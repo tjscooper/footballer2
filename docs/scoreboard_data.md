@@ -1,15 +1,14 @@
-# Data
+# Scoreboard Data
 
 Root level data structure fetched by API call to NFL source: [ESPN API](http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard)
-
 #### Root Object
 
 | Property            | Type                  
 |---------------------|-----------------------
-| leagues             | [League](#league)     
+| leagues [ ]         | [League](#league)     
 | season              | [Season](#season-1)   
 | week                | [Week](#week)         
-| events              | [Event](#event) 
+| events [ ]          | [Event](#event) 
 
 ---
 
@@ -21,11 +20,11 @@ An array containing the following schema:
 |---------------------|-----------------------|---------------------------------
 | id                  | string                | "28"                          
 | uid                 | string                | "s:20-1:28"                   
-| name                | string                | "National Football League     
+| name                | string                | "National Football League"  
 | abbreviation        | string                | "NFL"                         
 | slug                | string                | "nfl"                         
 | season              | [Season](#season)     | `{ "year": 2023, ... }`       
-| logos [ ]           | [Logo](#logo)         | `{ "href: "https://...", ... }`    
+| logos [ ]           | [Logo](#logo)         | `{ href: "https://...", ... }`    
 | calendarType        | string                | "list"                        
 | calendarIsWhiteList | boolean               | true                          
 | calendarStartDate   | Date                  | "2023-08-01T07:00Z"           
@@ -37,7 +36,7 @@ An array containing the following schema:
 #### Season
 | Property     | Type                      | Example                            
 |--------------|---------------------------|--------------------------
-| year         | integer                   | 2023                               
+| year         | number                    | 2023                               
 | startDate    | Date                      | "2023-08-01T07:00Z"                
 | endDate      | Date                      | "2024-02-15T07:59Z"                
 | displayName  | string                    | "2023"                             
@@ -47,7 +46,7 @@ An array containing the following schema:
 | Property     | Type        | Example                            
 |--------------|-------------|------------------------------------
 | id           | string      | "25"                               
-| type         | integer     | 1                                  
+| type         | number      | 1                                  
 | name         | string      | "Preseason"                         
 | abbreviation | string      | "pre"                              
 
@@ -55,8 +54,8 @@ An array containing the following schema:
 | Property     | Type        | Example                           
 |--------------|-------------|-----------------------------------
 | href         | string      | "25"                              
-| width        | integer     | 500                                
-| height       | integer     | 800                               
+| width        | number      | 500                                
+| height       | number      | 800                               
 | alt          | string      | ""                                
 | rel [ ]      | [string]    | [ "full", "default" ]             
 | lastUpdated  | Date        | "2023-08-01T07:00Z"               
@@ -87,8 +86,8 @@ An object literal with the following schema:
 
 | Property | Type     | Example 
 |----------|----------|---------
-| type     | integer  | 1       
-| year     | integer  | 2023    
+| type     | number   | 1       
+| year     | number   | 2023    
 
 
 ## Week
@@ -97,7 +96,7 @@ An object literal with the following schema:
 
 | Property | Type     | Example 
 |----------|----------|---------
-| number   | integer  | 2       
+| number   | number   | 2       
 
 
 ## Event
@@ -114,22 +113,22 @@ An array containing the following schema:
 | season           | [Season](#season-2)         | `{ year: 2023, ... }`
 | week             | [Week](#week-1)             | `{ number: 2 }`
 | competitions [ ] | [Competition](#competition) | `{ id: "409678974646", ... }`
-| links [ ]        | [EventLink](#eventlink)     | `{  }` 
-| status           | [Status](#status)           | `{  }`
+TODO | links [ ]        | [EventLink](#eventlink)     | `{  }` 
+TODO | status           | [Status](#status)           | `{  }`
 
 ### Event Sub-types (Extended)
 
 #### Season
 | Property     | Type       | Example                            
 |--------------|------------|---------------
-| year         | integer    | 2023                               
-| type         | integer    | 1
+| year         | number     | 2023                               
+| type         | number     | 1
 | slug         | string     | "Preseason"
 
 #### Week
 | Property | Type     | Example 
 |----------|----------|---------
-| number   | integer  | 2       
+| number   | number   | 2       
 
 #### Competition
 | Property              | Type                                | Example 
@@ -137,7 +136,7 @@ An array containing the following schema:
 | id                    | string                              | "409678974646"
 | uid                   | string                              | "s:20~l:28~e:401548631~c:401548631"
 | date                  | Date                                | "2023-08-07T12:00Z"
-| attendance            | integer                             | 64628
+| attendance            | number                              | 64628
 | type                  | [CompetitionType](#competitiontype) | `{ id: "1", ... }`
 | timeValid             | boolean                             | true
 | neutralSite           | boolean                             | false
@@ -159,7 +158,7 @@ An array containing the following schema:
 | id           | string              | "3738"
 | fullName     | string              | "Gillette Stadium"
 | address      | [Address](#address) | `{ city: "Foxboro", ... }`
-| capacity     | integer             | 65874
+| capacity     | number              | 65874
 | indoor       | boolean             | false
 
 #### Address
@@ -174,7 +173,7 @@ An array containing the following schema:
 | id                | string                                  | "19"
 | uid               | string                                  | "s:20-1:28-t:19"
 | type              | string                                  | "team"
-| order             | integer                                 | 0
+| order             | number                                  | 0
 | homeAway          | string                                  | "home"
 | winner            | boolean                                 | false
 | team              | [Team](#team)                           | `{ id: "19", ... }`
@@ -225,7 +224,7 @@ An array containing the following schema:
 #### LineScore
 | Property         | Type       | Example 
 |------------------|------------|-----------
-| value            | integer    | 3
+| value            | number     | 3
 
 #### Record
 | Property         | Type       | Example 
@@ -238,9 +237,9 @@ An array containing the following schema:
 #### CompetitionStatus
 | Property         | Type                      | Example 
 |------------------|---------------------------|----------------
-| clock            | integer                   | 0
+| clock            | number                    | 0
 | displayClock     | string                    | "0:00"
-| period           | integer                   | 4
+| period           | number                    | 4
 | type             | [StatusType](#statustype) | `{ id: "3", ... }`
 
 #### StatusType
@@ -273,7 +272,7 @@ An array containing the following schema:
 | Property         | Type                      | Example 
 |------------------|---------------------------|-------------------
 | displayValue     | string                    | "99 YDS, 1 TD"
-| value            | integer                   | 99
+| value            | number                    | 99
 | athlete          | [Athelete](#athlete)      | `{ id: "42425646", ... }`
 | team             | [LeaderTeam](#leaderteam) | `{ id: "34" }`
 
@@ -320,7 +319,7 @@ An array containing the following schema:
 #### RegulationDetail
 | Property         | Type      | Example 
 |------------------|-----------|---------------
-| periods          | integer   | 4
+| periods          | number    | 4
 
 #### GeoBroadcast
 | Property         | Type                                      | Example 
