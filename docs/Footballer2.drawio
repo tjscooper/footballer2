@@ -1,0 +1,88 @@
+<mxfile host="65bd71144e" pages="1">
+    <diagram id="dztBOANFAvIpilBolSLL" name="Workflow">
+        <mxGraphModel dx="1173" dy="745" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="liIhu_nuL6SnkejiNtax-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="190" width="620" height="530" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&lt;h1&gt;Workflow States&lt;/h1&gt;&lt;p&gt;Timing for API calls to ESPN APIs&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="300" y="100" width="290" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-6" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="amdknmdM2epJa_gma1rT-4" target="amdknmdM2epJa_gma1rT-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-4" value="Start Up" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="570" y="220" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-10" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="amdknmdM2epJa_gma1rT-5" target="amdknmdM2epJa_gma1rT-9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-5" value="Query&lt;br&gt;Games Collection" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="570" y="320" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-14" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="amdknmdM2epJa_gma1rT-9" target="amdknmdM2epJa_gma1rT-13">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-16" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;" vertex="1" connectable="0" parent="amdknmdM2epJa_gma1rT-14">
+                    <mxGeometry x="-0.1169" y="1" relative="1" as="geometry">
+                        <mxPoint x="-1" y="-2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-22" value="" style="edgeStyle=none;html=1;fontSize=18;" edge="1" parent="1" source="amdknmdM2epJa_gma1rT-9" target="amdknmdM2epJa_gma1rT-21">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-23" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;" vertex="1" connectable="0" parent="amdknmdM2epJa_gma1rT-22">
+                    <mxGeometry x="-0.2775" relative="1" as="geometry">
+                        <mxPoint x="7" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-9" value="Current&lt;br&gt;Week" style="rhombus;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="590" y="440" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-18" value="" style="edgeStyle=none;html=1;fontSize=18;" edge="1" parent="1" source="amdknmdM2epJa_gma1rT-13" target="amdknmdM2epJa_gma1rT-17">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-13" value="Fetch data from&lt;br&gt;Schedule API" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="385" y="450" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-15" value="Populating the Games Collection" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;" vertex="1" parent="1">
+                    <mxGeometry x="320" y="207.5" width="150" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-20" value="" style="edgeStyle=none;html=1;fontSize=18;" edge="1" parent="1" source="amdknmdM2epJa_gma1rT-17" target="amdknmdM2epJa_gma1rT-19">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-17" value="Parse API data" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="385" y="540" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-19" value="Insert&lt;br&gt;Game records&lt;br&gt;for Current Week" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="385" y="630" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="amdknmdM2epJa_gma1rT-21" value="Do Nothing" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="750" y="450" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="UI" id="AVUJP_bfGcbwHv7Mb2Ml">
+        <mxGraphModel dx="1237" dy="633" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
+            <root>
+                <mxCell id="fo4pJJIi-6-L1ebDa4Mh-0"/>
+                <mxCell id="fo4pJJIi-6-L1ebDa4Mh-1" parent="fo4pJJIi-6-L1ebDa4Mh-0"/>
+                <mxCell id="fo4pJJIi-6-L1ebDa4Mh-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="fo4pJJIi-6-L1ebDa4Mh-1">
+                    <mxGeometry x="280" y="40" width="480" height="830" as="geometry"/>
+                </mxCell>
+                <mxCell id="fo4pJJIi-6-L1ebDa4Mh-3" value="&lt;h1&gt;Workflow / State&lt;/h1&gt;&lt;p&gt;Timing for API calls to ESPN APIs&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="fo4pJJIi-6-L1ebDa4Mh-1">
+                    <mxGeometry x="300" y="70" width="290" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="fo4pJJIi-6-L1ebDa4Mh-4" value="Live Scores" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="fo4pJJIi-6-L1ebDa4Mh-1">
+                    <mxGeometry x="320" y="200" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="fo4pJJIi-6-L1ebDa4Mh-5" value="Picks" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="fo4pJJIi-6-L1ebDa4Mh-1">
+                    <mxGeometry x="320" y="280" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
