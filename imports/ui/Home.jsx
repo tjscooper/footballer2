@@ -43,6 +43,7 @@ export const Home = () => {
   if (!currentUser) {
     // TODO Replace with MUI skeleton
     return null;
+    navigateTo('sign-in');
   }
 
   return (
