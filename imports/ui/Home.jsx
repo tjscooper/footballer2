@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+import { useTracker } from 'meteor/react-meteor-data';
 import React, { useState } from 'react';
 import { 
   Grid,
@@ -8,63 +10,60 @@ import { useNavigate } from 'react-router-dom';
 
 export const Home = () => {
 
+  // References
   const navigate = useNavigate();
   
   // Menu
   const [isLeftOpen, setIsLeftOpen] = useState(false);
-  // const [isBottomOpen, setIsBottomOpen] = useState(false);
-  // const [isRightOpen, setIsRightOpen] = useState(false);
-  // const [isTopOpen, setIsTopOpen] = useState(false);
-
+  
   // Methods
   const toggleLeftNav = () => setIsLeftOpen(!isLeftOpen);
   
   const navigateTo = (pageName) => navigate(`/${pageName}`);
 
+  const getCurrentUserId = () => Meteor.userId();
+  
+  const currentUser = useTracker(() => {
+    const _id = getCurrentUserId();
+    return Meteor.users.find({ _id }).fetch()[0];
+  });
+
+  const signOut = () => { 
+    console.log('signing out...');
+    Meteor.logout((err) => {
+      if (err) {
+        console.error(err);
+      }
+      console.log('signed out...')
+      navigateTo('sign-in');
+    });
+  }
+
+  // View
+  if (!currentUser) {
+    // TODO Replace with MUI skeleton
+    return null;
+  }
+
   return (
     <Grid container>
       <Grid mobile={6} tablet={4} laptop={3}>
-        {/* Left */}
-        <Drawer
+        {/* View */}
+        <h1>Welcome, { currentUser.username }!</h1>
+        <Button onClick={() => toggleLeftNav()}>Menu</Button>
+      </Grid>
+      {/* Left Navigation */}
+      <Drawer
           anchor={'left'}
           open={isLeftOpen}
           onClose={() => toggleLeftNav()}>
+            <p><Button onClick={ () => navigateTo('sign-up') }>Sign Up</Button></p>
+            <p><Button onClick={ () => navigateTo('sign-in') }>Sign In</Button></p>
+            <p><Button onClick={ () => signOut() }>Sign Out</Button></p>
+            <p><Button onClick={ () => navigateTo('settings') }>Settings</Button></p>
             <p><Button onClick={ () => navigateTo('picks') }>Picks</Button></p>
-            <p>Blah Blah Blah Blah Blah Blah Blah</p>
-            <p>Blah Blah Blah Blah Blah Blah Blah</p>
-            <p>Blah Blah Blah Blah Blah Blah Blah</p>
-            <p>Blah Blah Blah Blah Blah Blah Blah</p>
-            <p>Blah Blah Blah Blah Blah Blah Blah</p>
         </Drawer>
-        <Button onClick={() => toggleLeftNav()}>Menu</Button>
-
-        {/* <Button onClick={() => toggleBottomNav()}>Menu B</Button>
-        <Drawer
-          anchor={'bottom'}
-          open={isBottomOpen}
-          onClose={() => toggleBottomNav()}
-        >
-          Blah Blah
-        </Drawer>
-
-        <Button onClick={() => toggleRightNav()}>Menu R</Button>
-        <Drawer
-          anchor={'right'}
-          open={isRightOpen}
-          onClose={() => toggleRightNav()}
-        >
-          Blah Blah
-        </Drawer>
-
-        <Button onClick={() => toggleTopNav()}>Menu T</Button>
-        <Drawer
-          anchor={'top'}
-          open={isTopOpen}
-          onClose={() => toggleTopNav()}
-        >
-          Blah Blah
-        </Drawer> */}
-      </Grid>
     </Grid>
+
   );
 };

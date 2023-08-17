@@ -7,12 +7,16 @@ import { MuiThemeProvider, createTheme } from '@material-ui/core';
 
 // Pages
 import { Home } from './Home';
-import { Settings } from './Settings';
+import { SignIn } from './SignIn';
+import { SignUp } from './SignUp';
 import { Picks } from './Picks';
+import { Settings } from './Settings';
 
 // Routes
 const footballerRoutes = createBrowserRouter([
   { path: "/", element: <Home /> },
+  { path: "/sign-in", element: <SignIn /> },
+  { path: "/sign-up", element: <SignUp /> },
   { path: "/picks", element: <Picks /> },
   { path: "/settings", element: <Settings /> },
 ]);
