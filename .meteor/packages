@@ -24,3 +24,5 @@ dev-error-overlay
 static-html
 accounts-password
 accounts-base@2.2.2
+percolate:synced-cron
+fetch
