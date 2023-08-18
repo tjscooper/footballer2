@@ -1,16 +1,19 @@
 import { Meteor } from 'meteor/meteor';
 
 import CronService from '../imports/service/cronService';
-import ScoreboardService from '../imports/service/scoreboardService';
+import FeedService from '../imports/service/feedService';
+
+import '../imports/api/weeks.js';
+import '../imports/api/scores.js';
 
 Meteor.startup(() => {
   
   // Scheduled Service Registry
-  const scoreboardService = new ScoreboardService().getInstance();
+  const feedService = new FeedService().getInstance();
   CronService.register({
     name: 'Get Scores',
     scheduleParserText: 'every 1 min',
-    scheduleFn: scoreboardService.getScores
+    scheduleFn: feedService.getScores
   });
 
   // Start Scheduled Services

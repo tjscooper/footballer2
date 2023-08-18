@@ -1,10 +1,11 @@
+import { Meteor } from 'meteor/meteor';
 import { fetch, Headers } from 'meteor/fetch';
 
 // Constants
 const SCOREBOARD_URL = "http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
 
 // Service
-class ScoreboardService {
+class FeedService {
 
   // Attributes
   constructor() {}
@@ -24,12 +25,8 @@ class ScoreboardService {
           referrerPolicy: 'no-referrer',
       });
       const data = await response.json();
-      
-      // Add week to Weeks Collection
-      // console.log(data.week);
-
-      // Add events to Games Collection
-      // console.log(data.events);
+      const result = await Meteor.call('scores.processFeed', data);
+      console.log('result of meteor call', result);
 
     } catch (err) {
       console.log(err);
@@ -41,7 +38,7 @@ class ScoreboardService {
 class Singleton {
   constructor() {
     if (!Singleton.instance) {
-      Singleton.instance = new ScoreboardService();
+      Singleton.instance = new FeedService();
     }
   }
   getInstance() {
