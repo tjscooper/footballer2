@@ -14,20 +14,11 @@ const processFeed = async ({ leagues, week, season, events }) => {
     await Meteor.call('weeks.currentWeek', week)
   );
   check(currentWeek, Week);
+
+  // Get events (games)
   
   // Response
   return currentWeek.id();
-
-  // const scores = ScoresCollection.findOne({ code });
-  // if (!game) {
-  //   throw new Meteor.Error('Game not found.');
-  // }
-
-  // ScoresCollection.update(game._id, { 
-  //   $set: { updatedAt: new Date() },
-  //   $addToSet: { players: playerObj }
-  // });
-  // return `/lobby/${ game.code }`;
 };
 
 export {
