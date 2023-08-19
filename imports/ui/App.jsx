@@ -3,7 +3,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { MuiThemeProvider, createTheme } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Pages
 import { Home } from './Home';
@@ -21,11 +21,29 @@ const footballerRoutes = createBrowserRouter([
   { path: "/settings", element: <Settings /> },
 ]);
 
+const defaultSpacing = '8';
+
 // View
 export const App = () => {
   return (
-    <MuiThemeProvider
+    <ThemeProvider
       theme={createTheme({
+        components: {
+          // todo: remove once the issue is addressed: https://github.com/mui/material-ui/issues/31185
+          MuiDialogContent: {
+            styleOverrides: { root: { paddingTop: `${defaultSpacing}px !important` } },
+          },
+        },
+        palette: {
+          background: {
+            default: '#212121'
+          },
+          text: {
+            primary: '#FFFFFF',
+            secondary: '#CCCCCC',
+            disabled: '#C7C7C7'
+          },
+        },
         breakpoints: {
           values: {
             laptop: 1024,
@@ -38,6 +56,6 @@ export const App = () => {
         <React.Fragment>
           <RouterProvider router={footballerRoutes} />
         </React.Fragment>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };

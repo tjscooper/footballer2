@@ -5,7 +5,7 @@ import {
   Grid,
   Button,
   Drawer
-} from '@material-ui/core';
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export const Home = () => {
