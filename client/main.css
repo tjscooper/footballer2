@@ -1,4 +1,10 @@
 body {
   padding: 10px;
   font-family: sans-serif;
-}
+  background-color: #211b1d;
+} 
+/* 
+sample {
+  display: flex;
+  flex-direction: ;
+} */
