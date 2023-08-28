@@ -32,7 +32,10 @@ export const SignIn = () => {
 
   const Copyright = (props) => {
     return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      <Typography
+        variant="body2"
+        align="center" {...props}
+        sx={{ color: '#FFFFFF' }}>
         {'Copyright © '}
         <Link color="inherit" href="http://hypnochip.com/">
           Hypnochip
@@ -52,8 +55,8 @@ export const SignIn = () => {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
-        <Avatar sx={{ m: 1 }}>
-          <SportsFootballIcon />
+        <Avatar sx={{ m: 1, background: '#f34cc5', width: '100px', height: '100px' }}>
+          <SportsFootballIcon sx={{ m: 1, color: '#FFFFFF', width: '80px', height: '80px' }} />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign In
@@ -69,7 +72,7 @@ export const SignIn = () => {
             id="username"
             label="Username"
             name="username"
-            autoFocus/>
+            autoFocus />
           <TextField
             margin="normal"
             InputLabelProps={{
@@ -81,20 +84,20 @@ export const SignIn = () => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"/>
+            autoComplete="current-password" />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}>
+            sx={{ mt: 3, mb: 2, background: '#d0ff12', color: '#000000', fontWeight: 'bold' }}>
             Sign In
           </Button>
           <Grid container>
-            <Grid
-              item>
-              <Link
-                href="/sign-up">
-                {'Sign Up'}
+            <Grid item sx={{ mb: 6, width: '100%', textAlign: 'center' }}>
+              <Link 
+                href="/sign-up"
+                sx={{ textDecoration: 'none', color: '#3ef3e2' }}>
+                Sign Up
               </Link>
             </Grid>
             {/* <Grid item>
@@ -105,7 +108,7 @@ export const SignIn = () => {
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
+      {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
     </Container>
   );
 };

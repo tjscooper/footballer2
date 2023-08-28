@@ -12,13 +12,13 @@ The original code base from Footballer goes back to 2015.  This legacy code base
 
 - [x] [Scheduled Tasks](#scheduled-tasks)
 - [ ] User Journey Map
-- [ ] [UI Design](#ui-design)
-- [ ] UI Scaffolding
+- [x] [UI Design](#ui-design)
+- [x] UI Scaffolding
 - [ ] Unit Testing Framework
-- [ ] Jobs Service
-- [ ] Weeks Service
-- [ ] Games Service
-- [ ] Picks Service
+- [x] Feed Service
+- [x] Week Service
+- [x] Game Service
+- [x] Pick Service
 - [ ] Dashboard Service
 - [ ] Settings Service
 - [ ] User Service
@@ -66,6 +66,32 @@ I'd like to introduce a few new components to the experience:
 ###### My Picks Prototype 01
 ![ui-my-picks-01](/assets/ui-my-picks-01.png)
 
+---
+
+### TODO List
+
+- [ ] Add "is Winning" logic to Games List
+- [ ] Add "show active" toggle to Games List
+- [ ] Add chart for users above Games List
+- [ ] Standardize menu system across the app
+- [ ] Add reportService to aggregate data for chart
+- [ ] Add reportService to scores workflow
+- [ ] Add notification system
+- [ ] Add mail integration
+- [ ] Add settings
+- [ ] Add data migration service
+
+---
+### Starting the Application
+
+Point Meteor to local MongoDB
+```
+export MONGO_URL=mongodb://localhost:27017/footballer2
+```
+Run Meteor
+```
+meteor
+```
 
 ---
 ###### Version 0.1.0

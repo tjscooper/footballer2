@@ -10,6 +10,7 @@ import { Home } from './Home';
 import { SignIn } from './SignIn';
 import { SignUp } from './SignUp';
 import { Picks } from './Picks';
+import { Teams } from './Teams';
 import { Settings } from './Settings';
 
 // Routes
@@ -18,6 +19,7 @@ const footballerRoutes = createBrowserRouter([
   { path: "/sign-in", element: <SignIn /> },
   { path: "/sign-up", element: <SignUp /> },
   { path: "/picks", element: <Picks /> },
+  { path: "/teams", element: <Teams /> },
   { path: "/settings", element: <Settings /> },
 ]);
 
@@ -36,12 +38,12 @@ export const App = () => {
         },
         palette: {
           background: {
-            default: '#212121'
+            default: '#27272f'
           },
           text: {
             primary: '#FFFFFF',
             secondary: '#CCCCCC',
-            disabled: '#C7C7C7'
+            disabled: '#C5C5C5'
           },
         },
         breakpoints: {

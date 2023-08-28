@@ -5,8 +5,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -19,11 +17,6 @@ export const SignUp = () => {
   // References
   const navigate = useNavigate();
   
-  // State
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   // Methods
   const navigateTo = (pageName) => navigate(`/${pageName}`);
 
@@ -68,8 +61,8 @@ export const SignUp = () => {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
-        <Avatar sx={{ m: 1 }}>
-          <SportsFootballIcon />
+        <Avatar sx={{ m: 1, background: '#f34cc5', width: '100px', height: '100px' }}>
+          <SportsFootballIcon sx={{ m: 1, color: '#FFFFFF', width: '80px', height: '80px' }} />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
@@ -121,19 +114,21 @@ export const SignUp = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}>
+            sx={{ mt: 3, mb: 2, background: '#d0ff12', color: '#000000', fontWeight: 'bold' }}>
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href="/sign-in">
+            <Grid item sx={{ mb: 6, width: '100%', textAlign: 'center' }}>
+              <Link
+                href="/sign-in"
+                sx={{ textDecoration: 'none', color: '#3ef3e2' }}>
                 Sign In
               </Link>
             </Grid>
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
+      {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
     </Container>
   );
 };
