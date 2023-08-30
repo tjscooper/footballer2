@@ -52,6 +52,42 @@ class FeedService {
     }
   }
 
+  async getWeeks() {
+    try {
+      const response = await fetch(SCOREBOARD_URL, {
+          method: 'GET',
+          mode: 'cors', 
+          cache: 'no-cache',
+          credentials: 'same-origin', 
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          redirect: 'follow',
+          referrerPolicy: 'no-referrer',
+      });
+      const data = await response.json();
+      const result = await Meteor.call('weeks.processFeed', data);
+      return result;
+
+    } catch (e) {
+      // Response
+      return new ServiceResponse({
+        _status: false,
+        _displayMessage: 'Failed to get Weeks.',
+        _meta: {
+          detailedText: 'Automated service call to process week information.',
+          serviceClass: 'FeedService',
+          methodName: 'getWeeks',
+          data: {
+            error: e,
+            errorMessage: JSON.stringify(e)
+          }
+        },
+        _type: ENTITY.FEED
+      });
+    }
+  }
+
   async getTeams() {
     try {
       const response = await fetch(SCHEDULE_URL, {

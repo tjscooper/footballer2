@@ -41,9 +41,9 @@ export const App = () => {
             default: '#27272f'
           },
           text: {
-            primary: '#FFFFFF',
-            secondary: '#CCCCCC',
-            disabled: '#C5C5C5'
+            primary: '#000000',
+            secondary: '#666666',
+            disabled: '#333333'
           },
         },
         breakpoints: {

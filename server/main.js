@@ -19,7 +19,7 @@ import '../imports/api/picks.js';
 
 Meteor.startup(() => {
 
-  const automateWorkflow = false;
+  const automateWorkflow = true;
 
   if (automateWorkflow) {
   
@@ -27,6 +27,7 @@ Meteor.startup(() => {
 
     // Get Teams must always run first
     feedService.getTeams();
+    feedService.getWeeks();
     feedService.getGames();
     feedService.getScores();
 
@@ -35,6 +36,12 @@ Meteor.startup(() => {
       name: 'Get Scores',
       scheduleParserText: 'every 1 min',
       scheduleFn: feedService.getScores
+    });
+
+    CronService.register({
+      name: 'Get Weeks',
+      scheduleParserText: 'every tuesday at 2am',
+      scheduleFn: feedService.getWeeks
     });
     
     CronService.register({

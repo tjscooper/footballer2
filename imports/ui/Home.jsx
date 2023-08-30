@@ -11,8 +11,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded';
+import ToggleOnRoundedIcon from '@mui/icons-material/ToggleOnRounded';
 
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { VictoryBar, VictoryChart, VictoryAxis } from 'victory';
 
 import { useNavigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -22,22 +24,6 @@ import { PicksCollection } from '../db/picks';
 import { WeeksCollection } from '../db/weeks';
 
 import { GamesList } from './GamesList';
-
-/*
-  Home - Description
-
-  a list of games for a given week, should show:
-  • score
-  • pick
-  • clock
-  • redzone
-  • logos
-  • abbrev
-  • last play
-
-
-
-*/
 
 export const Home = () => {
 
@@ -65,52 +51,6 @@ export const Home = () => {
       return { weeks: null, games: null, picks: null, isLoading: true };
     }
 
-    // TODO remove
-    const data = [
-      {
-        name: 'Page A',
-        uv: 4000,
-        pv: 2400,
-        amt: 2400,
-      },
-      {
-        name: 'Page B',
-        uv: 3000,
-        pv: 1398,
-        amt: 2210,
-      },
-      {
-        name: 'Page C',
-        uv: 2000,
-        pv: 9800,
-        amt: 2290,
-      },
-      {
-        name: 'Page D',
-        uv: 2780,
-        pv: 3908,
-        amt: 2000,
-      },
-      {
-        name: 'Page E',
-        uv: 1890,
-        pv: 4800,
-        amt: 2181,
-      },
-      {
-        name: 'Page F',
-        uv: 2390,
-        pv: 3800,
-        amt: 2500,
-      },
-      {
-        name: 'Page G',
-        uv: 3490,
-        pv: 4300,
-        amt: 2100,
-      },
-    ];
-
     const weeks = WeeksCollection
       .find({})
       .fetch()
@@ -137,7 +77,8 @@ export const Home = () => {
   });
   
   // State
-  const [isLeftOpen, setIsLeftOpen] = useState(false); // Menu (Left)
+  const [isLeftOpen, setIsLeftOpen] = useState(false); // Menu (Left Drawer)
+  const [showActiveFilterToggle, setShowActiveFilterToggle] = useState(false); // Toggle switch in header
   
   // Methods
   const toggleLeftNav = () => setIsLeftOpen(!isLeftOpen);
@@ -155,6 +96,14 @@ export const Home = () => {
     });
   }
 
+  const onWeekSelect = (event) => {
+    console.log(event.target.value);
+  }
+
+  const handleFilterToggle = () => {
+    setShowActiveFilterToggle(!showActiveFilterToggle);
+  }
+
   // Components
   const Copyright = (props) => {
     return (
@@ -168,40 +117,69 @@ export const Home = () => {
     );
   }
 
-  const barChart = (props) => (
-    <ResponsiveContainer width="100%" height="35%">
-        <BarChart
-          width={500}
-          height={100}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="pv" fill="#8884d8" />
-          <Bar dataKey="uv" fill="#82ca9d" />
-        </BarChart>
-      </ResponsiveContainer>
-  );
+  const FilterToggle = ({ onLabelText, offLabelText, showActiveFilterToggle, handleToggle, styles }) => {
+    return showActiveFilterToggle
+      ? <Button variant="outlined"
+          startIcon={<ToggleOnRoundedIcon />}
+          onClick={ () => handleToggle(false) }
+          sx={styles}>
+          {offLabelText}
+        </Button>
+      : <Button variant="outlined"
+          startIcon={<ToggleOffRoundedIcon />}
+          onClick={ () => handleToggle(true) }
+          sx={styles}>
+          {onLabelText}
+        </Button>
+  }
 
-  const onWeekSelect = (event) => {
-    console.log(event.target.value);
+  const BarChart = () => {
+    
+    // Sample data structure for totals
+    const orderBy = 'wins';
+    const data = [
+      { user: 'Tim', wins: 14 },
+      { user: 'Rach', wins: 16 },
+      { user: 'Liam', wins: 8 },
+      { user: 'Stan', wins: 10 }
+    ].sort((a,b) => a[orderBy] > b[orderBy]);
+    
+    return (
+      <VictoryChart
+        // domainPadding will add space to each side of VictoryBar to
+        // prevent it from overlapping the axis
+        domainPadding={20}
+      >
+        <VictoryAxis
+          // tickValues specifies both the number of ticks and where
+          // they are placed on the axis
+          tickValues={[1, 2, 3, 4]}
+          tickFormat={data.map(d => d.user)}
+        />
+        <VictoryAxis
+          dependentAxis
+          // tickFormat specifies how ticks should be displayed
+          tickFormat={(x) => x}
+        />
+        <VictoryBar
+          horizontal
+          data={data}
+          x="user"
+          y="wins"
+        />
+      </VictoryChart>
+    );
   }
 
   // Styles
+  const highlightRegions = false;
   const styles = {
     header: {
+      border: highlightRegions ? '1px solid blue' : 'none',
       display: 'flex',
       flexDirection: 'row',
-      width: '90vw',
+      justifyContent: 'spread-evenly',
+      width: '94vw',
       primary: {
         fontSize: '32px',
         fontWeight: 'bold',
@@ -209,7 +187,14 @@ export const Home = () => {
         minWidth: '310px'
       }
     },
+    chart: {
+      width: '90vw',
+      height: '200px',
+      background: '#FFFFFF',
+      borderRadius: '12px'
+    },
     filter: {
+      border: highlightRegions ? '1px solid red' : 'none',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -226,6 +211,10 @@ export const Home = () => {
           color: '#000000',
           paddingLeft: '16px',
         }
+      },
+      toggle: {
+        border: highlightRegions ? '1px solid orange' : 'none',
+        border: 'none'
       }
     },
     picksList: {
@@ -250,7 +239,12 @@ export const Home = () => {
   return (
     <Grid container>
       <Grid mobile={6} tablet={4} laptop={3}>
-      
+        {/* Leaderboard */}
+        <Box sx={styles.chart}>
+          <BarChart
+            styles={{ width: '90vw', height: '200px', minHeight: '200px' }} />
+        </Box>
+
         {/* <Header> */}
         <Box sx={styles.header}>
           {/* Week Selection */}
@@ -277,6 +271,15 @@ export const Home = () => {
                     )
                 }
           </Select>
+
+          {/* Show Active Toggle */}
+          <FilterToggle
+            onLabelText='Show Active'
+            offLabelText='Show All'
+            showActiveFilterToggle={showActiveFilterToggle}
+            handleToggle={handleFilterToggle}
+            styles={styles.filter.toggle} />
+          
           {/* Navigation Button */}
           <IconButton
             color="primary"
@@ -294,6 +297,7 @@ export const Home = () => {
             picks={picks}
             currentWeek={currentWeek}
             isLoading={isLoading}
+            showActiveFilterToggle={showActiveFilterToggle}
           />
         </Box>
 

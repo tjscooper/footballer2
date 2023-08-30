@@ -2,9 +2,59 @@ body {
   padding: 10px;
   font-family: sans-serif;
   background-color: #211b1d;
-} 
-/* 
-sample {
-  display: flex;
-  flex-direction: ;
-} */
+}
+
+#sign-up-container {
+  margin-top: -80px;
+  padding-top: 60px;
+  background-image: url('/sign-up-bg.jpg');
+  background-color: #211b1d; /* Used if the image is unavailable */
+  height: 980px; /* You must set a specified height */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+#sign-in-container {
+  margin-top: -120px;
+  padding-top: 60px;
+  background-image: url('/sign-in-bg-grass.jpg');
+  background-color: #211b1d; /* Used if the image is unavailable */
+  height: 980px; /* You must set a specified height */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+label[id="username-label"] {
+  margin-top: -10px;
+  background-color: #3ef3e2;
+  color: black;
+  font-weight: bold;
+  padding: 8px;
+  text-transform: uppercase;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+
+label[id="email-label"] {
+  margin-top: -10px;
+  background-color: #3ef3e2;
+  color: black;
+  font-weight: bold;
+  padding: 8px;
+  text-transform: uppercase;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+
+label[id="password-label"] {
+  margin-top: -10px;
+  background-color: #3ef3e2;
+  color: black;
+  font-weight: bold;
+  padding: 8px;
+  text-transform: uppercase;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: small;
+}

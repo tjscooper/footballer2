@@ -70,8 +70,8 @@ I'd like to introduce a few new components to the experience:
 
 ### TODO List
 
-- [ ] Add "is Winning" logic to Games List
-- [ ] Add "show active" toggle to Games List
+- [x] Add "is Winning" logic to Games List
+- [x] Add "show active" toggle to Games List
 - [ ] Add chart for users above Games List
 - [ ] Standardize menu system across the app
 - [ ] Add reportService to aggregate data for chart

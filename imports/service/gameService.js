@@ -36,7 +36,11 @@ const insertGame = (gameObj) => {
 }
 
 const updateGame = (queryObj) => {
-  const { _id } = getGameByGameId(queryObj._gameId);
+  const game = getGameByGameId(queryObj._gameId);
+  if (!game) {
+    return;
+  }
+  const { _id } = game;
   return GamesCollection.update(_id, {
     $set: {
       odds: queryObj._odds,
@@ -52,7 +56,12 @@ const getTeam = (event, teamType) => {
 }
 
 const updateGameScoreAndStatus = (game) => {
-  const { _id, homeTeam, awayTeam } = getGameByGameId(game.id);
+  const existingGame = getGameByGameId(game.id);
+  if (!existingGame) {
+    return;
+  }
+
+  const { _id, homeTeam, awayTeam } = existingGame;
   
   const { score: homeScore } = getTeam(game, 'home');
   const { score: awayScore } = getTeam(game, 'away');

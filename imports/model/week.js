@@ -1,9 +1,10 @@
 export default class Week {
   
-  constructor({ _id, number }){
+  constructor({ _id, number, year }){
     // Properties
     this._id = _id;
     this.number = number;
+    this.year = year;
   }
 
   // Methods

@@ -29,7 +29,7 @@ export const GamesList = (props) => {
   const navigate = useNavigate();
 
   // Data
-  const { games, picks, currentWeek } = props;
+  const { games, picks, currentWeek, showActiveFilterToggle } = props;
   
   // Methods
   const toggleBottomNav = () => setIsBottomOpen(!isBottomOpen);
@@ -75,7 +75,6 @@ export const GamesList = (props) => {
     if (!situation) {
       return false;
     }
-    console.log('isAwayRedZone', awayTeam, situation);
     return awayTeam.id === situation.possession
       && situation.isRedZone;
   }
@@ -249,6 +248,7 @@ export const GamesList = (props) => {
               border: highlightRegions ? '1px solid blue' : 'none',
               display: 'flex',
               flexDirection: 'column',
+              width: '32.5vw',
               name: {
                 fontSize: '10px',
                 color: '#999999',
@@ -271,7 +271,6 @@ export const GamesList = (props) => {
               textAlign: 'center',
               fontSize: '16px',
               width: '34vw',
-              fontSize: '10px',
               color: '#999999',
               displayClock: {
                 // TODO
@@ -323,7 +322,15 @@ export const GamesList = (props) => {
         { games.length > 0
             ? ( 
                 <List sx={styles.listBox.list}>
-                  { games.map((game, index) => {
+                  { games.filter((g) => {
+                      if (!showActiveFilterToggle) {
+                        return g;
+                      } else if (showActiveFilterToggle) {
+                        if (g.gameStatus.status === GAME_STATUS.IN_PROGRESS) {
+                          return g;
+                        }
+                      }
+                    }).map((game, index) => {
                     return (
                       <ListItem
                         divider={index < games.length - 1}

@@ -46,7 +46,10 @@ export const SignIn = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      id="sign-in-container"
+      component="main"
+      maxWidth="xs">
       <CssBaseline />
       <Box
         sx={{
@@ -55,12 +58,12 @@ export const SignIn = () => {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
-        <Avatar sx={{ m: 1, background: '#f34cc5', width: '100px', height: '100px' }}>
+        <Typography sx={{ fontSize: 54, marginTop: '16px', color: '#FFFFFF' }}>
+          FOOTBALLER
+        </Typography>
+        <Avatar sx={{ m: 1, background: '#211b1d', width: '100px', height: '100px' }}>
           <SportsFootballIcon sx={{ m: 1, color: '#FFFFFF', width: '80px', height: '80px' }} />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign In
-        </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -72,7 +75,8 @@ export const SignIn = () => {
             id="username"
             label="Username"
             name="username"
-            autoFocus />
+            autoFocus
+            sx={{ width: '90vw', background: '#FFFFFF', color: '#000000' }} />
           <TextField
             margin="normal"
             InputLabelProps={{
@@ -84,19 +88,20 @@ export const SignIn = () => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password" />
+            autoComplete="current-password"
+            sx={{ width: '90vw', background: '#FFFFFF', color: '#000000' }} />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, background: '#d0ff12', color: '#000000', fontWeight: 'bold' }}>
+            sx={{ mt: 3, mb: 2, height: '60px', background: '#d0ff12', color: '#000000', fontWeight: 'bold' }}>
             Sign In
           </Button>
           <Grid container>
             <Grid item sx={{ mb: 6, width: '100%', textAlign: 'center' }}>
               <Link 
                 href="/sign-up"
-                sx={{ textDecoration: 'none', color: '#3ef3e2' }}>
+                sx={{ textDecoration: 'none', color: '#3ef3e2', background: '#333333', padding: '8px', textTransform: 'uppercase' }}>
                 Sign Up
               </Link>
             </Grid>
