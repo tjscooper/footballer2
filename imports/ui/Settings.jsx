@@ -11,6 +11,12 @@ export const Settings = () => {
   // References
   const navigate = useNavigate();
 
+  // Authenticated Route
+  // Force login if no meteor token is found
+  if (!localStorage.getItem('Meteor.loginToken')) {
+    navigateTo('sign-in');
+  }
+
   // State
   const [isBottomOpen, setIsBottomOpen] = useState(false);
   

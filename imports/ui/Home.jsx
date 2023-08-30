@@ -31,15 +31,9 @@ export const Home = () => {
   const navigate = useNavigate();
 
   // Authenticated Route
-  const getCurrentUserId = () => Meteor.userId();
-  
-  const currentUser = useTracker(() => {
-    const _id = getCurrentUserId();
-    return Meteor.users.find({ _id }).fetch()[0];
-  });
-
-  if (!currentUser) {
-    //navigateTo('sign-in');
+  // Force login if no meteor token is found
+  if (!localStorage.getItem('Meteor.loginToken')) {
+    navigateTo('sign-in');
   }
 
   // Data

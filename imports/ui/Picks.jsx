@@ -47,9 +47,11 @@ export const Picks = () => {
     return Meteor.users.find({ _id }).fetch()[0];
   });
 
-  // if (!currentUser) {
-  //   navigateTo('sign-in');
-  // }
+  // Authenticated Route
+  // Force login if no meteor token is found
+  if (!localStorage.getItem('Meteor.loginToken')) {
+    navigateTo('sign-in');
+  }
 
   // Data
   const { picks, games, weeks, currentWeek, isLoading } = useTracker(() => {
