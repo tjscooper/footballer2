@@ -40,7 +40,7 @@ Meteor.startup(() => {
 
     CronService.register({
       name: 'Get Weeks',
-      scheduleParserText: 'every tuesday at 2am',
+      scheduleParserText: 'every tuesday',
       scheduleFn: feedService.getWeeks
     });
     
