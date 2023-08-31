@@ -18,7 +18,8 @@ import {
   VictoryBar,
   VictoryChart,
   VictoryAxis,
-  VictoryLabel
+  VictoryLabel,
+  VictoryStack
 } from 'victory';
 
 import { useNavigate } from 'react-router-dom';
@@ -184,6 +185,9 @@ export const Home = () => {
   }
 
   const BarChart = (data) => {
+
+    console.log('BarChart', data);
+
     if (!data) {
       return null;
     }
@@ -223,7 +227,7 @@ export const Home = () => {
           }}
         />
         <VictoryAxis
-          label="This Week's Legends"
+          label="This Week"
           axisLabelComponent={
             <VictoryLabel
               dx={-24}
@@ -252,19 +256,42 @@ export const Home = () => {
             }
           }}
         />
-        <VictoryBar
-          barRatio={0.70}
-          horizontal
-          sortOrder='ascending'
-          data={trimmedAndSorted}
-          style={{ data: { fill: "#3ef3e2" } }}
-          animate={{
-            duration: 2000,
-            onLoad: { duration: 1000 }
-          }}
-          x="user"
-          y="wins"
-        />
+        <VictoryStack
+          colorScale={["#698009", "#d0ff12"]}>
+          
+          {/* Confirmed Wins */}
+          <VictoryBar
+            barRatio={0.70}
+            horizontal
+            sortOrder='ascending'
+            data={trimmedAndSorted}
+            // style={{ data: { fill: "#3ef3e2" } }}
+            animate={{
+              duration: 2000,
+              onLoad: { duration: 1000 }
+            }}
+            x="user"
+            y="wins"
+          />
+
+          <VictoryBar
+            barRatio={0.70}
+            horizontal
+            sortOrder='ascending'
+            data={trimmedAndSorted}
+            // style={{ data: { fill: "#3ef3e2" } }}
+            animate={{
+              duration: 2000,
+              onLoad: { duration: 1000 }
+            }}
+            x="user"
+            y="winning"
+          />
+
+          {/* Currently Winning */}
+          
+
+        </VictoryStack>
       </VictoryChart>
     );
   }
