@@ -40,12 +40,7 @@ export const Picks = () => {
   // References
   const navigate = useNavigate();
 
-  const getCurrentUserId = () => Meteor.userId();
-  
-  const currentUser = useTracker(() => {
-    const _id = getCurrentUserId();
-    return Meteor.users.find({ _id }).fetch()[0];
-  });
+  const navigateTo = (pageName) => navigate(`/${pageName}`);  
 
   // Authenticated Route
   // Force login if no meteor token is found
@@ -90,8 +85,6 @@ export const Picks = () => {
   
   // Methods
   const toggleBottomNav = () => setIsBottomOpen(!isBottomOpen);
-
-  const navigateTo = (pageName) => navigate(`/${pageName}`);  
 
   const onWeekSelect = (event) => {
     console.log(event.target.value);

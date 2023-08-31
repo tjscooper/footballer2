@@ -58,13 +58,19 @@ export const SignIn = () => {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
-        <Typography sx={{ fontSize: 54, marginTop: '16px', color: '#FFFFFF' }}>
+        <Typography sx={{
+          fontSize: 54,
+          marginTop: '16px',
+          color: '#FFFFFF',
+          fontFamily: 'monospace',
+          fontWeight: 700,
+        }}>
           FOOTBALLER
         </Typography>
         <Avatar sx={{ m: 1, background: '#211b1d', width: '100px', height: '100px' }}>
           <SportsFootballIcon sx={{ m: 1, color: '#FFFFFF', width: '80px', height: '80px' }} />
         </Avatar>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, alignItems: 'center', maxWidth: '330px' }}>
           <TextField
             margin="normal"
             InputLabelProps={{
@@ -76,7 +82,7 @@ export const SignIn = () => {
             label="Username"
             name="username"
             autoFocus
-            sx={{ width: '90vw', background: '#FFFFFF', color: '#000000' }} />
+            sx={{ width: '90vw', background: '#FFFFFF', color: '#000000', maxWidth: '320px' }} />
           <TextField
             margin="normal"
             InputLabelProps={{
@@ -89,19 +95,38 @@ export const SignIn = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-            sx={{ width: '90vw', background: '#FFFFFF', color: '#000000' }} />
+            sx={{ width: '90vw', background: '#FFFFFF', color: '#000000', maxWidth: '320px' }} />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, height: '60px', background: '#d0ff12', color: '#000000', fontWeight: 'bold' }}>
+            sx={{
+              mt: 3,
+              mb: 2,
+              height: '60px',
+              background: '#d0ff12',
+              color: '#000000',
+              fontWeight: 'bold',
+              fontSize: '24px',
+              maxWidth: '320px',
+              fontFamily: 'monospace',
+            }}>
             Sign In
           </Button>
           <Grid container>
             <Grid item sx={{ mb: 6, width: '100%', textAlign: 'center' }}>
               <Link 
                 href="/sign-up"
-                sx={{ textDecoration: 'none', color: '#3ef3e2', background: '#333333', padding: '8px', textTransform: 'uppercase' }}>
+                sx={{
+                  textDecoration: 'none',
+                  color: '#3ef3e2',
+                  background: '#333333',
+                  padding: '8px',
+                  textTransform: 'uppercase',
+                  fontSize: '18px',
+                  maxWidth: '320px',
+                  fontFamily: 'monospace',
+                }}>
                 Sign Up
               </Link>
             </Grid>

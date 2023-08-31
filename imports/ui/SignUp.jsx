@@ -70,7 +70,7 @@ export const SignUp = () => {
         <Avatar sx={{ m: 1, background: '#211b1d', width: '100px', height: '100px' }}>
           <SportsFootballIcon sx={{ m: 1, color: '#FFFFFF', width: '80px', height: '80px' }} />
         </Avatar>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, alignItems: 'center', maxWidth: '330px' }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -83,7 +83,7 @@ export const SignUp = () => {
                 label="Username"
                 name="username"
                 autoComplete="username"
-                sx={{ width: '90vw', background: '#FFFFFF', color: '#000000' }} />
+                sx={{ width: '90vw', background: '#FFFFFF', color: '#000000', maxWidth: '320px' }} />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -96,7 +96,7 @@ export const SignUp = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                sx={{ width: '90vw', background: '#FFFFFF', color: '#000000' }} />
+                sx={{ width: '90vw', background: '#FFFFFF', color: '#000000', maxWidth: '320px' }} />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -110,14 +110,14 @@ export const SignUp = () => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                sx={{ width: '90vw', background: '#FFFFFF', color: '#000000' }} />
+                sx={{ width: '90vw', background: '#FFFFFF', color: '#000000', maxWidth: '320px' }} />
             </Grid>
           </Grid>
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, height: '60px', background: '#d0ff12', color: '#000000', fontWeight: 'bold' }}>
+            sx={{ mt: 3, mb: 2, height: '60px', background: '#d0ff12', color: '#000000', fontWeight: 'bold', maxWidth: '320px' }}>
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">

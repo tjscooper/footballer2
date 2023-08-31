@@ -1,4 +1,4 @@
-import { processFeed } from '../service/scoreService';
+import { processFeed, leaderboard } from '../service/scoreService';
 
 Meteor.methods({
   /*
@@ -7,6 +7,9 @@ Meteor.methods({
   */
   async 'scores.processFeed'(args) {
     return processFeed(args);
+  },
+  async 'scores.leaderboard'(args) {
+    return leaderboard(args);
   },
 });
 
