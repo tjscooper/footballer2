@@ -64,7 +64,13 @@ export const SignUp = () => {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
-        <Typography sx={{ fontSize: 54, marginTop: '16px', color: '#FFFFFF' }}>
+        <Typography sx={{
+          fontSize: 54,
+          marginTop: '16px',
+          color: '#f34cc5',
+          fontFamily: 'monospace',
+          fontWeight: 700,
+         }}>
           FOOTBALLER
         </Typography>
         <Avatar sx={{ m: 1, background: '#211b1d', width: '100px', height: '100px' }}>
@@ -117,14 +123,34 @@ export const SignUp = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, height: '60px', background: '#d0ff12', color: '#000000', fontWeight: 'bold', maxWidth: '320px' }}>
+            sx={{
+              mt: 3,
+              mb: 2,
+              height: '60px',
+              background: '#d0ff12',
+              color: '#000000',
+              fontWeight: 'bold',
+              maxWidth: '320px',
+              background: '#d0ff12',
+              fontSize: '24px',
+              fontFamily: 'monospace',
+             }}>
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item sx={{ mb: 6, width: '100%', textAlign: 'center' }}>
               <Link
                 href="/sign-in"
-                sx={{ textDecoration: 'none', color: '#3ef3e2', background: '#333333', padding: '6px', textTransform: 'uppercase' }}>
+                sx={{
+                  textDecoration: 'none',
+                  color: '#3ef3e2',
+                  background: '#333333',
+                  padding: '8px',
+                  textTransform: 'uppercase',
+                  fontSize: '18px',
+                  maxWidth: '320px',
+                  fontFamily: 'monospace',
+                }}>
                 Sign In
               </Link>
             </Grid>

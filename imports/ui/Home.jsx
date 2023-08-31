@@ -135,6 +135,7 @@ export const Home = () => {
         width: '140px',
         color: '#FFFFFF',
         height: '48px',
+        borderRadius: '16px',
         menuItem: {
           background: 'blue',
           height: '18px',
@@ -146,7 +147,8 @@ export const Home = () => {
         border: highlightRegions ? '1px solid orange' : 'none',
         border: 'none',
         color: '#FFFFFF',
-        textTransform: 'capitalize'
+        textTransform: 'capitalize',
+        paddingTop: '12px',
       }
     },
     picksList: {

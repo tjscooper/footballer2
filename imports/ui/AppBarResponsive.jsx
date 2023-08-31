@@ -7,11 +7,17 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import { Drawer } from '@mui/material';
-import { SportsFootballOutlined } from '@mui/icons-material';
+import SportsFootballOutlinedIcon from '@mui/icons-material/SportsFootball';
+import SportsFootballIcon from '@mui/icons-material/SportsFootball';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +27,10 @@ export const AppBarResponsive = (props) => {
   const navigate = useNavigate();
 
   // Routing
-  const navigateTo = (pageName) => navigate(`/${pageName}`);
+  const navigateTo = (pageName) => {
+    setPrimaryNavOpen(false);
+    navigate(`/${pageName}`);
+  }
 
   // State
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -47,11 +56,50 @@ export const AppBarResponsive = (props) => {
     setAnchorElUser(null);
   };
 
+  const stringToColor = (string) => {
+    let hash = 0;
+    let i;
+  
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+  
+    let color = '#';
+  
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+  
+    return color;
+  }
+  
+  const stringAvatar = (name, styles) => {
+    if (name.split(' ').length > 1) {
+      return {
+        sx: { 
+          ...styles,
+          bgcolor: stringToColor(name),
+        },
+        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+      };
+    }
+    return {
+      sx: { 
+        ...styles,
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.slice(0,1)}`,
+    };
+  }
+
   const togglePrimaryNav = () => setPrimaryNavOpen(!primaryNavOpen);
 
   return (
     <>
-      <AppBar position="static" sx={{ background: '#27272f', color: '#FFFFFF' }}>
+      <AppBar position="static" sx={{ background: '#27272f', color: '#FFFFFF', borderTopRightRadius: '16px', borderTopLeftRadius: '16px' }}>
         <Container maxWidth="sm">
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -60,10 +108,10 @@ export const AppBarResponsive = (props) => {
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={togglePrimaryNav}
+                onClick={ () => togglePrimaryNav() }
                 color="inherit"
               >
-                <SportsFootballOutlined />
+                <SportsFootballOutlinedIcon />
               </IconButton>
             </Box>
             <Typography
@@ -85,9 +133,9 @@ export const AppBarResponsive = (props) => {
               FOOTBALLER
             </Typography>
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title="Open User Options">
                 <IconButton onClick={handleOpenUserNav} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar {...stringAvatar('Timbro', { borderRadius: '12px', marginRight: '-8px' })} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -116,17 +164,30 @@ export const AppBarResponsive = (props) => {
       </AppBar>
 
       {/* <Menu> (Hidden Drawer) */}
-        <Drawer
-        sx={{ width: '90vw' }}
+      <Drawer
         anchor={'left'}
         open={primaryNavOpen}
         onClose={() => togglePrimaryNav()}>
-          <p><Button onClick={ () => navigateTo('sign-up') }>Sign Up</Button></p>
-          <p><Button onClick={ () => navigateTo('sign-in') }>Sign In</Button></p>
-          <p><Button onClick={ () => signOut() }>Sign Out</Button></p>
-          <p><Button onClick={ () => navigateTo('settings') }>Settings</Button></p>
-          <p><Button onClick={ () => navigateTo('picks') }>Picks</Button></p>
-          <p><Button onClick={ () => navigateTo('teams') }>Teams</Button></p>
+        <List
+         sx={{ margin: '16px' }}>
+          <ListItem key={'home'} disablePadding>
+            <ListItemButton onClick={() => navigateTo('') }>
+              <ListItemIcon>
+                <SportsFootballIcon sx={{ color: 'brown' }} />
+              </ListItemIcon>
+              <ListItemText>Home</ListItemText>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem key={'picks'} disablePadding>
+            <ListItemButton onClick={() => navigateTo('picks') }>
+              <ListItemIcon>
+                <CheckCircleIcon sx={{ color: 'green' }} />
+              </ListItemIcon>
+              <ListItemText>My Picks</ListItemText>
+            </ListItemButton>
+          </ListItem>
+        </List>
       </Drawer>
     </>
   );
