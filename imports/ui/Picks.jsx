@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 
 import { useNavigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -18,6 +14,7 @@ import { PicksCollection } from '../db/picks';
 import { WeeksCollection } from '../db/weeks';
 
 import { PicksList } from './PicksList';
+import { AppBarResponsive } from './AppBarResponsive';
 
 /*
   Picks - Description
@@ -40,16 +37,13 @@ export const Picks = () => {
   // References
   const navigate = useNavigate();
 
-  const getCurrentUserId = () => Meteor.userId();
-  
-  const currentUser = useTracker(() => {
-    const _id = getCurrentUserId();
-    return Meteor.users.find({ _id }).fetch()[0];
-  });
+  const navigateTo = (pageName) => navigate(`/${pageName}`);  
 
-  // if (!currentUser) {
-  //   navigateTo('sign-in');
-  // }
+  // Authenticated Route
+  // Force login if no meteor token is found
+  if (!localStorage.getItem('Meteor.loginToken')) {
+    navigateTo('sign-in');
+  }
 
   // Data
   const { picks, games, weeks, currentWeek, isLoading } = useTracker(() => {
@@ -82,15 +76,8 @@ export const Picks = () => {
     // Return data
     return { picks, games, weeks, currentWeek, isLoading: false };
   });
-  
-  // Menu
-  const [isBottomOpen, setIsBottomOpen] = useState(false);
-  
+
   // Methods
-  const toggleBottomNav = () => setIsBottomOpen(!isBottomOpen);
-
-  const navigateTo = (pageName) => navigate(`/${pageName}`);  
-
   const onWeekSelect = (event) => {
     console.log(event.target.value);
   }
@@ -141,74 +128,21 @@ export const Picks = () => {
   }
 
   return (
-    <Grid container>
-      <Grid mobile={6} tablet={4} laptop={3}>
-        
-        {/* <Header> */}
-        <Box sx={styles.header}>
-          {/* Title */}
-          <Typography sx={styles.header.primary}>
-            Picks
-          </Typography>
-
-          {/* Navigation Button */}
-          <IconButton
-            color="primary"
-            aria-label="open drawer"
-            onClick={() => toggleBottomNav()}
-            sx={{ mr: 2, ...(isBottomOpen && { display: 'none' }) }}>
-            <MenuIcon />
-          </IconButton>
-        </Box>
-        
-        {/* <Options> */}
-        <Box sx={styles.filter}>
-          <Select
-            labelId="week-selection"
-            id="week-selector"
-            value={currentWeek._id}
-            label="Week"
-            onChange={onWeekSelect}
-            sx={styles.filter.select}>
-              {
-                weeks.length > 0
-                  ? weeks.map((week) => (
-                      <MenuItem
-                        disableGutters
-                        key={week._id}
-                        value={week._id}
-                        sx={styles.filter.select.menuItem}>
-                          Week {week.number}
-                      </MenuItem>
-                    ))
-                  : (
-                      <Typography>No weeks to select.</Typography>
-                    )
-                }
-          </Select>
-        </Box>
-
-        {/* <List> */}
-        <Box sx={styles.picksList}>
-          <PicksList
-            games={games}
-            picks={picks}
-            currentWeek={currentWeek}
-            isLoading={isLoading}
-          />
-        </Box>
-        
-        {/* <Menu> (Hidden Drawer) */}
-        <Drawer
-          anchor={'bottom'}
-          open={isBottomOpen}
-          onClose={() => toggleBottomNav()}>
-            <p><Button onClick={ () => navigateTo('') }>Home</Button></p>
-            <p><Button onClick={ () => navigateTo('teams') }>Teams</Button></p>
-            <p><Button onClick={ () => navigateTo('picks') }>Picks</Button></p>
-        </Drawer>
-        
+    <>
+      <AppBarResponsive />
+      <Grid container>
+        <Grid mobile={6} tablet={4} laptop={3}>
+          {/* <List> */}
+          <Box sx={styles.picksList}>
+            <PicksList
+              games={games}
+              picks={picks}
+              currentWeek={currentWeek}
+              isLoading={isLoading}
+            />
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };

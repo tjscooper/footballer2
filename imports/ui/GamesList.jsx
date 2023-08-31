@@ -28,13 +28,14 @@ export const GamesList = (props) => {
   // References
   const navigate = useNavigate();
 
+  // Routing
+  const navigateTo = (pageName) => navigate(`/${pageName}`);
+
   // Data
   const { games, picks, currentWeek, showActiveFilterToggle } = props;
   
   // Methods
   const toggleBottomNav = () => setIsBottomOpen(!isBottomOpen);
-
-  const navigateTo = (pageName) => navigate(`/${pageName}`);
 
   const isPicked = (team) => {
     if (picks.length === 0) {
@@ -298,10 +299,22 @@ export const GamesList = (props) => {
     }
   };
   
+  // View
   if (!games) {
-    return <div>No Games found.</div>
+    return <Box sx={{
+      background: '#FFFFFF',
+      color: '#000000',
+      borderRadius: '16px',
+      textAlign: 'center',
+      padding: '16px',
+      alignContent: 'center',
+      justifyContent: 'center',
+      textTransform: 'uppercase',
+      fontSize: '16px'
+    }}>
+      No games to show
+    </Box>
   }
-
   const LogoImage = (imageSrc) => {
     return (
       <img

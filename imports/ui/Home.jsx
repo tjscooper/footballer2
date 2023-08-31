@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React, { useState } from 'react';
 
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -13,8 +12,14 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded';
 import ToggleOnRoundedIcon from '@mui/icons-material/ToggleOnRounded';
+import { CircularProgress } from '@mui/material';
 
-import { VictoryBar, VictoryChart, VictoryAxis } from 'victory';
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryAxis,
+  VictoryLabel
+} from 'victory';
 
 import { useNavigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -24,26 +29,28 @@ import { PicksCollection } from '../db/picks';
 import { WeeksCollection } from '../db/weeks';
 
 import { GamesList } from './GamesList';
+import { AppBarResponsive } from './AppBarResponsive';
 
 export const Home = () => {
 
   // References
   const navigate = useNavigate();
 
-  // Authenticated Route
-  const getCurrentUserId = () => Meteor.userId();
-  
-  const currentUser = useTracker(() => {
-    const _id = getCurrentUserId();
-    return Meteor.users.find({ _id }).fetch()[0];
-  });
+  // Routing
+  const navigateTo = (pageName) => navigate(`/${pageName}`);
 
-  if (!currentUser) {
-    //navigateTo('sign-in');
+  // Authenticated Route
+  // Force login if no meteor token is found
+  if (!localStorage.getItem('Meteor.loginToken')) {
+    navigateTo('sign-in');
   }
 
+  // State
+  const [leaderboard, setLeaderboard] = useState(null);
+  const [showActiveFilterToggle, setShowActiveFilterToggle] = useState(false); // Toggle switch in header
+
   // Data
-  const { picks, games, weeks, currentWeek, isLoading } = useTracker(() => {
+  const { currentWeek, weeks, games, picks, isLoading } = useTracker(() => {
     
     // Hydrate weeks
     const weeksHandler = Meteor.subscribe('weeks');
@@ -58,117 +65,39 @@ export const Home = () => {
 
     const currentWeek = weeks[0];
 
+    // Get data from application logic
+    Meteor.call('scores.leaderboard', { _weekId: currentWeek._id }, (err, data) => {
+      if (err) {
+        console.error(err);
+      }
+      if (!leaderboard) {
+        setLeaderboard(data);
+      }
+    });
+    
     // Hydrate local collections
     const picksAndGamesHandler = Meteor.subscribe('picksAndGames', currentWeek);
     
     // Await data hydration
     if (!picksAndGamesHandler.ready()) {
-      return { picks: null, games: null, weeks: null, isLoading: true };
+      return { currentWeek, isLoading: true };
     }
     
     // Query local collections
     const picks = PicksCollection.find({ weekId: currentWeek._id }).fetch();
-    console.log('picks', picks);
     const games = GamesCollection.find({ weekId: currentWeek._id }).fetch();
-    console.log('games', games);
 
     // Return data
-    return { picks, games, weeks, currentWeek, isLoading: false };
+    return { currentWeek, picks, games, weeks, isLoading: false };
   });
   
-  // State
-  const [isLeftOpen, setIsLeftOpen] = useState(false); // Menu (Left Drawer)
-  const [showActiveFilterToggle, setShowActiveFilterToggle] = useState(false); // Toggle switch in header
-  
   // Methods
-  const toggleLeftNav = () => setIsLeftOpen(!isLeftOpen);
-  
-  const navigateTo = (pageName) => navigate(`/${pageName}`);
-
-  const signOut = () => { 
-    console.log('signing out...');
-    Meteor.logout((err) => {
-      if (err) {
-        console.error(err);
-      }
-      console.log('signed out...')
-      navigateTo('sign-in');
-    });
-  }
-
   const onWeekSelect = (event) => {
     console.log(event.target.value);
   }
 
   const handleFilterToggle = () => {
     setShowActiveFilterToggle(!showActiveFilterToggle);
-  }
-
-  // Components
-  const Copyright = (props) => {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" href="http://hypnochip.com/">
-          Hypnochip
-        </Link>
-        {` ${ new Date().getFullYear() }.`}
-      </Typography>
-    );
-  }
-
-  const FilterToggle = ({ onLabelText, offLabelText, showActiveFilterToggle, handleToggle, styles }) => {
-    return showActiveFilterToggle
-      ? <Button variant="outlined"
-          startIcon={<ToggleOnRoundedIcon />}
-          onClick={ () => handleToggle(false) }
-          sx={styles}>
-          {offLabelText}
-        </Button>
-      : <Button variant="outlined"
-          startIcon={<ToggleOffRoundedIcon />}
-          onClick={ () => handleToggle(true) }
-          sx={styles}>
-          {onLabelText}
-        </Button>
-  }
-
-  const BarChart = () => {
-    
-    // Sample data structure for totals
-    const orderBy = 'wins';
-    const data = [
-      { user: 'Tim', wins: 14 },
-      { user: 'Rach', wins: 16 },
-      { user: 'Liam', wins: 8 },
-      { user: 'Stan', wins: 10 }
-    ].sort((a,b) => a[orderBy] > b[orderBy]);
-    
-    return (
-      <VictoryChart
-        // domainPadding will add space to each side of VictoryBar to
-        // prevent it from overlapping the axis
-        domainPadding={20}
-      >
-        <VictoryAxis
-          // tickValues specifies both the number of ticks and where
-          // they are placed on the axis
-          tickValues={[1, 2, 3, 4]}
-          tickFormat={data.map(d => d.user)}
-        />
-        <VictoryAxis
-          dependentAxis
-          // tickFormat specifies how ticks should be displayed
-          tickFormat={(x) => x}
-        />
-        <VictoryBar
-          horizontal
-          data={data}
-          x="user"
-          y="wins"
-        />
-      </VictoryChart>
-    );
   }
 
   // Styles
@@ -188,10 +117,11 @@ export const Home = () => {
       }
     },
     chart: {
-      width: '90vw',
-      height: '200px',
-      background: '#FFFFFF',
-      borderRadius: '12px'
+      width: '90.75vw',
+      height: '300px',
+      background: '#323232',
+      borderBottomRightRadius: '16px',
+      borderBottomLeftRadius: '16px',
     },
     filter: {
       border: highlightRegions ? '1px solid red' : 'none',
@@ -205,6 +135,7 @@ export const Home = () => {
         width: '140px',
         color: '#FFFFFF',
         height: '48px',
+        borderRadius: '16px',
         menuItem: {
           background: 'blue',
           height: '18px',
@@ -214,7 +145,10 @@ export const Home = () => {
       },
       toggle: {
         border: highlightRegions ? '1px solid orange' : 'none',
-        border: 'none'
+        border: 'none',
+        color: '#FFFFFF',
+        textTransform: 'capitalize',
+        paddingTop: '12px',
       }
     },
     picksList: {
@@ -231,94 +165,192 @@ export const Home = () => {
     }
   };
 
-    // View
+  // Components
+
+  const FilterToggle = ({ onLabelText, offLabelText, showActiveFilterToggle, handleToggle, styles, useOnLabelTextForBoth = false }) => {
+    return showActiveFilterToggle
+      ? <Button variant="outlined"
+          startIcon={<ToggleOnRoundedIcon sx={{ color: '#d0ff12' }} />}
+          onClick={ () => handleToggle(false) }
+          sx={styles}>
+          {useOnLabelTextForBoth ? onLabelText : offLabelText}
+        </Button>
+      : <Button variant="outlined"
+          startIcon={<ToggleOffRoundedIcon />}
+          onClick={ () => handleToggle(true) }
+          sx={styles}>
+          {onLabelText}
+        </Button>
+  }
+
+  const BarChart = (data) => {
+    if (!data) {
+      return null;
+    }
+    const sorted = [...data.sort((a, b) => a.wins - b.wins)].reverse();
+    const trimmedAndSorted = [
+      ...sorted
+           .slice(0, 5)
+           .sort((a, b) => a.wins - b.wins)
+    ];
+    
+    return (
+      <VictoryChart
+        // domainPadding will add space to each side of VictoryBar to
+        // prevent it from overlapping the axis
+        domainPadding={{ x: 16, y: 10 }}
+        padding={{ top: 50, bottom: 50, right: 24, left: 70 }}
+        height={250}
+        width={300}
+        style={{
+          fontFamily: "'Montserrat', sans-serif",
+          fontWeight: 100
+        }}
+      >
+        <VictoryAxis
+          tickFormat={trimmedAndSorted.map(d => d.user)}
+          style={{
+            axis: { stroke: '#f34cc5', width: '100px' },
+            data: {
+              stroke: '#FFFFFF'
+            },
+            tickLabels: {
+              fontSize: 10,
+              stroke: '#FFFFFF',
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 100
+            }
+          }}
+        />
+        <VictoryAxis
+          label="This Week's Legends"
+          axisLabelComponent={
+            <VictoryLabel
+              dx={-24}
+              dy={-210}
+              style={[{
+                textanchor: "middle",
+                fontSize: 16,
+                fill: '#FFFFFF',
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 600,
+                opacity: 0.25
+              }]}
+          />}
+          dependentAxis
+          tickFormat={(x) => x}
+          style={{
+            axis: { stroke: '#f34cc5' },
+            data: {
+              stroke: '#FFFFFF'
+            },
+            tickLabels: {
+              fontSize: 12,
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 100,
+              stroke: '#FFFFFF'
+            }
+          }}
+        />
+        <VictoryBar
+          barRatio={0.70}
+          horizontal
+          sortOrder='ascending'
+          data={trimmedAndSorted}
+          style={{ data: { fill: "#3ef3e2" } }}
+          animate={{
+            duration: 2000,
+            onLoad: { duration: 1000 }
+          }}
+          x="user"
+          y="wins"
+        />
+      </VictoryChart>
+    );
+  }
+
+  // View
   if (!currentWeek) {
-    return null;
+    return <Box sx={{
+      background: 'inherit',
+      color: '#FFFFFF',
+      paddingTop: '60px',
+      textAlign: 'center',
+      padding: '16px',
+      alignContent: 'center',
+      justifyContent: 'center',
+      textTransform: 'uppercase',
+      fontSize: '16px'
+    }}>
+      <CircularProgress color="secondary" />
+    </Box>
   }
 
   return (
-    <Grid container>
-      <Grid mobile={6} tablet={4} laptop={3}>
-        {/* Leaderboard */}
-        <Box sx={styles.chart}>
-          <BarChart
-            styles={{ width: '90vw', height: '200px', minHeight: '200px' }} />
-        </Box>
+    <>
+      <AppBarResponsive />
+      <Grid container>
+        <Grid mobile={6} tablet={4} laptop={3}>
+          {/* Leaderboard */}
+          <Box sx={styles.chart}>
+            {
+              // Render the leaderboard chart 
+              BarChart(leaderboard)
+            }
+          </Box>
 
-        {/* <Header> */}
-        <Box sx={styles.header}>
-          {/* Week Selection */}
-          <Select
-            labelId="week-selection"
-            id="week-selector"
-            value={currentWeek._id}
-            label="Week"
-            onChange={onWeekSelect}
-            sx={styles.filter.select}>
-              {
-                weeks.length > 0
-                  ? weeks.map((week) => (
-                      <MenuItem
-                        disableGutters
-                        key={week._id}
-                        value={week._id}
-                        sx={styles.filter.select.menuItem}>
-                          Week {week.number}
-                      </MenuItem>
-                    ))
-                  : (
-                      <Typography>No weeks to select.</Typography>
-                    )
-                }
-          </Select>
+          {/* <Header> */}
+          <Box sx={styles.header}>
+            {/* Week Selection */}
+            { weeks 
+                && <Select
+                      labelId="week-selection"
+                      id="week-selector"
+                      value={currentWeek._id}
+                      label="Week"
+                      onChange={onWeekSelect}
+                      sx={styles.filter.select}>
+                        {
+                          weeks.length > 0
+                            ? weeks.map((week) => (
+                                <MenuItem
+                                  disableGutters
+                                  key={week._id}
+                                  value={week._id}
+                                  sx={styles.filter.select.menuItem}>
+                                    Week {week.number}
+                                </MenuItem>
+                              ))
+                            : (
+                                <Typography>No weeks to select.</Typography>
+                              )
+                          }
+                    </Select>
+            }
 
-          {/* Show Active Toggle */}
-          <FilterToggle
-            onLabelText='Show Active'
-            offLabelText='Show All'
-            showActiveFilterToggle={showActiveFilterToggle}
-            handleToggle={handleFilterToggle}
-            styles={styles.filter.toggle} />
-          
-          {/* Navigation Button */}
-          <IconButton
-            color="primary"
-            aria-label="open drawer"
-            onClick={() => toggleLeftNav()}
-            sx={{ mr: 2, ...(isLeftOpen && { display: 'none' }) }}>
-            <MenuIcon />
-          </IconButton>
-        </Box>
+            {/* Show Active Toggle */}
+            <FilterToggle
+              onLabelText='Show Active'
+              offLabelText='Show All'
+              showActiveFilterToggle={showActiveFilterToggle}
+              handleToggle={handleFilterToggle}
+              styles={styles.filter.toggle}
+              useOnLabelTextForBoth={true} />
 
-        {/* <List> */}
-        <Box sx={styles.picksList}>
-          <GamesList
-            games={games}
-            picks={picks}
-            currentWeek={currentWeek}
-            isLoading={isLoading}
-            showActiveFilterToggle={showActiveFilterToggle}
-          />
-        </Box>
+          </Box>
 
-        {/* <Copyright> */}
-        {/* <Copyright sx={{ mt: 8, mb: 4, width: '90vw' }} /> */}
-        
-        {/* <Menu> (Hidden Drawer) */}
-        <Drawer
-          sx={{ width: '90vw' }}
-          anchor={'left'}
-          open={isLeftOpen}
-          onClose={() => toggleLeftNav()}>
-            <p><Button onClick={ () => navigateTo('sign-up') }>Sign Up</Button></p>
-            <p><Button onClick={ () => navigateTo('sign-in') }>Sign In</Button></p>
-            <p><Button onClick={ () => signOut() }>Sign Out</Button></p>
-            <p><Button onClick={ () => navigateTo('settings') }>Settings</Button></p>
-            <p><Button onClick={ () => navigateTo('picks') }>Picks</Button></p>
-            <p><Button onClick={ () => navigateTo('teams') }>Teams</Button></p>
-        </Drawer>
-
+          {/* <List> */}
+          <Box sx={styles.picksList}>
+            <GamesList
+              games={games}
+              picks={picks}
+              currentWeek={currentWeek}
+              isLoading={isLoading}
+              showActiveFilterToggle={showActiveFilterToggle}
+            />
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
