@@ -117,33 +117,35 @@ export const GamesList = (props) => {
   */
   const isHomePickWinning = (teamId, { gameId, homeTeam, awayTeam, odds }) => {
     const isFav = odds.favourite.home;
+
     const spreadScore = isFav
-      ? Number(homeTeam.score) + odds.spread - 0.5 // 0.5 to cover
-      : Number(homeTeam.score);
-    
-    let isPicked = false;
-    picks.forEach(pick => {
+      ? Number(homeTeam.score)
+      : Number(homeTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
+   
+    let pickWinning = false;
+    picks.map(pick => {
       if (pick.gameId === gameId && homeTeam.id === teamId) {
-        isPicked = true;
-      }
+        pickWinning = spreadScore > awayTeam.score;
+      };
     });
-    return isPicked && spreadScore > awayTeam.score;
+    return pickWinning;
   }
 
   const isAwayPickWinning = (teamId, { gameId, homeTeam, awayTeam, odds }) => {
     
     const isFav = odds.favourite.away;
+
     const spreadScore = isFav
-      ? Number(awayTeam.score) + odds.spread - 0.5 // 0.5 to cover
-      : Number(awayTeam.score);
+      ? Number(awayTeam.score)
+      : Number(awayTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
    
-    let isPicked = false;
-    picks.forEach(pick => {
+    let pickWinning = false;
+    picks.map(pick => {
       if (pick.gameId === gameId && awayTeam.id === teamId) {
-        isPicked = true;
-      }
+        pickWinning = spreadScore > homeTeam.score;
+      };
     });
-    return isPicked && spreadScore > homeTeam.score;
+    return pickWinning;
   }
 
   const getStatusText = (status) => {
