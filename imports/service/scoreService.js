@@ -53,46 +53,21 @@ const processFeed = async ({ leagues, week, season, events }) => {
   });
 };
 
-const leaderboard = async ({ _weekId }) => {
+const leaderboard = ({ _weekId }) => {
   
   const players = Meteor.users.find({}).fetch();
-
-  // Get player list
-  const shortened = players.map(
-    p => ({ ...p, user: shortenText(p.username, 9, '..') }));
-
+  const games = GamesCollection.find({ weekId: _weekId }).fetch();
+  const picks = PicksCollection.find({ weekId: _weekId }).fetch();
+  
   const lb = new Leaderboard({
     _id: null,
     _weekId,
-    _players: shortened
+    _players: players,
+    _picks: picks,
+    _games: games,
   });
 
-  // Get games
-  const games = GamesCollection.find({ weekId: _weekId }).fetch();
-  // console.log('games', games);
-
-  // Get picks
-  const picks = PicksCollection.find({ weekId: _weekId }).fetch();
-  // console.log('picks', picks);
-
-  // Iterate over picks
-  picks.forEach((pick) => {
-    // Iterate over games
-    games.forEach((game) => {
-      // Compare pick to each game
-      if (pick.gameId === game.gameId) {
-        // Did the pick win (or is it currently winning)
-        // is the game in progress?
-        // check home pick
-        // check away pick
-        // is home pick winning
-        // is away pick winning
-      }
-    });
-  });
-
-  const chartData = lb.getChartData();
-  return chartData;
+  return lb.getHorizontalBarChartData('leaderboard-top-5');
 };
 
 export {

@@ -186,17 +186,9 @@ export const Home = () => {
 
   const BarChart = (data) => {
 
-    console.log('BarChart', data);
-
     if (!data) {
       return null;
     }
-    const sorted = [...data.sort((a, b) => a.wins - b.wins)].reverse();
-    const trimmedAndSorted = [
-      ...sorted
-           .slice(0, 5)
-           .sort((a, b) => a.wins - b.wins)
-    ];
     
     return (
       <VictoryChart
@@ -212,7 +204,7 @@ export const Home = () => {
         }}
       >
         <VictoryAxis
-          tickFormat={trimmedAndSorted.map(d => d.user)}
+          tickFormat={data.map(d => d.username)}
           style={{
             axis: { stroke: '#f34cc5', width: '100px' },
             data: {
@@ -242,6 +234,7 @@ export const Home = () => {
               }]}
           />}
           dependentAxis
+          domain={[0, 16]}
           tickFormat={(x) => x}
           style={{
             axis: { stroke: '#f34cc5' },
@@ -264,33 +257,28 @@ export const Home = () => {
             barRatio={0.70}
             horizontal
             sortOrder='ascending'
-            data={trimmedAndSorted}
-            // style={{ data: { fill: "#3ef3e2" } }}
+            data={data}
             animate={{
               duration: 2000,
               onLoad: { duration: 1000 }
             }}
-            x="user"
+            x="username"
             y="wins"
           />
 
+          {/* Currently Winning */}
           <VictoryBar
             barRatio={0.70}
             horizontal
             sortOrder='ascending'
-            data={trimmedAndSorted}
-            // style={{ data: { fill: "#3ef3e2" } }}
+            data={data}
             animate={{
               duration: 2000,
               onLoad: { duration: 1000 }
             }}
-            x="user"
+            x="username"
             y="winning"
           />
-
-          {/* Currently Winning */}
-          
-
         </VictoryStack>
       </VictoryChart>
     );
