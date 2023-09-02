@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import '../imports/api/weeksPublications';
 import '../imports/api/teamsPublications';
 import '../imports/api/picksPublications';
+import '../imports/api/leaderboardsPublications';
 
 // Scheduling Services
 import CronService from '../imports/service/cronService';
@@ -15,6 +16,7 @@ import '../imports/api/teams.js';
 import '../imports/api/games.js';
 import '../imports/api/scores.js';
 import '../imports/api/picks.js';
+import '../imports/api/leaderboards.js';
 
 
 Meteor.startup(() => {
@@ -40,7 +42,7 @@ Meteor.startup(() => {
 
     CronService.register({
       name: 'Get Weeks',
-      scheduleParserText: 'every tuesday',
+      scheduleParserText: 'at 2:00 am every Tuesday',
       scheduleFn: feedService.getWeeks
     });
     

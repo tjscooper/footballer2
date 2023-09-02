@@ -39,7 +39,6 @@ export const PicksList = (props) => {
       if (err) {
         console.error(err);
       }
-      console.log(data);
     });
   }
 
@@ -56,7 +55,6 @@ export const PicksList = (props) => {
       if (err) {
         console.error(err);
       }
-      console.log(data);
     });
   }
 

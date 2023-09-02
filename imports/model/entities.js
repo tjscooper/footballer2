@@ -4,6 +4,7 @@ export const ENTITY = {
   GAME: 'GAME',
   PICK: 'PICK',
   FEED: 'FEED',
+  LEADERBOARD: 'LEADERBOARD'
 };
 
 export const GAME_STATUS = {

@@ -8,9 +8,6 @@ Meteor.methods({
   async 'scores.processFeed'(args) {
     return processFeed(args);
   },
-  async 'scores.leaderboard'(args) {
-    return leaderboard(args);
-  },
 });
 
 
