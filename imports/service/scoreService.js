@@ -1,21 +1,11 @@
 import { check } from 'meteor/check';
 
 import Week from '../model/week';
-import Leaderboard from '../model/leaderboard';
 
 import ServiceResponse from '../model/serviceResponse';
 
 // Enums
 import { ENTITY } from '../model/entities';
-import { GamesCollection } from '../db/games';
-import { PicksCollection } from '../db/picks';
-
-const shortenText = (text, chars, trail = null) => {
-  if (text.length < chars) {
-    return text;
-  }
-  return `${text.slice(0, chars)}${trail ? trail : ''}`;
-}
 
 const processFeed = async ({ leagues, week, season, events }) => {
   // Validation
@@ -31,8 +21,13 @@ const processFeed = async ({ leagues, week, season, events }) => {
   check(currentWeek, Week);
 
   // Add / Modify Games
-  const result = await Meteor.call('games.processScores', {
+  const gamesProcessFeedResult = await Meteor.call('games.processScores', {
     _games: events,
+    _currentWeek: currentWeek
+  });
+
+  // Add / Modify Leaderboard (Top 5)
+  const leaderboardProcessTop5Result = await Meteor.call('leaderboards.processTop5', {
     _currentWeek: currentWeek
   });
   
@@ -46,31 +41,14 @@ const processFeed = async ({ leagues, week, season, events }) => {
       methodName: 'processFeed',
       data: {
         currentWeekId: currentWeek.id(),
-        gamesProcessFeed: result,
+        gamesProcessFeed: gamesProcessFeedResult,
+        leaderboardProcessTop5: leaderboardProcessTop5Result 
       }
     },
     _type: ENTITY.GAME
   });
 };
 
-const leaderboard = ({ _weekId }) => {
-  
-  const players = Meteor.users.find({}).fetch();
-  const games = GamesCollection.find({ weekId: _weekId }).fetch();
-  const picks = PicksCollection.find({ weekId: _weekId }).fetch();
-  
-  const lb = new Leaderboard({
-    _id: null,
-    _weekId,
-    _players: players,
-    _picks: picks,
-    _games: games,
-  });
-
-  return lb.getHorizontalBarChartData('leaderboard-top-5');
-};
-
 export {
-  leaderboard,
   processFeed
 };

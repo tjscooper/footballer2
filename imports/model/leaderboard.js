@@ -16,6 +16,7 @@ export default class Leaderboard {
     this.picks = _picks;
     this.games = _games;
     this.meta = _meta;
+    this.data = null;
 
     this.debug = DEBUG_ENABLED || false;
   }
@@ -29,14 +30,6 @@ export default class Leaderboard {
     if (this.debug) {
       console.log(title, obj);
     }
-  }
-
-  getWins() {
-    return Math.round(Math.random(8) * 16);
-  }
-
-  getWinning() {
-    return Math.round(Math.random(8) * 16);
   }
 
   isHomeWinning = ({ homeTeam, awayTeam, odds }) => {
@@ -84,10 +77,8 @@ export default class Leaderboard {
   }
 
   getLeaderboardTop5() {
-
     // create game result dictionary
     const gameDictionary = this.createGameDictionary();
-    this.log('gameDictionary', gameDictionary);
     
     // create leaderboard list 
     // for each player
@@ -100,22 +91,17 @@ export default class Leaderboard {
       this.picks
         .filter(p => p.userId === player._id)
         .map((pick) => {
-          this.log('pick', pick);
           // winning team id = game dictionary [pick gameId]
           const { winningTeamId, active } = gameDictionary[pick.gameId];
-          this.log('winning team id', winningTeamId);
-
+          
           // if winning team id = pick team id
           if (winningTeamId === pick.teamId) {
-            this.log('you picked a winner', {});
             // if game active
             active ? winning.push(pick) : wins.push(pick);
           }
         });
       // total = sum winning and wins
       const total = wins.length + winning.length;
-      this.log('total', total);
-      // return { username, wins, winning, total }
       return {
         username: player.username,
         wins: wins.length,
@@ -123,31 +109,40 @@ export default class Leaderboard {
         total
       };
     });
-    this.log('leaderboard', leaderboard);
-
+    
     const sorted = [...leaderboard.sort((a, b) => b.total - a.total)];
-    this.log('sorted', sorted);
     const trimmedAndSorted = [
       ...sorted
            .slice(0, 5)
            .sort((a, b) => b.total - a.total)
     ];
-    this.log('trimmedAndSorted', trimmedAndSorted);
-    return trimmedAndSorted.reverse();
+    
+    this.data = {
+      top5: trimmedAndSorted,
+      full: sorted
+    }
+    
+    return this.data;
+  }
+
+  setData(data) {
+    if (!data) {
+      this.data = null;
+    }
+    this.data = data;
+  }
+
+  setMeta(metaKey, metaValue) {
+    if (!metaKey || !metaValue) {
+      return;
+    }
+    this.meta[metaKey] = metaValue;
   }
 
   getHorizontalBarChartData(chartName) {
     switch (chartName) {
-      case 'leaderboard-top-5': return this.getLeaderboardTop5();
+      case 'top-5': return this.getLeaderboardTop5();
       default: return null;
     }
   }
 }
-
-// let isPicked = false;
-// picks.forEach(pick => {
-//   if (pick.gameId === gameId && homeTeam.id === teamId) {
-//     isPicked = true;
-//   }
-// });
-// return isPicked && spreadScore > awayTeam.score;

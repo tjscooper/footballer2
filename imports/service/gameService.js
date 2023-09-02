@@ -338,9 +338,6 @@ const processScores = async ({ _games: games, _currentWeek }) => {
       }).throw();
     }
     
-    // TODO Remove this log
-    console.log('need to update scores and status for week:', _weekId, _weekNumber);
-    
     // Update game scores and statuses
     games.forEach(game => updateGameScoreAndStatus(game));
   }

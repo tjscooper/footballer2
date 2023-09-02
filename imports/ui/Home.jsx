@@ -3,13 +3,10 @@ import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded';
 import ToggleOnRoundedIcon from '@mui/icons-material/ToggleOnRounded';
 import { CircularProgress } from '@mui/material';
@@ -67,7 +64,7 @@ export const Home = () => {
     const currentWeek = weeks[0];
 
     // Get data from application logic
-    Meteor.call('scores.leaderboard', { _weekId: currentWeek._id }, (err, data) => {
+    Meteor.call('leaderboards.getTop5', { _weekId: currentWeek._id }, (err, data) => {
       if (err) {
         console.error(err);
       }
@@ -94,7 +91,7 @@ export const Home = () => {
   
   // Methods
   const onWeekSelect = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
   }
 
   const handleFilterToggle = () => {

@@ -29,7 +29,6 @@ export const SignUp = () => {
       email: data.get('email'),
       password: data.get('password'),
     };
-    console.log({ userObj });
 
     Accounts.createUser(userObj, (err) => {
       if (err) {
