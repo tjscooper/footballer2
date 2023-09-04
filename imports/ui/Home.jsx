@@ -25,6 +25,7 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { GamesCollection } from '../db/games';
 import { PicksCollection } from '../db/picks';
 import { WeeksCollection } from '../db/weeks';
+import { LeaderboardsCollection } from '../db/leaderboards';
 
 import { GamesList } from './GamesList';
 import { AppBarResponsive } from './AppBarResponsive';
@@ -44,11 +45,10 @@ export const Home = () => {
   }
 
   // State
-  const [leaderboard, setLeaderboard] = useState(null);
   const [showActiveFilterToggle, setShowActiveFilterToggle] = useState(false); // Toggle switch in header
 
   // Data
-  const { currentWeek, weeks, games, picks, isLoading } = useTracker(() => {
+  const { currentWeek, weeks, games, picks, leaderboard, isLoading } = useTracker(() => {
     
     // Hydrate weeks
     const weeksHandler = Meteor.subscribe('weeks');
@@ -64,18 +64,18 @@ export const Home = () => {
     const currentWeek = weeks[0];
 
     // Get data from application logic
-    Meteor.call('leaderboards.getTop5', { _weekId: currentWeek._id }, (err, data) => {
-      if (err) {
-        console.error(err);
-      }
-      if (!leaderboard) {
-        setLeaderboard(data);
-      }
-    });
+
+    const leaderboardHandler = Meteor.subscribe('leaderboardTop5', currentWeek);
     
+    if (!leaderboardHandler.ready()) {
+      return { currentWeek, isLoading: true };
+    }
+
+    const leaderboard = LeaderboardsCollection.find({ weekId: currentWeek._id }).fetch()[0];
+
     // Hydrate local collections
-    const picksAndGamesHandler = Meteor.subscribe('picksAndGames', currentWeek);
-    
+    const picksAndGamesHandler = Meteor.subscribe('picksAndGames', currentWeek); 
+
     // Await data hydration
     if (!picksAndGamesHandler.ready()) {
       return { currentWeek, isLoading: true };
@@ -86,7 +86,7 @@ export const Home = () => {
     const games = GamesCollection.find({ weekId: currentWeek._id }).fetch();
 
     // Return data
-    return { currentWeek, picks, games, weeks, isLoading: false };
+    return { currentWeek, picks, games, weeks, leaderboard, isLoading: false };
   });
   
   // Methods
@@ -181,18 +181,20 @@ export const Home = () => {
         </Button>
   }
 
-  const BarChart = (data) => {
+  const BarChart = (chartData) => {
 
-    if (!data) {
+    if (!chartData) {
       return null;
     }
-    
+
+    const data = chartData.meta.full.sort((a, b) => a.totalWins - b.totalWins);
+
     return (
       <VictoryChart
         // domainPadding will add space to each side of VictoryBar to
         // prevent it from overlapping the axis
-        domainPadding={{ x: 16, y: 10 }}
-        padding={{ top: 50, bottom: 50, right: 24, left: 70 }}
+        domainPadding={{ x: 16, y: 18 }}
+        padding={{ top: 50, bottom: 50, right: 24, left: 80 }}
         height={250}
         width={300}
         style={{
@@ -273,6 +275,9 @@ export const Home = () => {
               duration: 2000,
               onLoad: { duration: 1000 }
             }}
+            labels={({ datum }) => datum.totalWins > 0 ? Math.round(datum.totalWins) : '' }
+            style={{ labels: { fill: "white", fontSize: 10 } }}
+            labelComponent={<VictoryLabel dx={4}/>}
             x="username"
             y="winning"
           />
