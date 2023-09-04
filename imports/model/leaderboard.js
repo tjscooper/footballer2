@@ -32,26 +32,27 @@ export default class Leaderboard {
     }
   }
 
-  isHomeWinning = ({ homeTeam, awayTeam, odds }) => {
-    const isFav = odds.favourite.home;
-    // if (homeTeam.abbreviation === 'IND') console.log('isFav', isFav);
-    const spreadScore = isFav
-      ? Number(homeTeam.score) + odds.spread - 0.5 // 0.5 to cover
-      : Number(homeTeam.score);
-    // if (homeTeam.abbreviation === 'IND') console.log('spreadScore', spreadScore);
-    return spreadScore > awayTeam.score;
-  }
-
-  isAwayWinning = ({ homeTeam, awayTeam, odds }) => {
-    const isFav = odds.favourite.away;
-    const spreadScore = isFav
-      ? Number(awayTeam.score) + odds.spread - 0.5 // 0.5 to cover
-      : Number(awayTeam.score);
-    return spreadScore > homeTeam.score;
+  isWinning = (homeAway, { homeTeam, awayTeam, odds }) => {
+    let isFav = null;
+    let spreadScore = 0;
+    let isWinning = null;
+    if (homeAway === 'home') {
+      isFav = odds.favourite.home;
+      spreadScore = isFav
+        ? Number(homeTeam.score) 
+        : Number(homeTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
+      isWinning = spreadScore > awayTeam.score;
+    } else if (homeAway === 'away') {
+      isFav = odds.favourite.away;
+      spreadScore = isFav
+        ? Number(awayTeam.score) 
+        : Number(awayTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
+      isWinning = spreadScore > homeTeam.score;
+    }
+    return isWinning;
   }
 
   createGameDictionary() {
-
     // games list cannot be empty
     if (!this.games.length) {
       return null;
@@ -61,7 +62,7 @@ export default class Leaderboard {
 
     // for each game
     this.games.map((game) => {
-      const homeWinning = this.isHomeWinning(game);
+      const homeWinning = this.isWinning('home', game);
 
       // Get winning team Id
       const winningTeamId = homeWinning
@@ -74,13 +75,6 @@ export default class Leaderboard {
         winningTeamId,
         active: game.gameStatus.status === 'in' ? true : false
       };
-
-      // if (game.homeTeam.abbreviation === 'IND') {
-      //   console.log('home team', game.homeTeam.id, game.homeTeam.abbreviation);
-      //   console.log('away team', game.awayTeam.id, game.awayTeam.abbreviation);
-
-      //   console.log('winning team id', winningTeamId);
-      // }
     });
     return retObj;
   }
@@ -90,11 +84,12 @@ export default class Leaderboard {
     const gameDictionary = this.createGameDictionary();
     
     // create leaderboard list 
-    // for each player
+    // for each player    
     const leaderboard = this.players.map((player) => {
       // data
       const wins = [];
       const winning = [];
+      const losing = [];
 
       // for each pick
       this.picks
@@ -106,24 +101,28 @@ export default class Leaderboard {
           // if winning team id = pick team id
           if (winningTeamId === pick.teamId) {
             // if game active
-            active ? winning.push(pick) : wins.push(pick);
+            active ? wins.push(pick) : winning.push(pick);
+          } else {
+            losing.push(pick);
           }
         });
       // total = sum winning and wins
-      const total = wins.length + winning.length;
-      return {
+      const totalWins = wins.length + winning.length;
+      const stats = {
         username: player.username,
         wins: wins.length,
         winning: winning.length,
-        total
+        losing: losing.length,
+        totalWins
       };
+      return stats;
     });
     
-    const sorted = [...leaderboard.sort((a, b) => b.total - a.total)];
+    const sorted = [...leaderboard.sort((a, b) => b.totalWins - a.totalWins)];
     const trimmedAndSorted = [
       ...sorted
            .slice(0, 5)
-           .sort((a, b) => b.total - a.total)
+           .sort((a, b) => b.totalWins - a.totalWins)
     ];
     
     this.data = {

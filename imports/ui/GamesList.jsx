@@ -131,19 +131,34 @@ export const GamesList = (props) => {
     return pickWinning;
   }
 
-  const isAwayPickWinning = (teamId, { gameId, homeTeam, awayTeam, odds }) => {
-
-    const isFav = odds.favourite.away;
-    const spreadScore = isFav
-      ? Number(awayTeam.score) + odds.spread - 0.5 // 0.5 to cover
-      : Number(awayTeam.score);
-
+  const isPickWinning = (homeAway, teamId, { gameId, homeTeam, awayTeam, odds }) => {
+    
     let pickWinning = false;
-    picks.map(pick => {
-      if (pick.gameId === gameId && awayTeam.id === teamId) {
-        pickWinning = spreadScore > homeTeam.score;
-      };
-    });
+
+    if (homeAway === 'away') {
+      const isFav = odds.favourite.away;
+      const spreadScore = isFav
+        ? Number(awayTeam.score) 
+        : Number(awayTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
+
+      picks.map(pick => {
+        if (pick.gameId === gameId && awayTeam.id === teamId) {
+          pickWinning = spreadScore > homeTeam.score;
+        };
+      });
+    } else if (homeAway === 'home') {
+      const isFav = odds.favourite.home;
+      const spreadScore = isFav
+        ? Number(homeTeam.score) 
+        : Number(homeTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
+
+      picks.map(pick => {
+        if (pick.gameId === gameId && homeTeam.id === teamId) {
+          pickWinning = spreadScore > awayTeam.score;
+        };
+      });
+    }
+    
     return pickWinning;
   }
 
@@ -171,6 +186,9 @@ export const GamesList = (props) => {
     box: {
       bgcolor: '#FFFFFF',
       borderRadius: '16px',
+    },
+    icons: {
+      size: 24,
     },
     listBox: {
       marginTop: '8px',
@@ -376,9 +394,9 @@ export const GamesList = (props) => {
                                 isPicked(game.awayTeam)
                                   ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
                                       {
-                                        isAwayPickWinning(game.awayTeam.id, game)
-                                          ? <StarIcon sx={{ fontSize: 24 }} />
-                                          : <StarOutlineIcon sx={{ fontSize: 24 }} />
+                                        isPickWinning('away', game.awayTeam.id, game)
+                                          ? <StarIcon sx={{ fontSize: styles.icons.size }} />
+                                          : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} />
                                       }
                                     </Box>
                                   : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
@@ -388,7 +406,7 @@ export const GamesList = (props) => {
                               {
                                 isAwayPossession(game.awayTeam, game.gameStatus.situation)
                                   ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.possession}>
-                                      <SportsFootballIcon sx={{ fontSize: 24 }} />
+                                      <SportsFootballIcon sx={{ fontSize: styles.icons.size }} />
                                     </Box>
                                   : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
                                       <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
@@ -470,9 +488,9 @@ export const GamesList = (props) => {
                                 isPicked(game.homeTeam)
                                   ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
                                       {
-                                        isHomePickWinning(game.homeTeam.id, game)
-                                          ? <StarIcon sx={{ fontSize: 24 }} />
-                                          : <StarOutlineIcon sx={{ fontSize: 24 }} />
+                                        isPickWinning('home', game.homeTeam.id, game)
+                                          ? <StarIcon sx={{ fontSize: styles.icons.size }} />
+                                          : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} />
                                       }
                                     </Box>
                                   : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
@@ -482,7 +500,7 @@ export const GamesList = (props) => {
                               {
                                 isHomePossession(game.homeTeam, game.gameStatus.situation)
                                   ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.possession}>
-                                      <SportsFootballIcon sx={{ fontSize: 24 }} />
+                                      <SportsFootballIcon sx={{ fontSize: styles.icons.size }} />
                                     </Box>
                                   : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
                                       <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
