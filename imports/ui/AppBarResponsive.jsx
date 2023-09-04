@@ -18,6 +18,7 @@ import { Drawer } from '@mui/material';
 import SportsFootballOutlinedIcon from '@mui/icons-material/SportsFootball';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import MenuIcon from '@mui/icons-material/Menu';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -116,7 +117,7 @@ export const AppBarResponsive = (props) => {
                 onClick={ () => togglePrimaryNav() }
                 color="inherit"
               >
-                <SportsFootballOutlinedIcon />
+                <MenuIcon />
               </IconButton>
             </Box>
             <Typography
