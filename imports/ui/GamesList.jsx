@@ -116,12 +116,12 @@ export const GamesList = (props) => {
         :. overall score is H14 to A12.5
   */
   const isHomePickWinning = (teamId, { gameId, homeTeam, awayTeam, odds }) => {
+    
     const isFav = odds.favourite.home;
-
     const spreadScore = isFav
-      ? Number(homeTeam.score)
-      : Number(homeTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
-   
+      ? Number(homeTeam.score) + odds.spread - 0.5 // 0.5 to cover
+      : Number(homeTeam.score);
+    
     let pickWinning = false;
     picks.map(pick => {
       if (pick.gameId === gameId && homeTeam.id === teamId) {
@@ -132,13 +132,12 @@ export const GamesList = (props) => {
   }
 
   const isAwayPickWinning = (teamId, { gameId, homeTeam, awayTeam, odds }) => {
-    
-    const isFav = odds.favourite.away;
 
+    const isFav = odds.favourite.away;
     const spreadScore = isFav
-      ? Number(awayTeam.score)
-      : Number(awayTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
-   
+      ? Number(awayTeam.score) + odds.spread - 0.5 // 0.5 to cover
+      : Number(awayTeam.score);
+
     let pickWinning = false;
     picks.map(pick => {
       if (pick.gameId === gameId && awayTeam.id === teamId) {

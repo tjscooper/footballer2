@@ -34,9 +34,11 @@ export default class Leaderboard {
 
   isHomeWinning = ({ homeTeam, awayTeam, odds }) => {
     const isFav = odds.favourite.home;
+    // if (homeTeam.abbreviation === 'IND') console.log('isFav', isFav);
     const spreadScore = isFav
       ? Number(homeTeam.score) + odds.spread - 0.5 // 0.5 to cover
       : Number(homeTeam.score);
+    // if (homeTeam.abbreviation === 'IND') console.log('spreadScore', spreadScore);
     return spreadScore > awayTeam.score;
   }
 
@@ -60,7 +62,7 @@ export default class Leaderboard {
     // for each game
     this.games.map((game) => {
       const homeWinning = this.isHomeWinning(game);
-      
+
       // Get winning team Id
       const winningTeamId = homeWinning
         ? game.homeTeam.id
@@ -68,11 +70,18 @@ export default class Leaderboard {
       
       // Add team id to dictionary
       retObj[game.gameId] = {
+        teams: { home: game.homeTeam.id, away: game.awayTeam.id },
         winningTeamId,
         active: game.gameStatus.status === 'in' ? true : false
       };
-    });
 
+      // if (game.homeTeam.abbreviation === 'IND') {
+      //   console.log('home team', game.homeTeam.id, game.homeTeam.abbreviation);
+      //   console.log('away team', game.awayTeam.id, game.awayTeam.abbreviation);
+
+      //   console.log('winning team id', winningTeamId);
+      // }
+    });
     return retObj;
   }
 
