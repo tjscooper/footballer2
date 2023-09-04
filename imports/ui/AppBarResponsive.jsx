@@ -37,6 +37,11 @@ export const AppBarResponsive = (props) => {
   const [primaryNavOpen, setPrimaryNavOpen] = useState(false);
 
   // Methods
+  const getUsername = () => {
+    const { username } = Meteor.user();
+    return !username ? '?' : username.toUpperCase();
+  }
+
   const handleSignOut = () => { 
     // Close user navigation
     handleCloseUserNav();
@@ -135,7 +140,7 @@ export const AppBarResponsive = (props) => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open User Options">
                 <IconButton onClick={handleOpenUserNav} sx={{ p: 0 }}>
-                  <Avatar {...stringAvatar('Timbro', { borderRadius: '12px', marginRight: '-8px' })} />
+                  <Avatar {...stringAvatar(getUsername(), { borderRadius: '12px', marginRight: '-8px' })} />
                 </IconButton>
               </Tooltip>
               <Menu
