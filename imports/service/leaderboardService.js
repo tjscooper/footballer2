@@ -142,7 +142,7 @@ const getTop5 = ({ _weekId }) => {
   if (!_weekId) {
     return null;
   }
-  return getLeaderboardByWeekId(_weekId).data;
+  return getLeaderboardByWeekId(_weekId).meta.full;
 }
 
 export {
