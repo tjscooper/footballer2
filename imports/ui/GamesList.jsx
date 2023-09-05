@@ -18,6 +18,9 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import CircleIcon from '@mui/icons-material/Circle';
 import TextureRoundedIcon from '@mui/icons-material/TextureRounded';
+import HomeIcon from '@mui/icons-material/Home';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -195,6 +198,17 @@ export const GamesList = (props) => {
       bgcolor: '#FFFFFF',
       borderRadius: '16px',
       list: {
+        listItemHeader: {
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '30px',
+          background: '#e4e4e4',
+          borderTopLeftRadius: '16px',
+          borderTopRightRadius: '16px',
+          marginTop: '-8px'
+        },
         listItem: {
           height: '120px',
           container: {
@@ -202,10 +216,17 @@ export const GamesList = (props) => {
             display: 'flex',
             flexDirection: 'flex-start',
             alignContent: 'top',
+            headerGap: {
+              width: '40vw'
+            },
             gameContainer: {
               border: highlightRegions ? '1px solid orange' : 'none',
               display: 'flex',
               flexDirection: 'column',
+              cardHeader: {
+                border: highlightRegions ? '1px solid blue' : 'none',
+                height: '20px',
+              },
               card: {
                 border: highlightRegions ? '1px solid red' : 'none',
                 display: 'flex',
@@ -354,6 +375,25 @@ export const GamesList = (props) => {
         { games.length > 0
             ? ( 
                 <List sx={styles.listBox.list}>
+                  <ListItem sx={styles.listBox.list.listItemHeader}>
+                    <Grid sx={styles.listBox.list.listItem.container.gameContainer}>
+                      <Grid item sx={styles.listBox.list.listItem.container.gameContainer.cardHeader}>
+                        <AirplanemodeActiveIcon sx={{ fontSize: 18, color: '#999999' }} />
+                        {/* <span style={{ fontSize: '12px', color: '#999999', paddingLeft: '8px' }}>Away</span> */}
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Box sx={styles.listBox.list.listItem.container.headerGap}>
+                      </Box>
+                    </Grid>
+
+                    <Grid sx={styles.listBox.list.listItem.container.gameContainer}>
+                      <Grid item sx={styles.listBox.list.listItem.container.gameContainer.cardHeader}>
+                        <HomeIcon sx={{ fontSize: 18, color: '#999999' }} />
+                        {/* <span style={{ color: '#999999', paddingLeft: '8px' }}>Home</span> */}
+                      </Grid>
+                    </Grid>
+                  </ListItem>
                   { games.filter((g) => {
                       if (!showActiveFilterToggle) {
                         return g;

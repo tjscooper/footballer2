@@ -111,7 +111,7 @@ export const ChirpsList = (props) => {
           flexDirection: 'column',
           width: '50vw',
           background: '#FFFFFF',
-          borderTopRightRadius: '16px',
+          borderTopLeftRadius: '16px',
           borderBottomRightRadius: '16px',
           borderBottomLeftRadius: '16px',
           padding: '8px',
