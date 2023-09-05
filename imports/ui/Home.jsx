@@ -5,11 +5,13 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Drawer from '@mui/material/Drawer';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded';
 import ToggleOnRoundedIcon from '@mui/icons-material/ToggleOnRounded';
 import { CircularProgress } from '@mui/material';
+import CampaignIcon from '@mui/icons-material/Campaign';
 
 import {
   VictoryBar,
@@ -28,6 +30,7 @@ import { WeeksCollection } from '../db/weeks';
 import { LeaderboardsCollection } from '../db/leaderboards';
 
 import { GamesList } from './GamesList';
+import { Chirps } from './Chirps';
 import { AppBarResponsive } from './AppBarResponsive';
 
 export const Home = () => {
@@ -46,6 +49,7 @@ export const Home = () => {
 
   // State
   const [showActiveFilterToggle, setShowActiveFilterToggle] = useState(false); // Toggle switch in header
+  const [chirpsPanelOpen, setChirpsPanelOpen] = useState(false);
 
   // Data
   const { currentWeek, weeks, games, picks, leaderboard, isLoading } = useTracker(() => {
@@ -98,6 +102,8 @@ export const Home = () => {
     setShowActiveFilterToggle(!showActiveFilterToggle);
   }
 
+  const toggleChirpsPanel = () => setChirpsPanelOpen(!chirpsPanelOpen);
+
   // Styles
   const highlightRegions = false;
   const styles = {
@@ -121,11 +127,25 @@ export const Home = () => {
       borderBottomRightRadius: '16px',
       borderBottomLeftRadius: '16px',
     },
+    chirps: {
+      btn: {
+        marginLeft: '16px',
+        marginTop: '8px',
+        paddingLeft: '24px',
+        height: '48px',
+        color: '#FFFFFF',
+        background: '#f34cc5',
+        borderRadius: '16px',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'monospace',
+      }
+    },
     filter: {
       border: highlightRegions ? '1px solid red' : 'none',
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-evenly',
       width: '100%',
       select: {
         marginTop: '8px',
@@ -194,7 +214,7 @@ export const Home = () => {
         // domainPadding will add space to each side of VictoryBar to
         // prevent it from overlapping the axis
         domainPadding={{ x: 16, y: 18 }}
-        padding={{ top: 50, bottom: 50, right: 24, left: 80 }}
+        padding={{ top: 50, bottom: 50, right: 24, left: 90 }}
         height={250}
         width={300}
         style={{
@@ -354,6 +374,12 @@ export const Home = () => {
               styles={styles.filter.toggle}
               useOnLabelTextForBoth={true} />
 
+            <Button
+              variant="outlined"
+              sx={styles.chirps.btn}
+              startIcon={<CampaignIcon />}
+              onClick={ () => toggleChirpsPanel() } />
+
           </Box>
 
           {/* <List> */}
@@ -368,6 +394,14 @@ export const Home = () => {
           </Box>
         </Grid>
       </Grid>
+      <Drawer
+        anchor={'right'}
+        open={chirpsPanelOpen}
+        onClose={() => toggleChirpsPanel()}
+        PaperProps={{ sx: { width: '75vw', paddingLeft: '16px', background: '#333333' } }}>
+          <Chirps
+            toggleChirpsPanel={toggleChirpsPanel} />
+      </Drawer>
     </>
   );
 };

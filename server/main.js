@@ -5,6 +5,7 @@ import '../imports/api/weeksPublications';
 import '../imports/api/teamsPublications';
 import '../imports/api/picksPublications';
 import '../imports/api/leaderboardsPublications';
+import '../imports/api/chirpsPublications';
 
 // Scheduling Services
 import CronService from '../imports/service/cronService';
@@ -17,7 +18,7 @@ import '../imports/api/games.js';
 import '../imports/api/scores.js';
 import '../imports/api/picks.js';
 import '../imports/api/leaderboards.js';
-
+import '../imports/api/chirps.js';
 
 Meteor.startup(() => {
 
