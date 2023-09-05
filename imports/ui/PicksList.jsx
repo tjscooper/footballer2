@@ -9,6 +9,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Grid from '@mui/material/Grid';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import HomeIcon from '@mui/icons-material/Home';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 
 import { useNavigate } from 'react-router-dom';
 import { GAME_STATUS } from '../model/entities';
@@ -72,6 +75,7 @@ export const PicksList = (props) => {
   }
 
   // Styles
+  const highlightRegions = false;
   const styles = {
     box: {
       bgcolor: '#FFFFFF',
@@ -82,13 +86,36 @@ export const PicksList = (props) => {
       bgcolor: '#FFFFFF',
       borderRadius: '16px',
       list: {
-        // border: '1px solid red', // TODO Remove
+        listItemHeader: {
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '30px',
+          background: '#e4e4e4',
+          borderTopLeftRadius: '16px',
+          borderTopRightRadius: '16px',
+          marginTop: '-8px',
+          marginBottom: '8px',
+        },
         listItem: {
           minHeight: '72px',
           paddingLeft: '10px',
+          gameContainer: {
+            border: highlightRegions ? '1px solid orange' : 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            cardHeader: {
+              border: highlightRegions ? '1px solid blue' : 'none',
+              height: '20px',
+            },
+          },
           container: {
+            headerGap: {
+              width: '40vw'
+            },
             homePick: {
-              // border: '1px solid green', // TODO Remove
+              border: highlightRegions ? '1px solid green' : 'none',
               height: '100%',
               width: '10vw',
               marginLeft: '8px',
@@ -98,13 +125,13 @@ export const PicksList = (props) => {
               }
             },
             homeLogo: {
-              // border: '1px solid orange', // TODO Remove
+              border: highlightRegions ? '1px solid orange' : 'none',
               height: '100%',
               width: '12vw',
               paddingTop: '3px'
             },
             homeInfo: {
-              // border: '1px solid pink', // TODO Remove
+              border: highlightRegions ? '1px solid pink' : 'none',
               height: '100%',
               width: '10vw',
               name: {
@@ -118,7 +145,7 @@ export const PicksList = (props) => {
               }
             },
             odds: {
-              // border: '1px solid blue', // TODO Remove
+              border: highlightRegions ? '1px solid blue' : 'none',
               height: '50%',
               width: '10vw',
               paddingLeft: '8px',
@@ -131,7 +158,7 @@ export const PicksList = (props) => {
               }
             },
             awayInfo: {
-              // border: '1px solid pink', // TODO Remove
+              border: highlightRegions ? '1px solid pink' : 'none',
               height: '100%',
               width: '10vw',
               name: {
@@ -145,13 +172,13 @@ export const PicksList = (props) => {
               }
             },
             awayLogo: {
-              // border: '1px solid orange', // TODO Remove
+              border: highlightRegions ? '1px solid orange' : 'none',
               height: '100%',
               width: '12vw',
               paddingTop: '3px'
             },
             awayPick: {
-              // border: '1px solid green', // TODO Remove
+              border: highlightRegions ? '1px solid green' : 'none',
               height: '100%',
               width: '10vw',
               marginRight: '16px',
@@ -163,7 +190,7 @@ export const PicksList = (props) => {
               }
             }
           },
-          // border: '1px solid purple', // TODO Remove
+          border: highlightRegions ? '1px solid purple' : 'none',
           display: 'flex',
           width: '90vw',
           teamInfo: {
@@ -200,6 +227,25 @@ export const PicksList = (props) => {
         { games.length > 0
             ? ( 
                 <List sx={styles.listBox.list}>
+                  <ListItem sx={styles.listBox.list.listItemHeader}>
+                    <Grid sx={styles.listBox.list.listItem.gameContainer}>
+                      <Grid item sx={styles.listBox.list.listItem.gameContainer.cardHeader}>
+                        <AirplanemodeActiveIcon sx={{ fontSize: 18, color: '#999999' }} />
+                        {/* <span style={{ fontSize: '12px', color: '#999999', paddingLeft: '8px' }}>Away</span> */}
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Box sx={styles.listBox.list.listItem.container.headerGap}>
+                      </Box>
+                    </Grid>
+
+                    <Grid sx={styles.listBox.list.listItem.container.gameContainer}>
+                      <Grid item sx={styles.listBox.list.listItem.gameContainer.cardHeader}>
+                        <HomeIcon sx={{ fontSize: 18, color: '#999999' }} />
+                        {/* <span style={{ color: '#999999', paddingLeft: '8px' }}>Home</span> */}
+                      </Grid>
+                    </Grid>
+                  </ListItem>
                   { games.map((game, index) => (
                       <ListItem
                         key={game._id}
