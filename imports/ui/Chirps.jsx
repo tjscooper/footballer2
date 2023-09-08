@@ -39,7 +39,8 @@ export const Chirps = (props) => {
 
     const chirps = ChirpsCollection
       .find({})
-      .fetch();
+      .fetch()
+      .sort((a, b) => a.createdAt - b.createdAt);
     
     // Return data
     return { chirps, isLoading: false };
@@ -72,8 +73,15 @@ export const Chirps = (props) => {
     e.preventDefault();
 
     const data = new FormData(e.currentTarget);
+
+    const chirp = data.get('chirp');
+
+    if (chirp === '') {
+      return;
+    }
+
     const chirpObj = {
-      _chirp: data.get('chirp'),
+      _chirp: chirp,
       _chirpedAt: null,
       _createdAt: Date.now()
     };

@@ -3,12 +3,14 @@ import { Meteor } from 'meteor/meteor';
 import { ChirpsCollection } from '../db/chirps';
 
 Meteor.publish('chirps', function () {
+
   return ChirpsCollection.find(
-    {}, // Query
+    {}, // No query
     { 
-      fields: { userId: 0 },
-      sort: { createdAt: 1 },
-      limit: 25
-    } 
+      sort: {
+        $natural : -1 // Latest chirps
+      },
+      limit: 25 // Limit to 25 chirps
+    }
   );
 });
