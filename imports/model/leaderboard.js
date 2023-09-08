@@ -73,7 +73,9 @@ export default class Leaderboard {
       retObj[game.gameId] = {
         teams: { home: game.homeTeam.id, away: game.awayTeam.id },
         winningTeamId,
-        active: game.gameStatus.status === 'in' ? true : false
+        pregame: game.gameStatus.status === 'pre' ? true : false, 
+        active: game.gameStatus.status === 'in' ? true : false,
+        final: game.gameStatus.status === 'post' ? true : false,
       };
     });
     return retObj;
@@ -96,12 +98,20 @@ export default class Leaderboard {
         .filter(p => p.userId === player._id)
         .map((pick) => {
           // winning team id = game dictionary [pick gameId]
-          const { winningTeamId, active } = gameDictionary[pick.gameId];
+          const { winningTeamId, pregame, active, final } = gameDictionary[pick.gameId];
           
           // if winning team id = pick team id
           if (winningTeamId === pick.teamId) {
             // if game active
-            active ? wins.push(pick) : winning.push(pick);
+            if (pregame) {
+              // hide from users
+            } else if (active) {
+              // show who is winning any games
+              winning.push(pick);
+            } else if (post) {
+              // show the finished games
+              wins.push(pick);
+            }
           } else {
             losing.push(pick);
           }
