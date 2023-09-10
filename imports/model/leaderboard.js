@@ -108,7 +108,7 @@ export default class Leaderboard {
             } else if (active) {
               // show who is winning any games
               winning.push(pick);
-            } else if (post) {
+            } else if (final) {
               // show the finished games
               wins.push(pick);
             }
