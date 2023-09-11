@@ -32,24 +32,49 @@ export default class Leaderboard {
     }
   }
 
-  isWinning = (homeAway, { homeTeam, awayTeam, odds }) => {
-    let isFav = null;
-    let spreadScore = 0;
-    let isWinning = null;
-    if (homeAway === 'home') {
-      isFav = odds.favourite.home;
-      spreadScore = isFav
-        ? Number(homeTeam.score) 
-        : Number(homeTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
-      isWinning = spreadScore > awayTeam.score;
-    } else if (homeAway === 'away') {
-      isFav = odds.favourite.away;
-      spreadScore = isFav
-        ? Number(awayTeam.score) 
-        : Number(awayTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
-      isWinning = spreadScore > homeTeam.score;
+  getWinningTeamId = ({ homeTeam, awayTeam, odds }) => {
+    
+    const fav = odds.favourite.home === true ? 'home' : 'away';
+    const spread = Math.abs(odds.spread);
+    
+    // PHI 18 - NE 20, NE -3.5
+    // is 20 > 18 = true
+    // home is fav, fav is winning
+    // but fav has to win by 3.5
+    // 20 - 3.5 = 16.5
+    // 16.5 > 18 = false
+
+    // Home is fav
+    if (fav === 'home') { 
+      // is the home team score winning?
+      if (homeTeam.score > awayTeam.score) {
+        // home team has more points, they must cover the spread
+        return (homeTeam.score - spread) > awayTeam.score 
+          ? homeTeam.id
+          : awayTeam.id;
+      }
+      // If home team is tied, the away team is winning
+      if (homeTeam.score === awayTeam.score) {
+        return awayTeam.id;
+      }
+    
+    // Fav is away
+    } else if (fav === 'away') { 
+      // is the away team score winning?
+      if (awayTeam.score > homeTeam.score) {
+        // home team has more points, they must cover the spread
+        return (awayTeam.score - spread) > homeTeam.score 
+          ? awayTeam.id
+          : homeTeam.id;
+      }
+      // If away team is tied, the home team is winning
+      if (homeTeam.score === awayTeam.score) {
+        return homeTeam.id;
+      }
     }
-    return isWinning;
+    return fav == 'home'
+      ? homeTeam.id
+      : awayTeam.id;
   }
 
   createGameDictionary() {
@@ -62,16 +87,21 @@ export default class Leaderboard {
 
     // for each game
     this.games.map((game) => {
-      const homeWinning = this.isWinning('home', game);
-
       // Get winning team Id
-      const winningTeamId = homeWinning
-        ? game.homeTeam.id
-        : game.awayTeam.id;
+      const winningTeamId = this.getWinningTeamId(game);
       
       // Add team id to dictionary
       retObj[game.gameId] = {
-        teams: { home: game.homeTeam.id, away: game.awayTeam.id },
+        teams: { 
+          home: { 
+            name: game.homeTeam.abbreviation,
+            id: game.homeTeam.id,
+          },
+          away: {
+            name: game.awayTeam.abbreviation,
+            id: game.awayTeam.id
+          }
+        },
         winningTeamId,
         pregame: game.gameStatus.status === 'pre' ? true : false, 
         active: game.gameStatus.status === 'in' ? true : false,

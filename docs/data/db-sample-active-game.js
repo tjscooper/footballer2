@@ -76,6 +76,6 @@ db.games.update({ _id: "FpcMcfqx6Z7iSRPg2" }, {
       "meta": {
           "gameUrl": "https://www.espn.com/nfl/game/_/gameId/401547658"
       },
-      "updatedAt": ISODate("2023-08-27T23:08:36.372-04:00")
+      "updatedAt": "2023-08-27T23:08:36.372-04:00"
   }
 })
