@@ -25,3 +25,4 @@ accounts-password
 accounts-base@2.2.2
 percolate:synced-cron
 fetch
+quave:testing

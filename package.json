@@ -4,7 +4,7 @@
   "scripts": {
     "start": "meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
-    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "test-app": "MONGO_URL=mongodb://127.0.0.1:27017/footballer2_test TEST_WATCH=1 PARALLEL_TEST=1 meteor test --driver-package meteortesting:mocha --port 3100",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
@@ -14,6 +14,7 @@
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.5",
     "@mui/styled-engine-sc": "^5.12.0",
+    "chai": "^4.3.8",
     "dayjs": "^1.11.9",
     "faker": "^6.6.6",
     "meteor-node-stubs": "^1.2.1",

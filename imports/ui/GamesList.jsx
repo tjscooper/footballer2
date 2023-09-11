@@ -118,51 +118,77 @@ export const GamesList = (props) => {
         :. home team is winning because spread score is A14-1.5 = 12.5
         :. overall score is H14 to A12.5
   */
-  const isHomePickWinning = (teamId, { gameId, homeTeam, awayTeam, odds }) => {
-    
-    const isFav = odds.favourite.home;
-    const spreadScore = isFav
-      ? Number(homeTeam.score) + odds.spread - 0.5 // 0.5 to cover
-      : Number(homeTeam.score);
-    
-    let pickWinning = false;
-    picks.map(pick => {
-      if (pick.gameId === gameId && homeTeam.id === teamId) {
-        pickWinning = spreadScore > awayTeam.score;
-      };
-    });
-    return pickWinning;
-  }
-
   const isPickWinning = (homeAway, teamId, { gameId, homeTeam, awayTeam, odds }) => {
     
     let pickWinning = false;
 
-    if (homeAway === 'away') {
-      const isFav = odds.favourite.away;
-      const spreadScore = isFav
-        ? Number(awayTeam.score) 
-        : Number(awayTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
+    const fav = odds.favourite.home === true ? 'home' : 'away';
+    const spread = Math.abs(odds.spread);
+    let winningTeamId = null;
+    
+    // PHI 18 - NE 20, NE -3.5
+    // is 20 > 18 = true
+    // home is fav, fav is winning
+    // but fav has to win by 3.5
+    // 20 - 3.5 = 16.5
+    // 16.5 > 18 = false
 
-      picks.map(pick => {
-        if (pick.gameId === gameId && awayTeam.id === teamId) {
-          pickWinning = spreadScore > homeTeam.score;
-        };
-      });
-    } else if (homeAway === 'home') {
-      const isFav = odds.favourite.home;
-      const spreadScore = isFav
-        ? Number(homeTeam.score) 
-        : Number(homeTeam.score) + Math.abs(odds.spread) + 0.5 // 0.5 to cover;
-
+    if (homeAway === 'home') { 
+      // Home is fav
+      if (fav === 'home') { 
+        // is the home team score winning?
+        if (homeTeam.score > awayTeam.score) {
+          // home team has more points, they must cover the spread
+          winningTeamId = (homeTeam.score - spread) > awayTeam.score 
+            ? winningTeamId = homeTeam.id
+            : winningTeamId = awayTeam.id;
+        }
+        // If home team is tied, the away team is winning
+        if (homeTeam.score === awayTeam.score) {
+          winningTeamId = awayTeam.id;
+        }
+      } else {
+        // home team is not fav
+        winningTeamId = homeTeam.score > awayTeam.score 
+          ? winningTeamId = homeTeam.id
+          : winningTeamId = awayTeam.id;
+      }
+      // Cycle through picks and determine selection
       picks.map(pick => {
         if (pick.gameId === gameId && homeTeam.id === teamId) {
-          pickWinning = spreadScore > awayTeam.score;
+          pickWinning = winningTeamId === teamId;
         };
       });
     }
-    
-    return pickWinning;
+
+    if (homeAway === 'away') {
+      // Away is fav
+      if (fav === 'away') { 
+        // is the away team score winning?
+        if (awayTeam.score > homeTeam.score) {
+          // away team has more points, they must cover the spread
+          winningTeamId = (awayTeam.score - spread) > homeTeam.score 
+            ? winningTeamId = awayTeam.id
+            : winningTeamId = homeTeam.id;
+        }
+        // If away team is tied, the home team is winning
+        if (awayTeam.score === homeTeam.score) {
+          winningTeamId = homeTeam.id;
+        }
+      } else {
+        // away team is not fav
+        winningTeamId = awayTeam.score > homeTeam.score 
+          ? winningTeamId = awayTeam.id
+          : winningTeamId = homeTeam.id;
+      }
+      // Cycle through picks and determine selection
+      picks.map(pick => {
+        if (pick.gameId === gameId && awayTeam.id === teamId) {
+          pickWinning = winningTeamId === teamId;
+        };
+      });
+    }
+    return pickWinning
   }
 
   const getStatusText = (status) => {
