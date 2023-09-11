@@ -6,6 +6,7 @@ import '../imports/api/teamsPublications';
 import '../imports/api/picksPublications';
 import '../imports/api/leaderboardsPublications';
 import '../imports/api/chirpsPublications';
+import '../imports/api/usersPublications';
 
 // Scheduling Services
 import CronService from '../imports/service/cronService';

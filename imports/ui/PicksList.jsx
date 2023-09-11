@@ -16,6 +16,10 @@ import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { useNavigate } from 'react-router-dom';
 import { GAME_STATUS } from '../model/entities';
 
+
+const DEBUG = false;
+
+
 export const PicksList = (props) => {
 
   // References
@@ -260,7 +264,7 @@ export const PicksList = (props) => {
                               <Box sx={styles.listBox.list.listItem.container.awayPick}>
                                 <ListItemButton
                                   onClick={ () => handleAwayPick(game) }
-                                  disabled={game.gameStatus.status !== GAME_STATUS.PRE}
+                                  disabled={game.gameStatus.status !== GAME_STATUS.PRE && DEBUG === false}
                                   sx={styles.listBox.list.listItem.container.awayPick.btn}>
                                   <ListItemIcon>
                                     {
@@ -330,7 +334,7 @@ export const PicksList = (props) => {
                               <Box sx={styles.listBox.list.listItem.container.homePick}>
                                 <ListItemButton
                                   onClick={ () => handleHomePick(game) }
-                                  disabled={game.gameStatus.status !== GAME_STATUS.PRE}
+                                  disabled={game.gameStatus.status !== GAME_STATUS.PRE && DEBUG === false}
                                   sx={styles.listBox.list.listItem.container.homePick.btn}
                                 >
                                   <ListItemIcon>

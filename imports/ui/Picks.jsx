@@ -62,7 +62,7 @@ export const Picks = () => {
     const currentWeek = weeks[0];
 
     // Hydrate local collections
-    const picksGamesAndWeeksHandler = Meteor.subscribe('picksAndGames', currentWeek);
+    const picksGamesAndWeeksHandler = Meteor.subscribe('userPicksAndGames', currentWeek);
     
     // Await data hydration
     if (!picksGamesAndWeeksHandler.ready()) {

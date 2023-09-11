@@ -3,24 +3,17 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import Grid from '@mui/material/Grid';
-import Tooltip from '@mui/material/Tooltip';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import CircleIcon from '@mui/icons-material/Circle';
 import TextureRoundedIcon from '@mui/icons-material/TextureRounded';
 import HomeIcon from '@mui/icons-material/Home';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -35,7 +28,7 @@ export const GamesList = (props) => {
   const navigateTo = (pageName) => navigate(`/${pageName}`);
 
   // Data
-  const { games, picks, currentWeek, showActiveFilterToggle } = props;
+  const { games, picks, players, currentWeek, showActiveFilterToggle } = props;
   
   // Methods
   const toggleBottomNav = () => setIsBottomOpen(!isBottomOpen);
@@ -95,29 +88,6 @@ export const GamesList = (props) => {
     return status === GAME_STATUS.POST;
   }
  
-  /*
-    To determine a winning pick
-    - determine the favourite
-    - favScore must be greater than the score plus spread (ie. 3 + 6.5 = 9.5)
-    
-    const isFav = odds.favorite.home;
-    const spreadScore = team.score + odds.spread;
-
-    ie: home team has 7, is favoured at spread -3.5
-        away team has 14
-        :. away team is winning because home team is actually 7-3.5 = 3.5
-        :. overall score is H3.5 to A14
-
-        home team has 16, is favoured at spread -4
-        away team has 9
-        :. home team is winning because spread score is actually 16-4 = 12
-        :. overall score is H12 to A9
-
-        home team has 14
-        away team has 14, is favoured at spread -1.5
-        :. home team is winning because spread score is A14-1.5 = 12.5
-        :. overall score is H14 to A12.5
-  */
   const isPickWinning = (homeAway, teamId, { gameId, homeTeam, awayTeam, odds }) => {
     
     let pickWinning = false;
@@ -125,13 +95,6 @@ export const GamesList = (props) => {
     const fav = odds.favourite.home === true ? 'home' : 'away';
     const spread = Math.abs(odds.spread);
     let winningTeamId = null;
-    
-    // PHI 18 - NE 20, NE -3.5
-    // is 20 > 18 = true
-    // home is fav, fav is winning
-    // but fav has to win by 3.5
-    // 20 - 3.5 = 16.5
-    // 16.5 > 18 = false
 
     if (homeAway === 'home') { 
       // Home is fav
@@ -149,7 +112,7 @@ export const GamesList = (props) => {
         }
       } else {
         // home team is not fav
-        winningTeamId = homeTeam.score > awayTeam.score 
+        winningTeamId = homeTeam.score > (awayTeam.score - spread)
           ? winningTeamId = homeTeam.id
           : winningTeamId = awayTeam.id;
       }
@@ -177,7 +140,7 @@ export const GamesList = (props) => {
         }
       } else {
         // away team is not fav
-        winningTeamId = awayTeam.score > homeTeam.score 
+        winningTeamId = awayTeam.score > (homeTeam.score - spread)
           ? winningTeamId = awayTeam.id
           : winningTeamId = homeTeam.id;
       }
@@ -189,6 +152,17 @@ export const GamesList = (props) => {
       });
     }
     return pickWinning
+  }
+
+  const getPicks = (teamId) => {
+    // Picks should be unique per player
+    const teamPicks = picks.filter(p => p.teamId === teamId);
+    const userList = teamPicks.map(p => {
+      return {
+        username: players.find(pl => pl._id === p.userId).username
+      };
+    });
+    return userList;
   }
 
   const getStatusText = (status) => {
@@ -459,11 +433,49 @@ export const GamesList = (props) => {
                               {
                                 isPicked(game.awayTeam)
                                   ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
-                                      {
-                                        isPickWinning('away', game.awayTeam.id, game)
-                                          ? <StarIcon sx={{ fontSize: styles.icons.size }} />
-                                          : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} />
-                                      }
+                                      <PopupState variant="popover" popupId="away-team-picks">
+                                        {(popupStateAway) => (
+                                          <React.Fragment>
+                                              {
+                                                isPickWinning('away', game.awayTeam.id, game)
+                                                  ? <StarIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateAway)}/>
+                                                  : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateAway)}/>
+                                              }
+                                              {
+                                                game.gameStatus.status !== GAME_STATUS.PRE
+                                                  && <Menu
+                                                        disableAutoFocusItem={true}
+                                                        variant='menu'
+                                                        sx={{
+                                                          maxHeight: 96 * 4.5,
+                                                          width: '20ch',
+                                                        }}
+                                                        { ...bindMenu(popupStateAway) }
+                                                        anchorOrigin={{
+                                                          vertical: 'bottom',
+                                                          horizontal: 'bottom',
+                                                        }}
+                                                        transformOrigin={{
+                                                          vertical: 'bottom',
+                                                          horizontal: 'left',
+                                                        }}>
+                                                        {
+                                                          getPicks(game.awayTeam.id).map((pick) => {
+                                                            return (
+                                                              <MenuItem
+                                                                sx={{ background: '#333333', color: '#FFFFFF' }}
+                                                                dense
+                                                                onClick={popupStateAway.close}>
+                                                                { pick.username }
+                                                              </MenuItem>
+                                                            )
+                                                          })
+                                                        }
+                                                      </Menu>
+                                                }
+                                          </React.Fragment>
+                                        )}
+                                      </PopupState>
                                     </Box>
                                   : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
                                       <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
@@ -553,11 +565,49 @@ export const GamesList = (props) => {
                               {
                                 isPicked(game.homeTeam)
                                   ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
-                                      {
-                                        isPickWinning('home', game.homeTeam.id, game)
-                                          ? <StarIcon sx={{ fontSize: styles.icons.size }} />
-                                          : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} />
-                                      }
+                                      <PopupState variant="popover" popupId="home-team-picks">
+                                        {(popupStateHome) => (
+                                          <React.Fragment>
+                                            {
+                                              isPickWinning('home', game.homeTeam.id, game)
+                                                ? <StarIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateHome)}/>
+                                                : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateHome)}/>
+                                            }
+                                            {
+                                                game.gameStatus.status !== GAME_STATUS.PRE
+                                                  && <Menu
+                                                        disableAutoFocusItem={true}
+                                                        variant='menu'
+                                                        sx={{
+                                                          maxHeight: 96 * 4.5,
+                                                          width: '20ch',
+                                                        }}
+                                                        { ...bindMenu(popupStateHome) }
+                                                        anchorOrigin={{
+                                                          vertical: 'bottom',
+                                                          horizontal: 'bottom',
+                                                        }}
+                                                        transformOrigin={{
+                                                          vertical: 'bottom',
+                                                          horizontal: 'left',
+                                                        }}>
+                                                        {
+                                                          getPicks(game.homeTeam.id).map((pick) => {
+                                                            return (
+                                                              <MenuItem
+                                                                sx={{ background: '#333333', color: '#FFFFFF' }}
+                                                                dense
+                                                                onClick={popupStateHome.close}>
+                                                                { pick.username }
+                                                              </MenuItem>
+                                                            )
+                                                          })
+                                                        }
+                                                      </Menu>
+                                            }
+                                          </React.Fragment>
+                                        )}
+                                      </PopupState>
                                     </Box>
                                   : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
                                       <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />

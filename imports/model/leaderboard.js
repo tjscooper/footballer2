@@ -52,12 +52,10 @@ export default class Leaderboard {
         return (homeTeam.score - spread) > awayTeam.score 
           ? homeTeam.id
           : awayTeam.id;
-      }
-      // If home team is tied, the away team is winning
-      if (homeTeam.score === awayTeam.score) {
+      } else if (homeTeam.score <= awayTeam.score) {
         return awayTeam.id;
       }
-    
+
     // Fav is away
     } else if (fav === 'away') { 
       // is the away team score winning?
@@ -66,15 +64,10 @@ export default class Leaderboard {
         return (awayTeam.score - spread) > homeTeam.score 
           ? awayTeam.id
           : homeTeam.id;
-      }
-      // If away team is tied, the home team is winning
-      if (homeTeam.score === awayTeam.score) {
+      } else if (awayTeam.score <= homeTeam.score) {
         return homeTeam.id;
       }
     }
-    return fav == 'home'
-      ? homeTeam.id
-      : awayTeam.id;
   }
 
   createGameDictionary() {
@@ -89,7 +82,6 @@ export default class Leaderboard {
     this.games.map((game) => {
       // Get winning team Id
       const winningTeamId = this.getWinningTeamId(game);
-      
       // Add team id to dictionary
       retObj[game.gameId] = {
         teams: { 
@@ -127,9 +119,10 @@ export default class Leaderboard {
       this.picks
         .filter(p => p.userId === player._id)
         .map((pick) => {
+
           // winning team id = game dictionary [pick gameId]
           const { winningTeamId, pregame, active, final } = gameDictionary[pick.gameId];
-          
+
           // if winning team id = pick team id
           if (winningTeamId === pick.teamId) {
             // if game active
