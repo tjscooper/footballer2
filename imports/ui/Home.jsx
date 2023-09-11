@@ -52,12 +52,20 @@ export const Home = () => {
   const [chirpsPanelOpen, setChirpsPanelOpen] = useState(false);
 
   // Data
-  const { currentWeek, weeks, games, picks, leaderboard, isLoading } = useTracker(() => {
+  const { currentWeek, weeks, games, picks, players, leaderboard, isLoading } = useTracker(() => {
+    
+    // Hydrate players
+    const playersHandler = Meteor.subscribe('players.listUsers');
+    if (!playersHandler.ready()) {
+      return { weeks: null, games: null, players: null, picks: null, isLoading: true };
+    }
+
+    const players = Meteor.users.find({}).fetch();
     
     // Hydrate weeks
     const weeksHandler = Meteor.subscribe('weeks');
     if (!weeksHandler.ready()) {
-      return { weeks: null, games: null, picks: null, isLoading: true };
+      return { weeks: null, games: null, players, picks: null, isLoading: true };
     }
 
     const weeks = WeeksCollection
@@ -90,7 +98,7 @@ export const Home = () => {
     const games = GamesCollection.find({ weekId: currentWeek._id }).fetch();
 
     // Return data
-    return { currentWeek, picks, games, weeks, leaderboard, isLoading: false };
+    return { currentWeek, picks, games, weeks, players, leaderboard, isLoading: false };
   });
   
   // Methods
@@ -387,6 +395,7 @@ export const Home = () => {
             <GamesList
               games={games}
               picks={picks}
+              players={players}
               currentWeek={currentWeek}
               isLoading={isLoading}
               showActiveFilterToggle={showActiveFilterToggle}
