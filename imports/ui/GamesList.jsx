@@ -639,7 +639,11 @@ export const GamesList = (props) => {
                 }
               </List>
             )
-          : <div>No Teams found.</div>
+          : <ListItem sx={styles.listBox.list.listItemHeader}>
+              <Grid sx={styles.listBox.list.listItem.container.gameContainer}>
+                No Active Games
+              </Grid>
+            </ListItem>
         }
       </nav>
     </Box>

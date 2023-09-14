@@ -174,6 +174,24 @@ const getOdds = (odds) => {
   };
 }
 
+const isWithinDateRange = () => {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const hour = now.getHours();
+
+  // Check if it's Tuesday (dayOfWeek === 2) and the time is at or after 2 AM
+  // or if it's Wednesday or Thursday and the time is before 8 PM
+  if (
+    (dayOfWeek === 2 && hour >= 2) || // Tuesday after 2 AM
+    (dayOfWeek === 3) || // Wednesday
+    (dayOfWeek === 4 && hour <= 20) // Thursday before 8 PM
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
 /*/
  * Manage the creation of games for a given week
  * Depends on: scheduled task for Schedule data
@@ -249,9 +267,11 @@ const processFeed = async ({ sports }) => {
       });
     } else {
       // Games already exist, only update game odds
-      games.forEach(game => {
-        updateGameOdds(game);
-      });
+      if (isWithinDateRange()) {
+        games.forEach(game => {
+          updateGameOdds(game);
+        });
+      }
     }
     
     // Response
