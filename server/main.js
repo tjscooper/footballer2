@@ -44,8 +44,14 @@ Meteor.startup(() => {
 
     CronService.register({
       name: 'Get Weeks',
-      scheduleParserText: 'at 2:00 am every Tuesday',
+      scheduleParserText: 'at 1:55 am every Tuesday',
       scheduleFn: feedService.getWeeks
+    });
+
+    CronService.register({
+      name: 'Get Games',
+      scheduleParserText: 'at 2:00 am every Tuesday',
+      scheduleFn: feedService.getGames()
     });
     
     CronService.register({
