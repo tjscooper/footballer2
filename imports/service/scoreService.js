@@ -2,6 +2,7 @@ import { check } from 'meteor/check';
 
 import Week from '../model/week';
 import ServiceResponse from '../model/serviceResponse';
+import { getLeaderboards } from './leaderboardService';
 
 // Enums
 import { ENTITY } from '../model/entities';
@@ -25,9 +26,12 @@ const processFeed = async ({ leagues, week, season, events }) => {
     _currentWeek: currentWeek
   });
 
-  // Add / Modify Leaderboard
-  const leaderboardCalculation = await Meteor.call('leaderboards.calculateLeaderboard', currentWeek);
-  
+  const existingLeaderboards = getLeaderboards({});
+  if (existingLeaderboards.length) {
+    // Add / Modify Leaderboard
+    const leaderboardCalculation = await Meteor.call('leaderboards.calculateLeaderboard', currentWeek);
+  }
+
   // Response
   return new ServiceResponse({
     _status: true,
