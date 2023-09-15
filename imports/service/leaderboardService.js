@@ -290,7 +290,7 @@ const calculateWinners = async (gamesData = null, gameId = null, config) => {
 const getUsername = (userId) => Meteor.users.find({ _id: userId }).fetch()[0].username;
 
 const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
-
+  console.log('... calculating leaderboard stats for week', number);
   const DEBUG = false;
 
   // Replace with lookups
@@ -299,6 +299,7 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
   const leaderboardObj = getLeaderboardObj(week._id);
   
   if (!leaderboardObj) {
+    console.log('... No week found, failing')
     return;
   }
 
@@ -312,6 +313,9 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
 
   // Create user map for leaderboard chart
   leaderboardObj.players.forEach((player) => {
+
+    // Get current username
+    const username = getUsername(player._id);
     
     const wins = [];
     const winning = [];
@@ -321,9 +325,6 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
 
       // Locate the pick  
       leaderboardObj.picks.forEach((pick) => {
-
-        // Get current username
-        const username = getUsername(pick.userId);
 
         // Is the pick winning?
         if (pick.userId === player._id
@@ -360,7 +361,7 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
               winners[game.gameId].homeTeam.picks.push({ username });
         }
       });
-    }); 
+    });   
     
     // Calculate user metrics
     const totalWins = wins.length + winning.length;
@@ -377,19 +378,25 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
   });
 
   leaderboardObj.setData(data);
+  console.log('... set leaderboard data');
+
   leaderboardObj.setMeta(winners);
+  console.log('... set leaderboard winners');
   
   if (saveToDb) {
+    console.log('... saving to DB');
     // Look for existing leaderboard
     const existingLeaderboard = getLeaderboardByWeekId(week._id);
   
     // Create new leaderboard
     if (!existingLeaderboard) {
+      console.log(`... inserting leaderboard`);
       const id = insertLeaderboard(leaderboardObj);
-      console.log(`Inserted ${leaderboardObj.weekId} at [id]${id}`);
+      console.log(`... inserted ${leaderboardObj.weekId} at [id]${id}`);
     } else {
       // Update existing leaderboard
       const { _id } = existingLeaderboard;
+      console.log(`... updating leaderboard at [id]${_id} for week ${number}`);
       try {
         const result = LeaderboardsCollection.update(_id, {
           $set: {
@@ -399,14 +406,16 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
           }
         });
         console.log(
-          `Update ${leaderboardObj.weekId} at [id]${_id}: ${result === 1 ? 'Success' : 'Failed '}`
+          `... updated ${leaderboardObj.weekId} at [id]${_id}: ${result === 1 ? 'Success' : 'Failed '}`
         );
         return result === 1;
       } catch(e) {
+        console.log(`... failed to update leaderboard at [id]${_id}: ${result === 1 ? 'Success' : 'Failed '}`);
         console.log(e);
       }
     } 
   } else {
+    console.log(`... no insert, returning record only`);
     return leaderboardObj;
   }
 }
