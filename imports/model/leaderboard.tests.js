@@ -34,12 +34,10 @@ if (Meteor.isServer) {
 
       it('can generate leaderboard "top5" chart object', () => {
         const chartData = leaderboard.getHorizontalBarChartData('top-5');
-        console.log(chartData);
       });
 
       it('can determine winning teams with spread factor', () => {
         const dict = leaderboard.createGameDictionary();
-        console.log(dict);
       });
 
     });

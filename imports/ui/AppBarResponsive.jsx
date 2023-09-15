@@ -175,13 +175,13 @@ export const AppBarResponsive = (props) => {
         open={primaryNavOpen}
         onClose={() => togglePrimaryNav()}>
         <List
-         sx={{ margin: '16px' }}>
+          sx={{ background: '#27272f', color: '#FFFFFF', fontSize: '24px', padding: '24px', margin: '0px', height: '100%' }}>
           <ListItem key={'home'} disablePadding>
             <ListItemButton onClick={() => navigateTo('') }>
               <ListItemIcon>
                 <SportsFootballIcon sx={{ color: 'brown' }} />
               </ListItemIcon>
-              <ListItemText>Home</ListItemText>
+              <ListItemText >Home</ListItemText>
             </ListItemButton>
           </ListItem>
 

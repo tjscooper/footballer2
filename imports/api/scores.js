@@ -1,4 +1,4 @@
-import { processFeed, leaderboard } from '../service/scoreService';
+import { processFeed, calculateLeaderboard } from '../service/scoreService';
 
 Meteor.methods({
   /*
