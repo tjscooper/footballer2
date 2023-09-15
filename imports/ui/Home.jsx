@@ -141,15 +141,18 @@ export const Home = () => {
     chirps: {
       btn: {
         marginLeft: '16px',
-        marginTop: '8px',
+        marginTop: '-8px',
         paddingLeft: '24px',
-        height: '48px',
+        height: '64px',
+        width: '64px',
         color: '#FFFFFF',
         background: '#f34cc5',
-        borderRadius: '16px',
+        borderRadius: '48px',
         fontWeight: 'bold',
         textAlign: 'center',
         fontFamily: 'monospace',
+        border: '3px solid #FFFFFF',
+        zIndex: 99
       }
     },
     filter: {
@@ -381,6 +384,14 @@ export const Home = () => {
             }
 
             {/* Show Active Toggle */}
+            
+
+            <Button
+              variant="outlined"
+              sx={{ ...styles.chirps.btn }}
+              startIcon={<CampaignIcon />}
+              onClick={ () => toggleChirpsPanel() } />
+
             <FilterToggle
               onLabelText='Show Active'
               offLabelText='Show All'
@@ -388,12 +399,6 @@ export const Home = () => {
               handleToggle={handleFilterToggle}
               styles={styles.filter.toggle}
               useOnLabelTextForBoth={true} />
-
-            <Button
-              variant="outlined"
-              sx={styles.chirps.btn}
-              startIcon={<CampaignIcon />}
-              onClick={ () => toggleChirpsPanel() } />
 
           </Box>
 

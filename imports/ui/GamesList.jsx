@@ -670,7 +670,7 @@ export const GamesList = (props) => {
                                                   }}>
                                                     <MenuItem
                                                       key={game.gameId}
-                                                      sx={{ background: '#333333', color: '#FFFFFF' }}
+                                                      sx={{ background: '#27272f', border: '1px solid #CCCCCC', color: '#FFFFFF', fontSize: '16px', borderRadius: '4px', margin: '3px' }}
                                                       dense
                                                       onClick={popupStateHomeFav.close}>
                                                       { Math.abs(leaderboard.meta[game.gameId].spread) }

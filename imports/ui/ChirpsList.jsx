@@ -188,6 +188,7 @@ export const ChirpsList = (props) => {
                     }).map((chirp, index) => {
                       return (
                         <Box
+                          key={index}
                           sx={ styles.chirps.list[getChirpOwner(chirp.username)] }>
                           {
                             currentUsername !== chirp.username
