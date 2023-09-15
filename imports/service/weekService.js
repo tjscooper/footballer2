@@ -7,6 +7,10 @@ const getWeeks = (queryObj) => {
   return WeeksCollection.find(queryObj).fetch();
 };
 
+const getWeek = (queryObj) => {
+  return getWeeks(queryObj)[0] || [];
+}
+
 const getWeekById = (_id) => {
   return new Week(WeeksCollection.findOne(_id));
 }
@@ -59,6 +63,7 @@ const currentWeek = () => {
 // Public methods (for API)
 export {
   processFeed,
-  currentWeek
+  currentWeek,
+  getWeek
 };
 

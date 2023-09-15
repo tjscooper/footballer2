@@ -16,11 +16,9 @@ import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { useNavigate } from 'react-router-dom';
 import { GAME_STATUS } from '../model/entities';
 
-
-const DEBUG = false;
-
-
 export const PicksList = (props) => {
+
+  const DEBUG = false;
 
   // References
   const navigate = useNavigate();

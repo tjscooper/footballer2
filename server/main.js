@@ -11,6 +11,7 @@ import '../imports/api/usersPublications';
 // Scheduling Services
 import CronService from '../imports/service/cronService';
 import FeedService from '../imports/service/feedService';
+import MigrationService from '../imports/service/migrationService';
 
 // APIs
 import '../imports/api/weeks.js';
@@ -22,6 +23,18 @@ import '../imports/api/leaderboards.js';
 import '../imports/api/chirps.js';
 
 Meteor.startup(() => {
+
+  const runMigrations = true;
+
+  if (runMigrations) {
+
+    const migrationService = new MigrationService().getInstance();
+    
+    // List of migrations to run in sequence
+    
+    migrationService.v_01_refreshLeaderboards_up();
+
+  }
 
   const automateWorkflow = true;
 

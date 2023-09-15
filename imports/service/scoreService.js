@@ -1,7 +1,6 @@
 import { check } from 'meteor/check';
 
 import Week from '../model/week';
-
 import ServiceResponse from '../model/serviceResponse';
 
 // Enums
@@ -26,10 +25,8 @@ const processFeed = async ({ leagues, week, season, events }) => {
     _currentWeek: currentWeek
   });
 
-  // Add / Modify Leaderboard (Top 5)
-  const leaderboardProcessTop5Result = await Meteor.call('leaderboards.processTop5', {
-    _currentWeek: currentWeek
-  });
+  // Add / Modify Leaderboard
+  const leaderboardCalculation = await Meteor.call('leaderboards.calculateLeaderboard', currentWeek);
   
   // Response
   return new ServiceResponse({
@@ -42,7 +39,7 @@ const processFeed = async ({ leagues, week, season, events }) => {
       data: {
         currentWeekId: currentWeek.id(),
         gamesProcessFeed: gamesProcessFeedResult,
-        leaderboardProcessTop5: leaderboardProcessTop5Result 
+        leaderboardCalculation: leaderboardCalculation 
       }
     },
     _type: ENTITY.GAME

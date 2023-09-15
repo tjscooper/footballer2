@@ -103,68 +103,68 @@ export default class Leaderboard {
     return retObj;
   }
 
-  getLeaderboardTop5() {
-    // create game result dictionary
-    const gameDictionary = this.createGameDictionary();
+  // getLeaderboardTop5() {
+  //   // create game result dictionary
+  //   const gameDictionary = this.createGameDictionary();
     
-    // create leaderboard list 
-    // for each player    
-    const leaderboard = this.players.map((player) => {
-      // data
-      const wins = [];
-      const winning = [];
-      const losing = [];
+  //   // create leaderboard list 
+  //   // for each player    
+  //   const leaderboard = this.players.map((player) => {
+  //     // data
+  //     const wins = [];
+  //     const winning = [];
+  //     const losing = [];
 
-      // for each pick
-      this.picks
-        .filter(p => p.userId === player._id)
-        .map((pick) => {
+  //     // for each pick
+  //     this.picks
+  //       .filter(p => p.userId === player._id)
+  //       .map((pick) => {
 
-          // winning team id = game dictionary [pick gameId]
-          const { winningTeamId, pregame, active, final } = gameDictionary[pick.gameId];
+  //         // winning team id = game dictionary [pick gameId]
+  //         const { winningTeamId, pregame, active, final } = gameDictionary[pick.gameId];
 
-          // if winning team id = pick team id
-          if (winningTeamId === pick.teamId) {
-            // if game active
-            if (pregame) {
-              // hide from users
-            } else if (active) {
-              // show who is winning any games
-              winning.push(pick);
-            } else if (final) {
-              // show the finished games
-              wins.push(pick);
-            }
-          } else {
-            losing.push(pick);
-          }
-        });
-      // total = sum winning and wins
-      const totalWins = wins.length + winning.length;
-      const stats = {
-        username: player.username,
-        wins: wins.length,
-        winning: winning.length,
-        losing: losing.length,
-        totalWins
-      };
-      return stats;
-    });
+  //         // if winning team id = pick team id
+  //         if (winningTeamId === pick.teamId) {
+  //           // if game active
+  //           if (pregame) {
+  //             // hide from users
+  //           } else if (active) {
+  //             // show who is winning any games
+  //             winning.push(pick);
+  //           } else if (final) {
+  //             // show the finished games
+  //             wins.push(pick);
+  //           }
+  //         } else {
+  //           losing.push(pick);
+  //         }
+  //       });
+  //     // total = sum winning and wins
+  //     const totalWins = wins.length + winning.length;
+  //     const stats = {
+  //       username: player.username,
+  //       wins: wins.length,
+  //       winning: winning.length,
+  //       losing: losing.length,
+  //       totalWins
+  //     };
+  //     return stats;
+  //   });
     
-    const sorted = [...leaderboard.sort((a, b) => b.totalWins - a.totalWins)];
-    const trimmedAndSorted = [
-      ...sorted
-           .slice(0, 5)
-           .sort((a, b) => b.totalWins - a.totalWins)
-    ];
+  //   const sorted = [...leaderboard.sort((a, b) => b.totalWins - a.totalWins)];
+  //   const trimmedAndSorted = [
+  //     ...sorted
+  //          .slice(0, 5)
+  //          .sort((a, b) => b.totalWins - a.totalWins)
+  //   ];
     
-    this.data = {
-      top5: trimmedAndSorted,
-      full: sorted
-    }
+  //   this.data = {
+  //     top5: trimmedAndSorted,
+  //     full: sorted
+  //   }
     
-    return this.data;
-  }
+  //   return this.data;
+  // }
 
   setData(data) {
     if (!data) {
@@ -173,17 +173,17 @@ export default class Leaderboard {
     this.data = data;
   }
 
-  setMeta(metaKey, metaValue) {
-    if (!metaKey || !metaValue) {
-      return;
+  setMeta(data) {
+    if (!data) {
+      this.meta = null;
     }
-    this.meta[metaKey] = metaValue;
+    this.meta = data;
   }
 
-  getHorizontalBarChartData(chartName) {
-    switch (chartName) {
-      case 'top-5': return this.getLeaderboardTop5();
-      default: return null;
-    }
-  }
+  // getHorizontalBarChartData(chartName) {
+  //   switch (chartName) {
+  //     case 'top-5': return this.getLeaderboardTop5();
+  //     default: return null;
+  //   }
+  // }
 }

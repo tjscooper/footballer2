@@ -8,7 +8,7 @@ import ServiceResponse from '../model/serviceResponse';
 // Enums
 import { ENTITY } from '../model/entities';
 
-const getGames = (queryObj) => {
+const getGames = (queryObj = {}) => {
   return GamesCollection.find(queryObj).fetch();
 }
 

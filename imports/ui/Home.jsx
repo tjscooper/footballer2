@@ -50,6 +50,7 @@ export const Home = () => {
   // State
   const [showActiveFilterToggle, setShowActiveFilterToggle] = useState(false); // Toggle switch in header
   const [chirpsPanelOpen, setChirpsPanelOpen] = useState(false);
+  const [selectedWeekId, setSelectedWeekId] = useState(null);
 
   // Data
   const { currentWeek, weeks, games, picks, players, leaderboard, isLoading } = useTracker(() => {
@@ -73,11 +74,13 @@ export const Home = () => {
       .fetch()
       .sort((a, b) => b.number - a.number);
 
-    const currentWeek = weeks[0];
+    const currentWeek = selectedWeekId !== null
+      ? weeks.find(w => w._id === selectedWeekId)
+      : weeks[0];
 
     // Get data from application logic
 
-    const leaderboardHandler = Meteor.subscribe('leaderboardTop5', currentWeek);
+    const leaderboardHandler = Meteor.subscribe('leaderboard.byWeekId', currentWeek);
     
     if (!leaderboardHandler.ready()) {
       return { currentWeek, isLoading: true };
@@ -99,11 +102,11 @@ export const Home = () => {
 
     // Return data
     return { currentWeek, picks, games, weeks, players, leaderboard, isLoading: false };
-  });
+  }, [selectedWeekId]);
   
   // Methods
   const onWeekSelect = (event) => {
-    // console.log(event.target.value);
+    setSelectedWeekId(event.target.value);
   }
 
   const handleFilterToggle = () => {
@@ -163,10 +166,13 @@ export const Home = () => {
         height: '48px',
         borderRadius: '16px',
         menuItem: {
-          background: 'blue',
+          borderRadius: '16px',
+          textAlign: 'center',
+          background: '#FFFFFF',
           height: '18px',
           color: '#000000',
           paddingLeft: '16px',
+          margin: '10px'
         }
       },
       toggle: {
@@ -215,7 +221,7 @@ export const Home = () => {
       return null;
     }
 
-    const data = chartData.meta.full.sort((a, b) => a.totalWins - b.totalWins);
+    const data = chartData.data.sort((a, b) => a.totalWins - b.totalWins);
 
     return (
       <VictoryChart
@@ -246,7 +252,7 @@ export const Home = () => {
           }}
         />
         <VictoryAxis
-          label="This Week"
+          label={ !selectedWeekId ? "This Week" : `Week ${currentWeek.number}`}
           axisLabelComponent={
             <VictoryLabel
               dx={-24}
@@ -359,6 +365,7 @@ export const Home = () => {
                           weeks.length > 0
                             ? weeks.map((week) => (
                                 <MenuItem
+                                  id="weeks-select-menu-item"
                                   disableGutters
                                   key={week._id}
                                   value={week._id}
@@ -396,6 +403,7 @@ export const Home = () => {
               games={games}
               picks={picks}
               players={players}
+              leaderboard={leaderboard}
               currentWeek={currentWeek}
               isLoading={isLoading}
               showActiveFilterToggle={showActiveFilterToggle}

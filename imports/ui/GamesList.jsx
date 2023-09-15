@@ -8,6 +8,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import CircleIcon from '@mui/icons-material/Circle';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import TextureRoundedIcon from '@mui/icons-material/TextureRounded';
 import HomeIcon from '@mui/icons-material/Home';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
@@ -28,22 +29,13 @@ export const GamesList = (props) => {
   const navigateTo = (pageName) => navigate(`/${pageName}`);
 
   // Data
-  const { games, picks, players, currentWeek, showActiveFilterToggle } = props;
+  const { games, leaderboard, showActiveFilterToggle } = props;
   
   // Methods
-  const toggleBottomNav = () => setIsBottomOpen(!isBottomOpen);
 
-  const isPicked = (team) => {
-    if (picks.length === 0) {
-      return false;
-    }
-    let isFound = false;
-    picks.forEach(pick => {
-      if (pick.teamId === team.id) {
-        isFound = true;
-      }
-    }); 
-    return isFound;
+  const getUsername = () => {
+    const { username } = Meteor.user();
+    return !username ? null : username;
   }
 
   const isHomePossession = (homeTeam, situation) => {
@@ -87,82 +79,29 @@ export const GamesList = (props) => {
   const isPostGame = (status) => {
     return status === GAME_STATUS.POST;
   }
+
+  const isFav = (homeAway, gameId) => {
+    const game = leaderboard.meta[gameId];
+    return homeAway === 'home'
+      ? game.fav === 'home'
+      : game.fav === 'away';
+  }
  
-  const isPickWinning = (homeAway, teamId, { gameId, homeTeam, awayTeam, odds }) => {
-    
-    let pickWinning = false;
-
-    const fav = odds.favourite.home === true ? 'home' : 'away';
-    const spread = Math.abs(odds.spread);
-    let winningTeamId = null;
-
-    if (homeAway === 'home') { 
-      // Home is fav
-      if (fav === 'home') { 
-        // is the home team score winning?
-        if (homeTeam.score > awayTeam.score) {
-          // home team has more points, they must cover the spread
-          winningTeamId = (homeTeam.score - spread) > awayTeam.score 
-            ? winningTeamId = homeTeam.id
-            : winningTeamId = awayTeam.id;
-        }
-        // If home team is tied, the away team is winning
-        if (homeTeam.score === awayTeam.score) {
-          winningTeamId = awayTeam.id;
-        }
-      } else {
-        // home team is not fav
-        winningTeamId = homeTeam.score > (awayTeam.score - spread)
-          ? winningTeamId = homeTeam.id
-          : winningTeamId = awayTeam.id;
-      }
-      // Cycle through picks and determine selection
-      picks.map(pick => {
-        if (pick.gameId === gameId && homeTeam.id === teamId) {
-          pickWinning = winningTeamId === teamId;
-        };
-      });
-    }
-
-    if (homeAway === 'away') {
-      // Away is fav
-      if (fav === 'away') { 
-        // is the away team score winning?
-        if (awayTeam.score > homeTeam.score) {
-          // away team has more points, they must cover the spread
-          winningTeamId = (awayTeam.score - spread) > homeTeam.score 
-            ? winningTeamId = awayTeam.id
-            : winningTeamId = homeTeam.id;
-        }
-        // If away team is tied, the home team is winning
-        if (awayTeam.score === homeTeam.score) {
-          winningTeamId = homeTeam.id;
-        }
-      } else {
-        // away team is not fav
-        winningTeamId = awayTeam.score > (homeTeam.score - spread)
-          ? winningTeamId = awayTeam.id
-          : winningTeamId = homeTeam.id;
-      }
-      // Cycle through picks and determine selection
-      picks.map(pick => {
-        if (pick.gameId === gameId && awayTeam.id === teamId) {
-          pickWinning = winningTeamId === teamId;
-        };
-      });
-    }
-    return pickWinning
+  const isPickWinning = (teamId, { gameId }) => {
+    const game = leaderboard.meta[gameId];
+    const winning = teamId === game.winningTeam.id;
+    return winning;
   }
 
-  const getPicks = (teamId) => {
-    // Picks should be unique per player
-    const teamPicks = picks.filter(p => p.teamId === teamId);
-    const userList = teamPicks.map(p => {
-      return {
-        username: players.find(pl => pl._id === p.userId).username
-      };
-    });
-    return userList;
+  const isPick = (homeAway, { gameId }) => {
+    const game = leaderboard.meta[gameId];
+    const picks = homeAway === 'home'
+      ? game.homeTeam.picks
+      : game.awayTeam.picks;
+
+    const username = getUsername();
+    const isFound = picks.filter(pick => pick.username === username).length ? true : false;
+    return isFound;
   }
 
   const getStatusText = (status) => {
@@ -191,6 +130,11 @@ export const GamesList = (props) => {
       borderRadius: '16px',
     },
     icons: {
+      star: {
+        isPick: {
+          border: '1px solid green'
+        }
+      },
       size: 24,
     },
     listBox: {
@@ -217,7 +161,8 @@ export const GamesList = (props) => {
             flexDirection: 'flex-start',
             alignContent: 'top',
             headerGap: {
-              width: '40vw'
+              width: '40vw',
+              height: '40vh'
             },
             gameContainer: {
               border: highlightRegions ? '1px solid orange' : 'none',
@@ -275,6 +220,14 @@ export const GamesList = (props) => {
                 redZone: {
                   icon: {
                     color: 'red'
+                  },
+                  iconHidden: {
+                    color: 'white'
+                  }
+                },
+                fav: {
+                  icon: {
+                    color: 'pink'
                   },
                   iconHidden: {
                     color: 'white'
@@ -379,7 +332,6 @@ export const GamesList = (props) => {
                     <Grid sx={styles.listBox.list.listItem.container.gameContainer}>
                       <Grid item sx={styles.listBox.list.listItem.container.gameContainer.cardHeader}>
                         <AirplanemodeActiveIcon sx={{ fontSize: 18, color: '#999999' }} />
-                        {/* <span style={{ fontSize: '12px', color: '#999999', paddingLeft: '8px' }}>Away</span> */}
                       </Grid>
                     </Grid>
                     <Grid item xs={3}>
@@ -390,260 +342,355 @@ export const GamesList = (props) => {
                     <Grid sx={styles.listBox.list.listItem.container.gameContainer}>
                       <Grid item sx={styles.listBox.list.listItem.container.gameContainer.cardHeader}>
                         <HomeIcon sx={{ fontSize: 18, color: '#999999' }} />
-                        {/* <span style={{ color: '#999999', paddingLeft: '8px' }}>Home</span> */}
                       </Grid>
                     </Grid>
                   </ListItem>
                   { games.filter((g) => {
-                      if (!showActiveFilterToggle) {
-                        return g;
-                      } else if (showActiveFilterToggle) {
-                        if (g.gameStatus.status === GAME_STATUS.IN_PROGRESS) {
-                          return g;
-                        }
-                      }
-                    }).map((game, index) => {
-                    return (
-                      <ListItem
-                        divider={index < games.length - 1}
-                        key={game._id}
-                        sx={styles.listBox.list.listItem}>
-                          <Grid
-                            sx={styles.listBox.list.listItem.container.gameContainer}>
-                            <Grid item sx={styles.listBox.list.listItem.container.gameContainer.card}>
-                              <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info}>
-                                <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.logo}>
-                                  { LogoImage(game.awayTeam) }
-                                </Box>
-                                <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.name}>
-                                  {game.awayTeam.abbreviation}
-                                </Box>
-                                {
-                                  !isInProgressGame(game.gameStatus.status)
-                                    && <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.record}>
-                                        {game.awayTeam.record}
+                          if (!showActiveFilterToggle) {
+                            return g;
+                          } else if (showActiveFilterToggle) {
+                            if (g.gameStatus.status === GAME_STATUS.IN_PROGRESS) {
+                              return g;
+                            }
+                          }
+                        }).map((game, index) => {
+                          return (
+                            <ListItem
+                              divider={index < games.length - 1}
+                              key={game._id}
+                              sx={styles.listBox.list.listItem}>
+                                <Grid
+                                  sx={styles.listBox.list.listItem.container.gameContainer}>
+                                  <Grid item sx={styles.listBox.list.listItem.container.gameContainer.card}>
+                                    <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info}>
+                                      <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.logo}>
+                                        { LogoImage(game.awayTeam) }
                                       </Box>
-                                } 
-                              </Box>
-                              <Box sx={styles.listBox.list.listItem.container.gameContainer.card.score}>
-                                {game.awayTeam.score}
-                              </Box>
-                            </Grid>
-                            <Grid item sx={styles.listBox.list.listItem.container.gameContainer.state}>
-                              {
-                                isPicked(game.awayTeam)
-                                  ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
-                                      <PopupState variant="popover" popupId="away-team-picks">
-                                        {(popupStateAway) => (
-                                          <React.Fragment>
+                                      <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.name}>
+                                        {game.awayTeam.abbreviation}
+                                      </Box>
+                                      {
+                                        !isInProgressGame(game.gameStatus.status)
+                                          && <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.record}>
+                                              {game.awayTeam.record}
+                                            </Box>
+                                      } 
+                                    </Box>
+                                    <Box sx={styles.listBox.list.listItem.container.gameContainer.card.score}>
+                                      {game.awayTeam.score}
+                                    </Box>
+                                  </Grid>
+                                  <Grid item sx={styles.listBox.list.listItem.container.gameContainer.state}>
+                                    {
+                                      game.gameStatus.status !== GAME_STATUS.PRE
+                                        ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
+                                            <PopupState variant="popover" popupId="away-team-picks">
+                                              {(popupStateAway) => (
+                                                <React.Fragment>
+                                                    {
+                                                      isPickWinning(game.awayTeam.id, game, leaderboard.meta[game.gameId].winningTeam)
+                                                        ? isPick('away', game)
+                                                            ? <StarIcon sx={{ fontSize: styles.icons.size, border: '2px dashed green', borderRadius: '24px', padding: '3px', margin: '-3px' }} {...bindTrigger(popupStateAway)}/>
+                                                            : <StarIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateAway)}/>
+                                                        : isPick('away', game)
+                                                            ? <StarOutlineIcon sx={{ fontSize: styles.icons.size, border: '2px dashed green', borderRadius: '24px', padding: '3px', margin: '-3px' }} {...bindTrigger(popupStateAway)}/>
+                                                            : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateAway)}/>
+                                                    }
+                                                    {
+                                                      game.gameStatus.status !== GAME_STATUS.PRE
+                                                        && <Menu
+                                                              disableAutoFocusItem={true}
+                                                              variant='menu'
+                                                              sx={{
+                                                                maxHeight: 96 * 4.5,
+                                                                width: '20ch',
+                                                              }}
+                                                              { ...bindMenu(popupStateAway) }
+                                                              anchorOrigin={{
+                                                                vertical: 'bottom',
+                                                                horizontal: 0,
+                                                              }}
+                                                              transformOrigin={{
+                                                                vertical: 'bottom',
+                                                                horizontal: 'left',
+                                                              }}>
+                                                              {
+                                                                leaderboard.meta[game.gameId].awayTeam.picks.map((pick) => {
+                                                                  return (
+                                                                    <MenuItem
+                                                                      key={pick.username}
+                                                                      sx={{ background: '#27272f', border: '1px solid #CCCCCC', color: '#FFFFFF', fontSize: '16px', borderRadius: '4px', margin: '3px' }}
+                                                                      dense
+                                                                      onClick={popupStateAway.close}>
+                                                                      { pick.username }
+                                                                    </MenuItem>
+                                                                  )
+                                                                })
+                                                              }
+                                                          </Menu>
+                                                      }
+                                                </React.Fragment>
+                                              )}
+                                            </PopupState>
+                                          </Box>
+                                        : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                            <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                          </Box>
+                                    }
+                                    {
+                                      isAwayPossession(game.awayTeam, game.gameStatus.situation)
+                                        ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.possession}>
+                                            <SportsFootballIcon sx={{ fontSize: styles.icons.size }} />
+                                          </Box>
+                                        : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                            <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                          </Box>
+                                    }
+                                    {
+                                      isAwayRedZone(game.awayTeam, game.gameStatus.situation)
+                                        ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                            <TextureRoundedIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.icon} />
+                                          </Box>
+                                        : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                            <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                          </Box>
+                                    }
+                                    {
+                                      <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
+                                        <PopupState variant="popover" popupId="away-team-fav">
+                                          {(popupStateAwayFav) => (
+                                            <React.Fragment>
                                               {
-                                                isPickWinning('away', game.awayTeam.id, game)
-                                                  ? <StarIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateAway)}/>
-                                                  : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateAway)}/>
+                                                isFav('away', game.gameId)
+                                                  ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                                      <FavoriteIcon sx={styles.listBox.list.listItem.container.gameContainer.state.fav.icon} {...bindTrigger(popupStateAwayFav)}/>
+                                                    </Box>
+                                                  : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                                      <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                                    </Box>
                                               }
                                               {
-                                                game.gameStatus.status !== GAME_STATUS.PRE
-                                                  && <Menu
-                                                        disableAutoFocusItem={true}
-                                                        variant='menu'
-                                                        sx={{
-                                                          maxHeight: 96 * 4.5,
-                                                          width: '20ch',
-                                                        }}
-                                                        { ...bindMenu(popupStateAway) }
-                                                        anchorOrigin={{
-                                                          vertical: 'bottom',
-                                                          horizontal: 'bottom',
-                                                        }}
-                                                        transformOrigin={{
-                                                          vertical: 'bottom',
-                                                          horizontal: 'left',
-                                                        }}>
-                                                        {
-                                                          getPicks(game.awayTeam.id).map((pick) => {
-                                                            return (
-                                                              <MenuItem
-                                                                sx={{ background: '#333333', color: '#FFFFFF' }}
-                                                                dense
-                                                                onClick={popupStateAway.close}>
-                                                                { pick.username }
-                                                              </MenuItem>
-                                                            )
-                                                          })
-                                                        }
-                                                      </Menu>
-                                                }
-                                          </React.Fragment>
-                                        )}
-                                      </PopupState>
-                                    </Box>
-                                  : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
-                                      <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
-                                    </Box>
-                              }
-                              {
-                                isAwayPossession(game.awayTeam, game.gameStatus.situation)
-                                  ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.possession}>
-                                      <SportsFootballIcon sx={{ fontSize: styles.icons.size }} />
-                                    </Box>
-                                  : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
-                                      <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
-                                    </Box>
-                              }
-                              {
-                                isAwayRedZone(game.awayTeam, game.gameStatus.situation)
-                                  ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
-                                      <TextureRoundedIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.icon} />
-                                    </Box>
-                                  : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
-                                      <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
-                                    </Box>
-                              }
-                            </Grid>
-                          </Grid>
-                          {
-                            // Pregame
-                            isPreGame(game.gameStatus.status)
-                              && <Grid item xs={3}>
-                                    <Box sx={styles.listBox.list.listItem.container.statusPre}>
-                                      <Box sx={styles.listBox.list.listItem.container.statusPre.name}>
-                                        <Typography>{game.gameStatus.date}</Typography>
+                                              <Menu
+                                                  disableAutoFocusItem={true}
+                                                  variant='menu'
+                                                  sx={{
+                                                    maxHeight: 96 * 4.5,
+                                                    width: '20ch',
+                                                  }}
+                                                  { ...bindMenu(popupStateAwayFav) }
+                                                  anchorOrigin={{
+                                                    vertical: 'bottom',
+                                                    horizontal: 0,
+                                                  }}
+                                                  transformOrigin={{
+                                                    vertical: 'bottom',
+                                                    horizontal: 0,
+                                                  }}>
+                                                    <MenuItem
+                                                      key={game.gameId}
+                                                      sx={{ background: '#27272f', border: '1px solid #CCCCCC', color: '#FFFFFF', fontSize: '16px', borderRadius: '4px', margin: '3px' }}
+                                                      dense
+                                                      onClick={popupStateAwayFav.close}>
+                                                      { Math.abs(leaderboard.meta[game.gameId].spread) }
+                                                    </MenuItem>
+                                              </Menu>
+                                              }
+                                            </React.Fragment>
+                                          )}
+                                        </PopupState>
                                       </Box>
-                                      <Box sx={styles.listBox.list.listItem.container.statusPre.date}>
-                                        <Typography>{getStatusDate(game.clockStatus.date)}</Typography>
-                                        <Typography>{getStatusTime(game.clockStatus.date)}</Typography>
-                                      </Box>
-                                    </Box>
+                                    }
+                                  </Grid>
                                 </Grid>
-                          }
-                          {
-                            // Game In Progress
-                            isInProgressGame(game.gameStatus.status)
-                              && <Grid item xs={3} sx={styles.listBox.list.listItem.container.statusInProgress}>
-                                    <Box sx={styles.listBox.list.listItem.container.statusInProgress.displayClock}>
-                                      <Typography>{game.gameStatus.shortDetail}</Typography>
-                                    </Box>
-                                    <Box sx={styles.listBox.list.listItem.container.statusInProgress.situation}>
-                                      <Typography>{game.gameStatus.situation?.shortDownDistanceText}</Typography>
-                                      <Typography>{game.gameStatus.situation?.possessionText}</Typography>
-                                    </Box>
-                                  </Grid>
-                          }
-                          {
-                            // Postgame
-                            isPostGame(game.gameStatus.status)
-                              && <Grid item xs={3}>
-                                    <Box sx={styles.listBox.list.listItem.container.statusPost}>
-                                      <Box sx={styles.listBox.list.listItem.container.statusPost.name}>
-                                        <Typography>{getStatusText(game.gameStatus.name)}</Typography>
-                                      </Box>
-                                    </Box>
-                                  </Grid>
-                          }
-                          <Grid
-                            sx={styles.listBox.list.listItem.container.gameContainer}>
-                            <Grid item sx={styles.listBox.list.listItem.container.gameContainer.card}>
-                              <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info}>
-                                <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.logo}>
-                                  { LogoImage(game.homeTeam) }
-                                </Box>
-                                <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.name}>
-                                  {game.homeTeam.abbreviation}
-                                </Box>
                                 {
-                                  !isInProgressGame(game.gameStatus.status)
-                                    && <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.record}>
-                                        {game.homeTeam.record}
+                                  // Pregame
+                                  isPreGame(game.gameStatus.status)
+                                    && <Grid item xs={3}>
+                                          <Box sx={styles.listBox.list.listItem.container.statusPre}>
+                                            <Box sx={styles.listBox.list.listItem.container.statusPre.name}>
+                                              <Typography>{game.gameStatus.date}</Typography>
+                                            </Box>
+                                            <Box sx={styles.listBox.list.listItem.container.statusPre.date}>
+                                              <Typography>{getStatusDate(game.clockStatus.date)}</Typography>
+                                              <Typography>{getStatusTime(game.clockStatus.date)}</Typography>
+                                            </Box>
+                                          </Box>
+                                      </Grid>
+                                }
+                                {
+                                  // Game In Progress
+                                  isInProgressGame(game.gameStatus.status)
+                                    && <Grid item xs={3} sx={styles.listBox.list.listItem.container.statusInProgress}>
+                                          <Box sx={styles.listBox.list.listItem.container.statusInProgress.displayClock}>
+                                            <Typography>{game.gameStatus.shortDetail}</Typography>
+                                          </Box>
+                                          <Box sx={styles.listBox.list.listItem.container.statusInProgress.situation}>
+                                            <Typography>{game.gameStatus.situation?.shortDownDistanceText}</Typography>
+                                            <Typography>{game.gameStatus.situation?.possessionText}</Typography>
+                                          </Box>
+                                        </Grid>
+                                }
+                                {
+                                  // Postgame
+                                  isPostGame(game.gameStatus.status)
+                                    && <Grid item xs={3}>
+                                          <Box sx={styles.listBox.list.listItem.container.statusPost}>
+                                            <Box sx={styles.listBox.list.listItem.container.statusPost.name}>
+                                              <Typography>{getStatusText(game.gameStatus.name)}</Typography>
+                                            </Box>
+                                          </Box>
+                                        </Grid>
+                                }
+                                <Grid
+                                  sx={styles.listBox.list.listItem.container.gameContainer}>
+                                  <Grid item sx={styles.listBox.list.listItem.container.gameContainer.card}>
+                                    <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info}>
+                                      <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.logo}>
+                                        { LogoImage(game.homeTeam) }
                                       </Box>
-                                } 
-                              </Box>
-                              <Box sx={styles.listBox.list.listItem.container.gameContainer.card.score}>
-                                {game.homeTeam.score}
-                              </Box>
-                            </Grid>
-                            <Grid item sx={styles.listBox.list.listItem.container.gameContainer.state}>
-                              {
-                                isPicked(game.homeTeam)
-                                  ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
-                                      <PopupState variant="popover" popupId="home-team-picks">
-                                        {(popupStateHome) => (
-                                          <React.Fragment>
-                                            {
-                                              isPickWinning('home', game.homeTeam.id, game)
-                                                ? <StarIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateHome)}/>
-                                                : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateHome)}/>
-                                            }
-                                            {
-                                                game.gameStatus.status !== GAME_STATUS.PRE
-                                                  && <Menu
-                                                        disableAutoFocusItem={true}
-                                                        variant='menu'
-                                                        sx={{
-                                                          maxHeight: 96 * 4.5,
-                                                          width: '20ch',
-                                                        }}
-                                                        { ...bindMenu(popupStateHome) }
-                                                        anchorOrigin={{
-                                                          vertical: 'bottom',
-                                                          horizontal: 'bottom',
-                                                        }}
-                                                        transformOrigin={{
-                                                          vertical: 'bottom',
-                                                          horizontal: 'left',
-                                                        }}>
-                                                        {
-                                                          getPicks(game.homeTeam.id).map((pick) => {
-                                                            return (
-                                                              <MenuItem
-                                                                sx={{ background: '#333333', color: '#FFFFFF' }}
-                                                                dense
-                                                                onClick={popupStateHome.close}>
-                                                                { pick.username }
-                                                              </MenuItem>
-                                                            )
-                                                          })
-                                                        }
-                                                      </Menu>
-                                            }
-                                          </React.Fragment>
-                                        )}
-                                      </PopupState>
+                                      <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.name}>
+                                        {game.homeTeam.abbreviation}
+                                      </Box>
+                                      {
+                                        !isInProgressGame(game.gameStatus.status)
+                                          && <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.record}>
+                                              {game.homeTeam.record}
+                                            </Box>
+                                      } 
                                     </Box>
-                                  : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
-                                      <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                    <Box sx={styles.listBox.list.listItem.container.gameContainer.card.score}>
+                                      {game.homeTeam.score}
                                     </Box>
-                              }
-                              {
-                                isHomePossession(game.homeTeam, game.gameStatus.situation)
-                                  ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.possession}>
-                                      <SportsFootballIcon sx={{ fontSize: styles.icons.size }} />
-                                    </Box>
-                                  : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
-                                      <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
-                                    </Box>
-                              }
-                              {
-                                isHomeRedZone(game.homeTeam, game.gameStatus.situation)
-                                  ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
-                                      <TextureRoundedIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.icon} />
-                                    </Box>
-                                  : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
-                                      <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
-                                    </Box>
-                              }
-                            </Grid>
-                          </Grid>
-                      </ListItem>
-                    )
-                  })
+                                  </Grid>
+                                  <Grid item sx={styles.listBox.list.listItem.container.gameContainer.state}>
+                                    {
+                                      game.gameStatus.status !== GAME_STATUS.PRE
+                                        ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
+                                            <PopupState variant="popover" popupId="home-team-picks">
+                                              {(popupStateHome) => (
+                                                <React.Fragment>
+                                                  {
+                                                      isPickWinning(game.homeTeam.id, game, leaderboard.meta[game.gameId].winningTeam)
+                                                        ? isPick('home', game)
+                                                            ? <StarIcon sx={{ fontSize: styles.icons.size, border: '2px dashed green', borderRadius: '24px', padding: '3px', margin: '-3px' }} {...bindTrigger(popupStateHome)}/>
+                                                            : <StarIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateHome)}/>
+                                                        : isPick('home', game)
+                                                            ? <StarOutlineIcon sx={{ fontSize: styles.icons.size, border: '2px dashed green', borderRadius: '24px', padding: '3px', margin: '-3px' }} {...bindTrigger(popupStateHome)}/>
+                                                            : <StarOutlineIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateHome)}/>
+                                                    }
+                                                  {
+                                                      game.gameStatus.status !== GAME_STATUS.PRE
+                                                        && <Menu
+                                                              disableAutoFocusItem={true}
+                                                              variant='menu'
+                                                              sx={{
+                                                                maxHeight: 96 * 4.5,
+                                                                width: '20ch',
+                                                              }}
+                                                              { ...bindMenu(popupStateHome) }
+                                                              anchorOrigin={{
+                                                                vertical: 'bottom',
+                                                                horizontal: 0,
+                                                              }}
+                                                              transformOrigin={{
+                                                                vertical: 'bottom',
+                                                                horizontal: 'left',
+                                                              }}>
+                                                              {
+                                                                leaderboard.meta[game.gameId].homeTeam.picks.map((pick) => {
+                                                                  return (
+                                                                    <MenuItem
+                                                                      key={pick.username}
+                                                                      sx={{ background: '#27272f', border: '1px solid #CCCCCC', color: '#FFFFFF', fontSize: '16px', borderRadius: '4px', margin: '3px' }}
+                                                                      dense
+                                                                      onClick={popupStateHome.close}>
+                                                                      { pick.username }
+                                                                    </MenuItem>
+                                                                  )
+                                                                })
+                                                              }
+                                                            </Menu>
+                                                  }
+                                                </React.Fragment>
+                                              )}
+                                            </PopupState>
+                                          </Box>
+                                        : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                            <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                          </Box>
+                                    }
+                                    {
+                                      isHomePossession(game.homeTeam, game.gameStatus.situation)
+                                        ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.possession}>
+                                            <SportsFootballIcon sx={{ fontSize: styles.icons.size }} />
+                                          </Box>
+                                        : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                            <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                          </Box>
+                                    }
+                                    {
+                                      isHomeRedZone(game.homeTeam, game.gameStatus.situation)
+                                        ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                            <TextureRoundedIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.icon} />
+                                          </Box>
+                                        : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                            <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                          </Box>
+                                    }
+                                    {
+                                      <Box sx={styles.listBox.list.listItem.container.gameContainer.state.picked}>
+                                        <PopupState variant="popover" popupId="home-team-fav">
+                                          {(popupStateHomeFav) => (
+                                            <React.Fragment>
+                                              {
+                                                isFav('home', game.gameId)
+                                                  ? <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                                      <FavoriteIcon sx={styles.listBox.list.listItem.container.gameContainer.state.fav.icon} {...bindTrigger(popupStateHomeFav)}/>
+                                                    </Box>
+                                                  : <Box sx={styles.listBox.list.listItem.container.gameContainer.state.redZone}>
+                                                      <CircleIcon sx={styles.listBox.list.listItem.container.gameContainer.state.redZone.iconHidden} />
+                                                    </Box>
+                                              }
+                                              {
+                                              <Menu
+                                                  disableAutoFocusItem={true}
+                                                  variant='menu'
+                                                  sx={{
+                                                    maxHeight: 96 * 4.5,
+                                                    width: '20ch',
+                                                  }}
+                                                  { ...bindMenu(popupStateHomeFav) }
+                                                  anchorOrigin={{
+                                                    vertical: 'bottom',
+                                                    horizontal: 0,
+                                                  }}
+                                                  transformOrigin={{
+                                                    vertical: 'bottom',
+                                                    horizontal: 'left',
+                                                  }}>
+                                                    <MenuItem
+                                                      key={game.gameId}
+                                                      sx={{ background: '#333333', color: '#FFFFFF' }}
+                                                      dense
+                                                      onClick={popupStateHomeFav.close}>
+                                                      { Math.abs(leaderboard.meta[game.gameId].spread) }
+                                                    </MenuItem>
+                                                </Menu>
+                                              }
+                                            </React.Fragment>
+                                          )}
+                                        </PopupState>
+                                      </Box>
+                                    }
+                                  </Grid>
+                                </Grid>
+                            </ListItem>
+                          )
+                        })
                 }
               </List>
             )
-          : <ListItem sx={styles.listBox.list.listItemHeader}>
-              <Grid sx={styles.listBox.list.listItem.container.gameContainer}>
-                No Active Games
-              </Grid>
-            </ListItem>
+          : null
         }
       </nav>
     </Box>
