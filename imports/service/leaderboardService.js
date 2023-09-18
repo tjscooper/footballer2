@@ -148,7 +148,7 @@ const calculateWinners = async (gamesData = null, gameId = null, config) => {
   
   const { debugMode } = config || false;
   const DEBUG = debugMode || false;
-  const inspectGameId = gameId || '401547396'; 
+  const inspectGameId = gameId || '401547421'; 
 
   // Begin with empty return object
   let games = {};
@@ -160,7 +160,7 @@ const calculateWinners = async (gamesData = null, gameId = null, config) => {
     const awayTeam = game.awayTeam;
     const homeScore = parseFloat(game.homeTeam.score);
     const awayScore = parseFloat(game.awayTeam.score);
-    const spread = parseFloat(game.odds.spread) * -1;
+    const spread = Math.abs(parseFloat(game.odds.spread));
     if (DEBUG && gameId === inspectGameId) console.log('spread', spread);
 
     const fav = game.odds.favourite.home ? 'home' : 'away';
