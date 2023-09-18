@@ -29,10 +29,46 @@ Meteor.startup(() => {
   if (runMigrations) {
 
     const migrationService = new MigrationService().getInstance();
-    
+
+    // Migration List
+    const migrations = [
+      {
+        name: 'Calculate all leaderboards',
+        version: '01',
+        func: migrationService.v_01_refreshLeaderboards_up,
+        addToQueue: false
+      }
+    ];
+
     // List of migrations to run in sequence
-    
-    migrationService.v_01_refreshLeaderboards_up();
+    const migrationTimer = ms => new Promise(res => setTimeout(res, ms));
+    const timerSetting = 30; // seconds
+
+    const completedMigrations = [];
+    const performMigrations = async () => { 
+      for (let taskNumber = 0; taskNumber < migrations.length; taskNumber++) {
+
+        console.log(`performing migration ${taskNumber + 1}`);
+
+        // Execute migration logic, if add to queue is indicated
+        if (migrations[taskNumber].addToQueue) {
+          migrations[taskNumber]['func']();
+          completedMigrations.push(migrations[taskNumber]);
+        } else {
+          console.log(`migration ${taskNumber + 1} was skipped (not in queue)`);  
+        }
+
+        // Manage migration threads using task timer
+        await migrationTimer(timerSetting * 1000); // Await timer in ms
+      }
+      console.log(`completed ${completedMigrations.length} migrations`);
+    }
+
+    // Determine the total number of tasks to perform
+    const migrationTotal = migrations.length;
+
+    console.log('starting migration queue processing')
+    performMigrations(migrationTotal);
 
   }
 

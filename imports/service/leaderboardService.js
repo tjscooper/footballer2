@@ -289,9 +289,10 @@ const calculateWinners = async (gamesData = null, gameId = null, config) => {
 
 const getUsername = (userId) => Meteor.users.find({ _id: userId }).fetch()[0].username;
 
-const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
-  console.log('... calculating leaderboard stats for week', number);
+const calculateLeaderboard = async ({ number, year }, saveToDb = true) => {
   const DEBUG = false;
+
+  saveToDb && console.log('... calculating leaderboard stats for week', number);
 
   // Replace with lookups
   const week = getWeek({ number, year });
@@ -299,7 +300,7 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
   const leaderboardObj = getLeaderboardObj(week._id);
   
   if (!leaderboardObj) {
-    console.log('... No week found, failing')
+    saveToDb && console.log('... No week found, failing')
     return;
   }
 
@@ -378,10 +379,10 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
   });
 
   leaderboardObj.setData(data);
-  console.log('... set leaderboard data');
+  saveToDb && console.log('... set leaderboard data');
 
   leaderboardObj.setMeta(winners);
-  console.log('... set leaderboard winners');
+  saveToDb && console.log('... set leaderboard winners');
   
   if (saveToDb) {
     console.log('... saving to DB');
@@ -393,6 +394,7 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
       console.log(`... inserting leaderboard`);
       const id = insertLeaderboard(leaderboardObj);
       console.log(`... inserted ${leaderboardObj.weekId} at [id]${id}`);
+      return leaderboardObj;
     } else {
       // Update existing leaderboard
       const { _id } = existingLeaderboard;
@@ -415,7 +417,7 @@ const calculateLeaderboard = async ({ number, year }, saveToDb = false) => {
       }
     } 
   } else {
-    console.log(`... no insert, returning record only`);
+    saveToDb && console.log(`... no insert, returning record only`);
     return leaderboardObj;
   }
 }
