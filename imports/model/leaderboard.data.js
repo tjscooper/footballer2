@@ -759,7 +759,7 @@ const LEADERBOARD_JSON = {
 				"entity" : "PICK"
 			},
 			"updatedAt" : ISODate("2023-09-07T23:23:26.662-04:00")
-		}
+		},
   ],
   _games: [
 		/* 1 */
@@ -1944,7 +1944,1190 @@ const LEADERBOARD_JSON = {
 				"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547399"
 			},
 			"updatedAt" : ISODate("2023-09-13T00:03:00.653-04:00")
+		},
+		/* 1 */
+{
+	"_id" : "ktuN32ydHpT4j3Yp5",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547417",
+	"name" : "Green Bay Packers at Atlanta Falcons",
+	"shortName" : "GB @ ATL",
+	"competitionId" : "401547417",
+	"location" : "Mercedes-Benz Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T17:00Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "1",
+		"uid" : "s:20~l:28~t:1",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Atlanta Falcons",
+		"name" : "Falcons",
+		"abbreviation" : "ATL",
+		"location" : "Atlanta",
+		"color" : "a71930",
+		"alternateColor" : "000000",
+		"score" : "25",
+		"group" : "11",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/atl.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/atl.png"
+	},
+	"awayTeam" : {
+		"id" : "9",
+		"uid" : "s:20~l:28~t:9",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Green Bay Packers",
+		"name" : "Packers",
+		"abbreviation" : "GB",
+		"location" : "Green Bay",
+		"color" : "204e32",
+		"alternateColor" : "ffb612",
+		"score" : "24",
+		"group" : "10",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/gb.png"
+	},
+	"odds" : {
+		"details" : "GB -1.0",
+		"spread" : 1,
+		"favourite" : {
+			"home" : false,
+			"away" : true
 		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547417"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.649-04:00")
+},
+
+/* 2 */
+{
+	"_id" : "fnX64fRvFKELpKf8F",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547423",
+	"name" : "Miami Dolphins at New England Patriots",
+	"shortName" : "MIA @ NE",
+	"competitionId" : "401547423",
+	"location" : "Gillette Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-18T00:20Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "17",
+		"uid" : "s:20~l:28~t:17",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "New England Patriots",
+		"name" : "Patriots",
+		"abbreviation" : "NE",
+		"location" : "New England",
+		"color" : "002a5c",
+		"alternateColor" : "c60c30",
+		"score" : "17",
+		"group" : "4",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/ne.png"
+	},
+	"awayTeam" : {
+		"id" : "15",
+		"uid" : "s:20~l:28~t:15",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Miami Dolphins",
+		"name" : "Dolphins",
+		"abbreviation" : "MIA",
+		"location" : "Miami",
+		"color" : "008e97",
+		"alternateColor" : "fc4c02",
+		"score" : "24",
+		"group" : "4",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/mia.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/mia.png"
+	},
+	"odds" : {
+		"details" : "MIA -3.0",
+		"spread" : 3,
+		"favourite" : {
+			"home" : false,
+			"away" : true
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547423"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:01.552-04:00")
+},
+
+/* 3 */
+{
+	"_id" : "f2Ky3bPj6k7zJzvah",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547424",
+	"name" : "Cleveland Browns at Pittsburgh Steelers",
+	"shortName" : "CLE @ PIT",
+	"competitionId" : "401547424",
+	"location" : "Acrisure Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "pre",
+		"name" : "STATUS_SCHEDULED",
+		"shortDetail" : "9/18 - 8:15 PM EDT",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-19T00:15Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "23",
+		"uid" : "s:20~l:28~t:23",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Pittsburgh Steelers",
+		"name" : "Steelers",
+		"abbreviation" : "PIT",
+		"location" : "Pittsburgh",
+		"color" : "000000",
+		"alternateColor" : "ffb612",
+		"score" : "0",
+		"group" : "12",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/pit.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/pit.png"
+	},
+	"awayTeam" : {
+		"id" : "5",
+		"uid" : "s:20~l:28~t:5",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Cleveland Browns",
+		"name" : "Browns",
+		"abbreviation" : "CLE",
+		"location" : "Cleveland",
+		"color" : "472a08",
+		"alternateColor" : "ff3c00",
+		"score" : "0",
+		"group" : "12",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cle.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/cle.png"
+	},
+	"odds" : {
+		"details" : "CLE -2.5",
+		"spread" : 2.5,
+		"favourite" : {
+			"home" : false,
+			"away" : true
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547424"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.448-04:00")
+},
+
+/* 4 */
+{
+	"_id" : "ddXuFWhCfMsS9Wtg5",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547415",
+	"name" : "New York Jets at Dallas Cowboys",
+	"shortName" : "NYJ @ DAL",
+	"competitionId" : "401547415",
+	"location" : "AT&T Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T20:25Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "6",
+		"uid" : "s:20~l:28~t:6",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Dallas Cowboys",
+		"name" : "Cowboys",
+		"abbreviation" : "DAL",
+		"location" : "Dallas",
+		"color" : "002a5c",
+		"alternateColor" : "b0b7bc",
+		"score" : "30",
+		"group" : "1",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/dal.png"
+	},
+	"awayTeam" : {
+		"id" : "20",
+		"uid" : "s:20~l:28~t:20",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "New York Jets",
+		"name" : "Jets",
+		"abbreviation" : "NYJ",
+		"location" : "New York",
+		"color" : "115740",
+		"alternateColor" : "ffffff",
+		"score" : "10",
+		"group" : "4",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyj.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/nyj.png"
+	},
+	"odds" : {
+		"details" : "DAL -9.0",
+		"spread" : -9,
+		"favourite" : {
+			"home" : true,
+			"away" : false
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547415"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:01.352-04:00")
+},
+
+/* 5 */
+{
+	"_id" : "ZpEHDYWfSEqHnsZ5u",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547412",
+	"name" : "Baltimore Ravens at Cincinnati Bengals",
+	"shortName" : "BAL @ CIN",
+	"competitionId" : "401547412",
+	"location" : "Paycor Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T17:00Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "4",
+		"uid" : "s:20~l:28~t:4",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Cincinnati Bengals",
+		"name" : "Bengals",
+		"abbreviation" : "CIN",
+		"location" : "Cincinnati",
+		"color" : "fb4f14",
+		"alternateColor" : "000000",
+		"score" : "24",
+		"group" : "12",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/cin.png"
+	},
+	"awayTeam" : {
+		"id" : "33",
+		"uid" : "s:20~l:28~t:33",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Baltimore Ravens",
+		"name" : "Ravens",
+		"abbreviation" : "BAL",
+		"location" : "Baltimore",
+		"color" : "24135f",
+		"alternateColor" : "9a7611",
+		"score" : "27",
+		"group" : "12",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/bal.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/bal.png"
+	},
+	"odds" : {
+		"details" : "CIN -3.5",
+		"spread" : -3.5,
+		"favourite" : {
+			"home" : true,
+			"away" : false
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547412"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.747-04:00")
+},
+
+/* 6 */
+{
+	"_id" : "XbCFaZfSYSw2Hm5wM",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547420",
+	"name" : "Chicago Bears at Tampa Bay Buccaneers",
+	"shortName" : "CHI @ TB",
+	"competitionId" : "401547420",
+	"location" : "Raymond James Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T17:00Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "27",
+		"uid" : "s:20~l:28~t:27",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Tampa Bay Buccaneers",
+		"name" : "Buccaneers",
+		"abbreviation" : "TB",
+		"location" : "Tampa Bay",
+		"color" : "bd1c36",
+		"alternateColor" : "3e3a35",
+		"score" : "27",
+		"group" : "11",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/tb.png"
+	},
+	"awayTeam" : {
+		"id" : "3",
+		"uid" : "s:20~l:28~t:3",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Chicago Bears",
+		"name" : "Bears",
+		"abbreviation" : "CHI",
+		"location" : "Chicago",
+		"color" : "0b1c3a",
+		"alternateColor" : "e64100",
+		"score" : "17",
+		"group" : "10",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/chi.png"
+	},
+	"odds" : {
+		"details" : "TB -2.5",
+		"spread" : -2.5,
+		"favourite" : {
+			"home" : true,
+			"away" : false
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547420"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.946-04:00")
+},
+
+/* 7 */
+{
+	"_id" : "TWeQuKoeWj4x4yQcK",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547418",
+	"name" : "Seattle Seahawks at Detroit Lions",
+	"shortName" : "SEA @ DET",
+	"competitionId" : "401547418",
+	"location" : "Ford Field",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final/OT",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T17:00Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "8",
+		"uid" : "s:20~l:28~t:8",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Detroit Lions",
+		"name" : "Lions",
+		"abbreviation" : "DET",
+		"location" : "Detroit",
+		"color" : "0076b6",
+		"alternateColor" : "bbbbbb",
+		"score" : "31",
+		"group" : "10",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/det.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/det.png"
+	},
+	"awayTeam" : {
+		"id" : "26",
+		"uid" : "s:20~l:28~t:26",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Seattle Seahawks",
+		"name" : "Seahawks",
+		"abbreviation" : "SEA",
+		"location" : "Seattle",
+		"color" : "002a5c",
+		"alternateColor" : "69be28",
+		"score" : "37",
+		"group" : "3",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sea.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/sea.png"
+	},
+	"odds" : {
+		"details" : "DET -5.0",
+		"spread" : -5,
+		"favourite" : {
+			"home" : true,
+			"away" : false
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547418"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.846-04:00")
+},
+
+/* 8 */
+{
+	"_id" : "TLK8yrPZukFuxJpdc",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547419",
+	"name" : "Indianapolis Colts at Houston Texans",
+	"shortName" : "IND @ HOU",
+	"competitionId" : "401547419",
+	"location" : "NRG Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T17:00Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "34",
+		"uid" : "s:20~l:28~t:34",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Houston Texans",
+		"name" : "Texans",
+		"abbreviation" : "HOU",
+		"location" : "Houston",
+		"color" : "00143f",
+		"alternateColor" : "c41230",
+		"score" : "20",
+		"group" : "13",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/hou.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/hou.png"
+	},
+	"awayTeam" : {
+		"id" : "11",
+		"uid" : "s:20~l:28~t:11",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Indianapolis Colts",
+		"name" : "Colts",
+		"abbreviation" : "IND",
+		"location" : "Indianapolis",
+		"color" : "003b75",
+		"alternateColor" : "ffffff",
+		"score" : "31",
+		"group" : "13",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ind.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/ind.png"
+	},
+	"odds" : {
+		"details" : "IND -1.0",
+		"spread" : 1,
+		"favourite" : {
+			"home" : false,
+			"away" : true
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547419"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:01.145-04:00")
+},
+
+/* 9 */
+{
+	"_id" : "S84cJsQPBbgNayDgE",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547411",
+	"name" : "Las Vegas Raiders at Buffalo Bills",
+	"shortName" : "LV @ BUF",
+	"competitionId" : "401547411",
+	"location" : "Highmark Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T17:00Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "2",
+		"uid" : "s:20~l:28~t:2",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Buffalo Bills",
+		"name" : "Bills",
+		"abbreviation" : "BUF",
+		"location" : "Buffalo",
+		"color" : "00338d",
+		"alternateColor" : "d50a0a",
+		"score" : "38",
+		"group" : "4",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/buf.png"
+	},
+	"awayTeam" : {
+		"id" : "13",
+		"uid" : "s:20~l:28~t:13",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Las Vegas Raiders",
+		"name" : "Raiders",
+		"abbreviation" : "LV",
+		"location" : "Las Vegas",
+		"color" : "000000",
+		"alternateColor" : "a5acaf",
+		"score" : "10",
+		"group" : "6",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lv.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/lv.png"
+	},
+	"odds" : {
+		"details" : "BUF -9.0",
+		"spread" : -9,
+		"favourite" : {
+			"home" : true,
+			"away" : false
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547411"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.661-04:00")
+},
+
+/* 10 */
+{
+	"_id" : "PXePcbBeDDXdBQE5v",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547421",
+	"name" : "New York Giants at Arizona Cardinals",
+	"shortName" : "NYG @ ARI",
+	"competitionId" : "401547421",
+	"location" : "State Farm Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T20:05Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "22",
+		"uid" : "s:20~l:28~t:22",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Arizona Cardinals",
+		"name" : "Cardinals",
+		"abbreviation" : "ARI",
+		"location" : "Arizona",
+		"color" : "a4113e",
+		"alternateColor" : "ffffff",
+		"score" : "28",
+		"group" : "3",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ari.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/ari.png"
+	},
+	"awayTeam" : {
+		"id" : "19",
+		"uid" : "s:20~l:28~t:19",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "New York Giants",
+		"name" : "Giants",
+		"abbreviation" : "NYG",
+		"location" : "New York",
+		"color" : "003c7f",
+		"alternateColor" : "c9243f",
+		"score" : "31",
+		"group" : "1",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyg.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/nyg.png"
+	},
+	"odds" : {
+		"details" : "NYG -5.5",
+		"spread" : 5.5,
+		"favourite" : {
+			"home" : false,
+			"away" : true
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547421"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:01.263-04:00")
+},
+
+/* 11 */
+{
+	"_id" : "JPZD4J38xv6CXwQzv",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547425",
+	"name" : "New Orleans Saints at Carolina Panthers",
+	"shortName" : "NO @ CAR",
+	"competitionId" : "401547425",
+	"location" : "Bank of America Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "pre",
+		"name" : "STATUS_SCHEDULED",
+		"shortDetail" : "9/18 - 7:15 PM EDT",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-18T23:15Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "29",
+		"uid" : "s:20~l:28~t:29",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Carolina Panthers",
+		"name" : "Panthers",
+		"abbreviation" : "CAR",
+		"location" : "Carolina",
+		"color" : "0085ca",
+		"alternateColor" : "000000",
+		"score" : "0",
+		"group" : "11",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/car.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/car.png"
+	},
+	"awayTeam" : {
+		"id" : "18",
+		"uid" : "s:20~l:28~t:18",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "New Orleans Saints",
+		"name" : "Saints",
+		"abbreviation" : "NO",
+		"location" : "New Orleans",
+		"color" : "d3bc8d",
+		"alternateColor" : "000000",
+		"score" : "0",
+		"group" : "11",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/no.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/no.png"
+	},
+	"odds" : {
+		"details" : "NO -3.0",
+		"spread" : 3,
+		"favourite" : {
+			"home" : false,
+			"away" : true
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547425"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.354-04:00")
+},
+
+/* 12 */
+{
+	"_id" : "DzCJPkq8gdDcPPaGr",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547422",
+	"name" : "San Francisco 49ers at Los Angeles Rams",
+	"shortName" : "SF @ LAR",
+	"competitionId" : "401547422",
+	"location" : "SoFi Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T20:05Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "14",
+		"uid" : "s:20~l:28~t:14",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Los Angeles Rams",
+		"name" : "Rams",
+		"abbreviation" : "LAR",
+		"location" : "Los Angeles",
+		"color" : "003594",
+		"alternateColor" : "ffd100",
+		"score" : "23",
+		"group" : "3",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lar.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/lar.png"
+	},
+	"awayTeam" : {
+		"id" : "25",
+		"uid" : "s:20~l:28~t:25",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "San Francisco 49ers",
+		"name" : "49ers",
+		"abbreviation" : "SF",
+		"location" : "San Francisco",
+		"color" : "aa0000",
+		"alternateColor" : "b3995d",
+		"score" : "30",
+		"group" : "3",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sf.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/sf.png"
+	},
+	"odds" : {
+		"details" : "SF -8.0",
+		"spread" : 8,
+		"favourite" : {
+			"home" : false,
+			"away" : true
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547422"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:01.246-04:00")
+},
+
+/* 13 */
+{
+	"_id" : "8yokpvhx2n9Z7wDGa",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547410",
+	"name" : "Minnesota Vikings at Philadelphia Eagles",
+	"shortName" : "MIN @ PHI",
+	"competitionId" : "401547410",
+	"location" : "Lincoln Financial Field",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-15T00:15Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "21",
+		"uid" : "s:20~l:28~t:21",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Philadelphia Eagles",
+		"name" : "Eagles",
+		"abbreviation" : "PHI",
+		"location" : "Philadelphia",
+		"color" : "06424d",
+		"alternateColor" : "a2aaad",
+		"score" : "34",
+		"group" : "1",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/phi.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/phi.png"
+	},
+	"awayTeam" : {
+		"id" : "16",
+		"uid" : "s:20~l:28~t:16",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Minnesota Vikings",
+		"name" : "Vikings",
+		"abbreviation" : "MIN",
+		"location" : "Minnesota",
+		"color" : "4f2683",
+		"alternateColor" : "ffc62f",
+		"score" : "28",
+		"group" : "10",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/min.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/min.png"
+	},
+	"odds" : {
+		"details" : "PHI -6.0",
+		"spread" : -6,
+		"favourite" : {
+			"home" : true,
+			"away" : false
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547410"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.550-04:00")
+},
+
+/* 14 */
+{
+	"_id" : "8ce6F6bncX8wDtGJC",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547416",
+	"name" : "Washington Commanders at Denver Broncos",
+	"shortName" : "WSH @ DEN",
+	"competitionId" : "401547416",
+	"location" : "Empower Field at Mile High",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T20:25Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "7",
+		"uid" : "s:20~l:28~t:7",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Denver Broncos",
+		"name" : "Broncos",
+		"abbreviation" : "DEN",
+		"location" : "Denver",
+		"color" : "0a2343",
+		"alternateColor" : "fc4c02",
+		"score" : "33",
+		"group" : "6",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/den.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/den.png"
+	},
+	"awayTeam" : {
+		"id" : "28",
+		"uid" : "s:20~l:28~t:28",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Washington Commanders",
+		"name" : "Commanders",
+		"abbreviation" : "WSH",
+		"location" : "Washington",
+		"color" : "5a1414",
+		"alternateColor" : "ffb612",
+		"score" : "35",
+		"group" : "1",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/wsh.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/wsh.png"
+	},
+	"odds" : {
+		"details" : "DEN -3.5",
+		"spread" : -3.5,
+		"favourite" : {
+			"home" : true,
+			"away" : false
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547416"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:01.450-04:00")
+},
+
+/* 15 */
+{
+	"_id" : "6GNyY8qchpXJqKQgG",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547413",
+	"name" : "Kansas City Chiefs at Jacksonville Jaguars",
+	"shortName" : "KC @ JAX",
+	"competitionId" : "401547413",
+	"location" : "EverBank Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T17:00Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "30",
+		"uid" : "s:20~l:28~t:30",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Jacksonville Jaguars",
+		"name" : "Jaguars",
+		"abbreviation" : "JAX",
+		"location" : "Jacksonville",
+		"color" : "007487",
+		"alternateColor" : "d7a22a",
+		"score" : "9",
+		"group" : "13",
+		"record" : "1-0",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/jax.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/jax.png"
+	},
+	"awayTeam" : {
+		"id" : "12",
+		"uid" : "s:20~l:28~t:12",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Kansas City Chiefs",
+		"name" : "Chiefs",
+		"abbreviation" : "KC",
+		"location" : "Kansas City",
+		"color" : "e31837",
+		"alternateColor" : "ffb612",
+		"score" : "17",
+		"group" : "6",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/kc.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/kc.png"
+	},
+	"odds" : {
+		"details" : "KC -3.5",
+		"spread" : 3.5,
+		"favourite" : {
+			"home" : false,
+			"away" : true
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547413"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:01.049-04:00")
+},
+
+/* 16 */
+{
+	"_id" : "4bWCvpnjN28FhdKJk",
+	"weekId" : "jo39qYCdZem9FA3ub",
+	"weekNumber" : 2,
+	"gameId" : "401547414",
+	"name" : "Los Angeles Chargers at Tennessee Titans",
+	"shortName" : "LAC @ TEN",
+	"competitionId" : "401547414",
+	"location" : "Nissan Stadium",
+	"seasonType" : "2",
+	"gameStatus" : {
+		"status" : "post",
+		"name" : "STATUS_FINAL",
+		"shortDetail" : "Final/OT",
+		"situation" : null
+	},
+	"clockStatus" : {
+		"date" : "2023-09-17T17:00Z",
+		"displayClock" : "0:00",
+		"clock" : 0
+	},
+	"homeTeam" : {
+		"id" : "10",
+		"uid" : "s:20~l:28~t:10",
+		"type" : "team",
+		"order" : 0,
+		"homeAway" : "home",
+		"winner" : false,
+		"displayName" : "Tennessee Titans",
+		"name" : "Titans",
+		"abbreviation" : "TEN",
+		"location" : "Tennessee",
+		"color" : "4b92db",
+		"alternateColor" : "002a5c",
+		"score" : "27",
+		"group" : "13",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ten.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/ten.png"
+	},
+	"awayTeam" : {
+		"id" : "24",
+		"uid" : "s:20~l:28~t:24",
+		"type" : "team",
+		"order" : 1,
+		"homeAway" : "away",
+		"winner" : false,
+		"displayName" : "Los Angeles Chargers",
+		"name" : "Chargers",
+		"abbreviation" : "LAC",
+		"location" : "Los Angeles",
+		"color" : "0080c6",
+		"alternateColor" : "ffc20e",
+		"score" : "24",
+		"group" : "6",
+		"record" : "0-1",
+		"logo" : "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lac.png",
+		"logoDark" : "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/lac.png"
+	},
+	"odds" : {
+		"details" : "LAC -3.0",
+		"spread" : 3,
+		"favourite" : {
+			"home" : false,
+			"away" : true
+		}
+	},
+	"meta" : {
+		"gameUrl" : "https://www.espn.com/nfl/game/_/gameId/401547414"
+	},
+	"updatedAt" : ISODate("2023-09-18T11:46:00.854-04:00")
+}
   ],
   _meta: { full: null },
 };

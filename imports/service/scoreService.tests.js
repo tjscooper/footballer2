@@ -29,6 +29,11 @@ if (Meteor.isServer) {
         { gameId: '401547407', homeTeam: 'CHI', homeScore: 20, awayTeam: 'GB', awayScore: 38, spread: -1.5, winner: 'GB', weekNumber: '1', season: '2023' },
         { gameId: '401547408', homeTeam: 'SEA', homeScore: 13, awayTeam: 'LAR', awayScore: 30, spread: -4.5, winner: 'LAR', weekNumber: '1', season: '2023' },
         { gameId: '401547409', homeTeam: 'NYG', homeScore: 0, awayTeam: 'DAL', awayScore: 40, spread: 3, winner: 'DAL', weekNumber: '1', season: '2023' },
+        { gameId: '401547410', homeTeam: 'PHI', homeScore: 34, awayTeam: 'MIN', awayScore: 28, spread: -6, winner: 'MIN', weekNumber: '2', season: '2023' },
+        { gameId: '401547411', homeTeam: 'BUF', homeScore: 38, awayTeam: 'LV', awayScore: 10, spread: -9, winner: 'BUF', weekNumber: '2', season: '2023' },
+        { gameId: '401547421', homeTeam: 'ARI', homeScore: 28, awayTeam: 'NYG', awayScore: 31, spread: 5.5, winner: 'ARI', weekNumber: '2', season: '2023' },
+        { gameId: '401547422', homeTeam: 'LAR', homeScore: 23, awayTeam: 'SF', awayScore: 30, spread: 8, winner: 'LAR', weekNumber: '2', season: '2023' },
+        // { gameId: '401547412', homeTeam: 'BUF', homeScore: 38, awayTeam: 'LV', awayScore: 10, spread: -9, winner: 'BUF', weekNumber: '2', season: '2023' },
       ]
 
       scoreSheets.forEach(({
