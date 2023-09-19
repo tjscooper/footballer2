@@ -27,6 +27,7 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { GamesCollection } from '../db/games';
 import { PicksCollection } from '../db/picks';
 import { WeeksCollection } from '../db/weeks';
+import { TeamsCollection } from '../db/teams';
 import { LeaderboardsCollection } from '../db/leaderboards';
 
 import { GamesList } from './GamesList';
@@ -53,7 +54,7 @@ export const Home = () => {
   const [selectedWeekId, setSelectedWeekId] = useState(null);
 
   // Data
-  const { currentWeek, weeks, games, picks, players, leaderboard, isLoading } = useTracker(() => {
+  const { currentWeek, weeks, games, picks, players, teams, leaderboard, isLoading } = useTracker(() => {
     
     // Hydrate players
     const playersHandler = Meteor.subscribe('players.listUsers');
@@ -100,8 +101,18 @@ export const Home = () => {
     const picks = PicksCollection.find({ weekId: currentWeek._id }).fetch();
     const games = GamesCollection.find({ weekId: currentWeek._id }).fetch();
 
+    const teamsHandler = Meteor.subscribe('teams'); 
+
+    // Await data hydration
+    if (!teamsHandler.ready()) {
+      return { currentWeek, isLoading: true };
+    }
+    
+    // Query local collections
+    const teams = TeamsCollection.find({}).fetch();
+
     // Return data
-    return { currentWeek, picks, games, weeks, players, leaderboard, isLoading: false };
+    return { currentWeek, picks, games, weeks, players, teams, leaderboard, isLoading: false };
   }, [selectedWeekId]);
   
   // Methods
@@ -408,6 +419,7 @@ export const Home = () => {
               games={games}
               picks={picks}
               players={players}
+              teams={teams}
               leaderboard={leaderboard}
               currentWeek={currentWeek}
               isLoading={isLoading}
