@@ -29,7 +29,7 @@ export const GamesList = (props) => {
   const navigateTo = (pageName) => navigate(`/${pageName}`);
 
   // Data
-  const { games, leaderboard, showActiveFilterToggle } = props;
+  const { games, teams, leaderboard, showActiveFilterToggle } = props;
   
   // Methods
 
@@ -120,6 +120,13 @@ export const GamesList = (props) => {
   const getStatusTime = (date) => {
     const statusTime = dayjs(date).format('h:mm A');
     return statusTime;
+  }
+
+  const getTeamRecord = (competitorId) => {
+    if (!competitorId || !teams) {
+      return null;
+    }
+    return teams.find(t => t.competitorId === competitorId).record;
   }
 
   // Styles
@@ -372,7 +379,7 @@ export const GamesList = (props) => {
                                       {
                                         !isInProgressGame(game.gameStatus.status)
                                           && <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.record}>
-                                              {game.awayTeam.record}
+                                              {getTeamRecord(game.awayTeam.id)}
                                             </Box>
                                       } 
                                     </Box>
@@ -554,7 +561,7 @@ export const GamesList = (props) => {
                                       {
                                         !isInProgressGame(game.gameStatus.status)
                                           && <Box sx={styles.listBox.list.listItem.container.gameContainer.card.info.record}>
-                                              {game.homeTeam.record}
+                                              {getTeamRecord(game.homeTeam.id)}
                                             </Box>
                                       } 
                                     </Box>
