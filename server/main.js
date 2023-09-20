@@ -21,6 +21,7 @@ import '../imports/api/scores.js';
 import '../imports/api/picks.js';
 import '../imports/api/leaderboards.js';
 import '../imports/api/chirps.js';
+import '../imports/api/feeds.js';
 
 Meteor.startup(() => {
 
@@ -78,6 +79,7 @@ Meteor.startup(() => {
   
     const feedService = new FeedService().getInstance();
 
+    // Trigger all services on startup
     // Get Teams must always run first
     feedService.getTeams();
     feedService.getWeeks();
@@ -93,13 +95,13 @@ Meteor.startup(() => {
 
     CronService.register({
       name: 'Get Weeks',
-      scheduleParserText: 'at 1:55 am every Tuesday',
+      scheduleParserText: 'at 1:55 am every Wednesday',
       scheduleFn: feedService.getWeeks
     });
 
     CronService.register({
       name: 'Get Games',
-      scheduleParserText: 'at 2:00 am every Tuesday',
+      scheduleParserText: 'at 2:00 am every Wednesday',
       scheduleFn: feedService.getGames()
     });
     

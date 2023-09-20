@@ -53,6 +53,7 @@ class FeedService {
   }
 
   async getWeeks() {
+    console.log('getting weeks...');
     try {
       const response = await fetch(SCOREBOARD_URL, {
           method: 'GET',
@@ -89,6 +90,7 @@ class FeedService {
   }
 
   async getTeams() {
+    console.log('getting teams...');
     try {
       const response = await fetch(SCHEDULE_URL, {
           method: 'GET',
@@ -125,6 +127,7 @@ class FeedService {
   }
 
   async getGames() {
+    console.log('getting games...');
     try {
       const response = await fetch(SCHEDULE_URL, {
           method: 'GET',
@@ -165,10 +168,12 @@ class FeedService {
 class Singleton {
   constructor() {
     if (!Singleton.instance) {
+      console.log('creating new feed service...');
       Singleton.instance = new FeedService();
     }
   }
   getInstance() {
+    console.log('feed service...');
     return Singleton.instance;
   }
 }

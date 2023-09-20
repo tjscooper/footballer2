@@ -29,10 +29,47 @@ const getGameByGameId = (_gameId) => {
   return game;
 }
 
-const insertGame = (gameObj) => {
-  const id = GamesCollection.insert(gameObj);
-  check(id, String);
-  return id;
+// Use upsert to prevent duplicates
+const insertGame = ({
+  weekId, 
+  weekNumber, 
+  gameId,
+  name,
+  shortName,
+  competitionId,
+  location,
+  seasonType,
+  gameStatus,
+  clockStatus,
+  homeTeam,
+  awayTeam,
+  odds,
+  meta
+}) => {
+
+  const query = { gameId };
+
+  const updateObj = {
+    weekId, 
+    weekNumber, 
+    gameId,
+    name,
+    shortName,
+    competitionId,
+    location,
+    seasonType,
+    gameStatus,
+    clockStatus,
+    homeTeam,
+    awayTeam,
+    odds,
+    meta
+  }
+  const update = { $set: updateObj };
+  const options = { upsert: true };
+  const result = GamesCollection.update(query, update, options);
+  check(result, Number);
+  return result;
 }
 
 const updateGame = (queryObj) => {
@@ -262,8 +299,12 @@ const processFeed = async ({ sports }) => {
 
         // Games are created 
         const gameObj = getGameObj(game, _weekId, _weekNumber);
-        const id = insertGame(gameObj);
-        console.debug(`Inserted ${game.name} at [id]${id}`);
+        const result = insertGame(gameObj);
+        if (result) {
+          console.debug(`Successfully inserted ${game.name}`);
+        } else {
+          console.debug(`Failed to insert ${game.name}`);
+        }
       });
     } else {
       // Games already exist, only update game odds
