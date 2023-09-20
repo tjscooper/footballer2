@@ -81,6 +81,9 @@ export const GamesList = (props) => {
   }
 
   const isFav = (homeAway, gameId) => {
+    if (!leaderboard) {
+      return false;
+    }
     const game = leaderboard.meta[gameId];
     return homeAway === 'home'
       ? game.fav === 'home'
