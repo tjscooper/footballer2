@@ -284,7 +284,7 @@ export const Home = () => {
           }}
         />
         <VictoryAxis
-          label={ !selectedWeekId ? "This Week" : `Week ${currentWeek.number}`}
+          label={getWeekText(currentWeek)}
           axisLabelComponent={
             <VictoryLabel
               dx={-24}

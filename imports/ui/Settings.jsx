@@ -15,6 +15,7 @@ import { WeeksCollection } from '../db/weeks';
 
 import { PicksList } from './PicksList';
 import { AppBarResponsive } from './AppBarResponsive';
+import { Button } from '@mui/material';
 
 /*
   Settings - Description
@@ -68,42 +69,95 @@ export const Settings = () => {
   //   return { picks, games, weeks, currentWeek, isLoading: false };
   // });
 
+  // State
+
+  const [currentWeek, setCurrentWeek] = useState(null);
+  const [teamsMessage, setTeamsMessage] = useState(null);
+  const [gamesMessage, setGamesMessage] = useState(null);
+  const [scoresMessage, setScoresMessage] = useState(null);
+
   // Methods
-  const onWeekSelect = (event) => {
-    // console.log(event.target.value);
+
+  const handleGetWeeks = () => {
+    Meteor.call('feeds.getWeeks', (err, data) => {
+      if (err) {
+        console.err(err);
+      }
+      console.log('data', data);
+      var obj = { status: true, ...data };
+      if (obj?.displayMessage !== null) {
+        obj['displayMessage'] = data.displayMessage;
+      } else {
+        obj = { obj, ...data };
+      }
+      setCurrentWeek(obj);
+    });
+  }
+
+  const handleGetTeams = () => {
+    Meteor.call('feeds.getTeams', (err, data) => {
+      if (err) {
+        console.err(err);
+      }
+      setTeamsMessage(data.displayMessage);
+    });
+  }
+
+  const handleGetGames = () => {
+    Meteor.call('feeds.getGames', (err, data) => {
+      if (err) {
+        console.err(err);
+      }
+      setGamesMessage(data.displayMessage);
+    });
+  }
+
+  const handleGetScores = () => {
+    Meteor.call('feeds.getScores', (err, data) => {
+      if (err) {
+        console.err(err);
+      }
+      console.log('data', data);
+      setScoresMessage(data.displayMessage);
+    });
   }
   
   // Styles
   const styles = {
     container: {
-      display: 'flex',
-      flexDirection: 'row',
-      minWidth: '90.5vw',
+      minWidth: '91vw',
+      maxWidth: '91vw',
       minHeight: '90.5vw',
-      background: '#000000',
-      padding: '12px',
+      padding: '12px'
     },
     header: {
-      display: 'flex',
-      flexDirection: 'row',
+      display: 'block',
+      width: '90vw',
       marginTop: '16px',
       primary: {
         fontSize: '18px',
         fontWeight: 'regular',
         textTransform: 'uppercase',
-        color: '#999999',
-        minWidth: '310px'
+        color: '#999999'
       }
     },
     section: {
-      display: 'flex',
-      flexDirection: 'row',
-      width: '90vw',
+      display: 'block',
       marginTop: '16px',
-      background: '#666666',
+      background: '#dedede',
       color: '#FFFFFF',
       padding: '16px',
       borderRadius: '24px',
+      button: {
+        color: '#FFFFFF',
+        minWidth: '100px',
+        maxWidth: '100px',
+        maxHeight: '55px',
+        borderRadius: '8px',
+        fontSize: '14px',
+        backgroundColor: '#333333',
+        padding: '16px'
+      }
     }
   }
 
@@ -124,10 +178,63 @@ export const Settings = () => {
             </Box>
           </Box>
           <Box sx={styles.section}>
-            {/* <Box sx={styles.header.primary}>
-              Settings
-            </Box> */}
-            <Box>Test</Box>
+
+            <Box style={{ display: 'inline-flex', color: '#000000', margin: '8px' }}>
+              <Button
+                onClick={handleGetWeeks}
+                sx={styles.section.button}>
+                Weeks
+              </Button>
+              <Box style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
+                <span>YEAR: {currentWeek?.year || '-'}</span>
+                <span>TYPE: {currentWeek?.type || '-'}</span>
+                <span>WEEK: {currentWeek?.number || '-'}</span>
+              </Box>
+            </Box>
+
+            <hr />
+
+            <Box style={{ display: 'inline-flex', color: '#000000', margin: '8px' }}>
+              <Button
+                onClick={handleGetTeams}
+                sx={styles.section.button}>
+                Teams
+              </Button>
+              <Box style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
+                <span>STATUS:</span>
+                <span>{teamsMessage || '-'}</span>
+              </Box>
+            </Box>
+
+            <hr />
+
+            <Box style={{ display: 'inline-flex', color: '#000000', margin: '8px' }}>
+              <Button
+                onClick={handleGetGames}
+                sx={styles.section.button}>
+                Games
+              </Button>
+              <Box style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
+                <span>STATUS:</span>
+                <span>{gamesMessage || '-'}</span>
+              </Box>
+            </Box>
+
+            <hr />
+
+            <Box style={{ display: 'inline-flex', color: '#000000', margin: '8px' }}>
+              <Button
+                onClick={handleGetScores}
+                sx={styles.section.button}>
+                Scores
+              </Button>
+              <Box style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
+                <span>STATUS:</span>
+                <span>{scoresMessage || '-'}</span>
+              </Box>
+            </Box>
+
+
           </Box>
         </Grid>
       </Grid>
