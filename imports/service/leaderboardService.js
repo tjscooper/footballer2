@@ -289,13 +289,13 @@ const calculateWinners = async (gamesData = null, gameId = null, config) => {
 
 const getUsername = (userId) => Meteor.users.find({ _id: userId }).fetch()[0].username;
 
-const calculateLeaderboard = async ({ number, year }, saveToDb = true) => {
+const calculateLeaderboard = async ({ number, year, type }, saveToDb = true) => {
   const DEBUG = false;
 
-  saveToDb && console.log('... calculating leaderboard stats for week', number);
+  saveToDb && console.log('... calculating leaderboard stats for week', year, type, number);
 
   // Replace with lookups
-  const week = getWeek({ number, year });
+  const week = getWeek({ number, year, type });
 
   const leaderboardObj = getLeaderboardObj(week._id);
   

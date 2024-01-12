@@ -44,8 +44,8 @@ class MigrationService {
             console.log(`05 - performing task ${taskNumber + 1}`);
 
             // Task logic
-            const { number, year } = weeks[taskNumber];
-            const result = await calculateLeaderboard({ number, year }, true); // Allow Save to DB (true)
+            const { number, year, type } = weeks[taskNumber];
+            const result = await calculateLeaderboard({ number, year, type }, true); // Allow Save to DB (true)
             console.log(`05-${taskNumber + 1} - inserted leaderboard for week ${number} [${ result ? 'success' : 'fail' }]`);
 
             // Manage task threads using task timer

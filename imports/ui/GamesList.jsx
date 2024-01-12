@@ -151,7 +151,12 @@ export const GamesList = (props) => {
       marginTop: '8px',
       bgcolor: '#FFFFFF',
       borderRadius: '16px',
+      minWidth: '91vw',
+      maxWidth: '91vw',
       list: {
+        minHeight: '48px',
+        background: '#FFFFFF',
+        borderRadius: '16px',
         listItemHeader: {
           display: 'flex',
           flexDirection: 'row',

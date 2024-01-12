@@ -28,22 +28,26 @@ const insertWeek = (weekObj) => {
 }
 
 // Process Feed
+// season: { type: 3, year: 2023 }
+// week: { number: 1 }
 const processFeed = ({ week, season }) => {
   
+
   // Validation
   check(week, Object); 
   check(season, Object);
   
   // Get week number from feed data
   const { number } = week;
-  const { year } = season;
+  const { year, type } = season;
 
   // If week is not found, insert
-  if (getWeeks({ number, year }).length === 0) {
+  if (getWeeks({ number, year, type }).length === 0) {
     const weekObj = getWeekObj({
       _id: null,
       number,
-      year
+      year,
+      type
     });
     const id = insertWeek(weekObj);
     return getWeekById(id);
