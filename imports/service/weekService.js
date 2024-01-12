@@ -7,6 +7,14 @@ const getWeeks = (queryObj) => {
   return WeeksCollection.find(queryObj).fetch();
 };
 
+const getWeeksOrderByType = () => {
+  return WeeksCollection.find({}, { sort: { type: -1, number: -1 }}).fetch();
+};
+
+const getWeekOrderByType = () => {
+  return WeeksCollection.find({}, { sort: { type: -1, number: -1 } }, { limit: 1 }).fetch()[0];
+};
+
 const getWeek = (queryObj) => {
   return getWeeks(queryObj)[0] || [];
 }
@@ -59,8 +67,8 @@ const processFeed = ({ week, season }) => {
 // Current Week
 // returns the latest week (sorted by "number" property)
 const currentWeek = () => {
-  const week = getWeeks({})
-    .sort((a, b) => b.number - a.number)[0];
+  const week = getWeekOrderByType();
+  console.log('week', week);
   return week;
 }
 

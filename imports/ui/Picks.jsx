@@ -55,9 +55,7 @@ export const Picks = () => {
     }
 
     const weeks = WeeksCollection
-      .find({})
-      .fetch()
-      .sort((a, b) => b.number - a.number);
+      .find({}, { sort: { type: -1, number: -1 } }).fetch();
 
     const currentWeek = weeks[0];
 

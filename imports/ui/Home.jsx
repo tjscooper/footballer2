@@ -73,9 +73,8 @@ export const Home = () => {
     }
 
     const weeks = WeeksCollection
-      .find({})
-      .fetch()
-      .sort((a, b) => b.number - a.number);
+      .find({}, { sort: { type: -1, number: -1 } })
+      .fetch();
 
     const currentWeek = selectedWeekId !== null
       ? weeks.find(w => w._id === selectedWeekId)
@@ -129,12 +128,15 @@ export const Home = () => {
   const toggleChirpsPanel = () => setChirpsPanelOpen(!chirpsPanelOpen);
 
   const getWeekText = ({ number, type }) => {
-    switch (type) {
-      case 2: return `Week ${number}`;
-      case 3: return `Wildcard Week ${number}`;
-      default:
-        return `Week ${number}`;
-    }
+    if (type === 2) {
+      return `Week ${number}`;
+    } else if (type === 3 && number === 1) {
+      return 'Wildcard';
+    } else if (type === 3 && number === 2) {
+      return 'Divisional';
+    } else {
+      return 'TBD';
+    } 
   }
 
   // Styles
@@ -162,14 +164,14 @@ export const Home = () => {
     },
     chirps: {
       btn: {
-        marginLeft: '16px',
-        marginTop: '8px',
+        marginLeft: '24px',
+        marginTop: '-8px',
         paddingLeft: '24px',
-        height: '48px',
-        width: '36px',
+        height: '64px',
+        width: '64px',
         color: '#FFFFFF',
         background: '#f34cc5',
-        borderRadius: '72px',
+        borderRadius: '48px',
         fontWeight: 'bold',
         textAlign: 'center',
         fontFamily: 'monospace',
@@ -186,7 +188,7 @@ export const Home = () => {
       select: {
         marginTop: '8px',
         background: '#27272f',
-        width: '180px',
+        width: '200px',
         color: '#FFFFFF',
         height: '48px',
         borderRadius: '16px',
@@ -207,7 +209,7 @@ export const Home = () => {
         textTransform: 'capitalize',
         paddingTop: '12px',
         maxWidth: '20px',
-        marginLeft: '24px',        
+        marginLeft: '36px',        
       }
     },
     picksList: {
