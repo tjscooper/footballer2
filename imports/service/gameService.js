@@ -259,7 +259,8 @@ const processFeed = async ({ sports }) => {
       }).throw();
     }
 
-    const week = { number: games[0].number };
+    const week = { number: games[0].week };
+  
 
     if (!week) {
       return;

@@ -12,6 +12,7 @@ import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded';
 import ToggleOnRoundedIcon from '@mui/icons-material/ToggleOnRounded';
 import { CircularProgress } from '@mui/material';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import SportsFootballIcon from '@mui/icons-material/SportsFootball'
 
 import {
   VictoryBar,
@@ -33,6 +34,7 @@ import { LeaderboardsCollection } from '../db/leaderboards';
 import { GamesList } from './GamesList';
 import { Chirps } from './Chirps';
 import { AppBarResponsive } from './AppBarResponsive';
+import { Weekend } from '@mui/icons-material';
 
 export const Home = () => {
 
@@ -126,6 +128,15 @@ export const Home = () => {
 
   const toggleChirpsPanel = () => setChirpsPanelOpen(!chirpsPanelOpen);
 
+  const getWeekText = ({ number, type }) => {
+    switch (type) {
+      case 2: return `Week ${number}`;
+      case 3: return `Wildcard Week ${number}`;
+      default:
+        return `Week ${number}`;
+    }
+  }
+
   // Styles
   const highlightRegions = false;
   const styles = {
@@ -152,13 +163,13 @@ export const Home = () => {
     chirps: {
       btn: {
         marginLeft: '16px',
-        marginTop: '-8px',
+        marginTop: '8px',
         paddingLeft: '24px',
-        height: '64px',
-        width: '64px',
+        height: '48px',
+        width: '36px',
         color: '#FFFFFF',
         background: '#f34cc5',
-        borderRadius: '48px',
+        borderRadius: '72px',
         fontWeight: 'bold',
         textAlign: 'center',
         fontFamily: 'monospace',
@@ -175,7 +186,7 @@ export const Home = () => {
       select: {
         marginTop: '8px',
         background: '#27272f',
-        width: '140px',
+        width: '180px',
         color: '#FFFFFF',
         height: '48px',
         borderRadius: '16px',
@@ -192,13 +203,16 @@ export const Home = () => {
       toggle: {
         border: highlightRegions ? '1px solid orange' : 'none',
         border: 'none',
-        color: '#FFFFFF',
+        color: '#999999',
         textTransform: 'capitalize',
         paddingTop: '12px',
+        maxWidth: '20px',
+        marginLeft: '24px',        
       }
     },
     picksList: {
       display: 'flex',
+      minHeight: '24px',
       flexDirection: 'row',
       justifyContent: 'start',
       width: '100%',
@@ -219,13 +233,15 @@ export const Home = () => {
           startIcon={<ToggleOnRoundedIcon sx={{ color: '#d0ff12' }} />}
           onClick={ () => handleToggle(false) }
           sx={styles}>
-          {useOnLabelTextForBoth ? onLabelText : offLabelText}
+          {/* {useOnLabelTextForBoth ? onLabelText : offLabelText} */}
+          <SportsFootballIcon sx={{styles}} />
         </Button>
       : <Button variant="outlined"
-          startIcon={<ToggleOffRoundedIcon />}
+          startIcon={<ToggleOffRoundedIcon  sx={{ color: '#FFFFFF' }} />}
           onClick={ () => handleToggle(true) }
           sx={styles}>
-          {onLabelText}
+          {/* {onLabelText} */}
+          <SportsFootballIcon sx={{styles}} />
         </Button>
   }
 
@@ -384,7 +400,7 @@ export const Home = () => {
                                   key={week._id}
                                   value={week._id}
                                   sx={styles.filter.select.menuItem}>
-                                    Week {week.number}
+                                    { getWeekText(week) }
                                 </MenuItem>
                               ))
                             : (
@@ -394,18 +410,19 @@ export const Home = () => {
                     </Select>
             }
 
-            {/* Show Active Toggle */}
+            {/* Chirps Button */}
             
-
             <Button
               variant="outlined"
               sx={{ ...styles.chirps.btn }}
               startIcon={<CampaignIcon />}
               onClick={ () => toggleChirpsPanel() } />
 
+            {/* Show Active Toggle */}
+
             <FilterToggle
-              onLabelText='Show Active'
-              offLabelText='Show All'
+              onLabelText='Active'
+              offLabelText='All'
               showActiveFilterToggle={showActiveFilterToggle}
               handleToggle={handleFilterToggle}
               styles={styles.filter.toggle}

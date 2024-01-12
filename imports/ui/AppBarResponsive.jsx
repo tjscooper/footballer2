@@ -15,7 +15,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { Drawer } from '@mui/material';
-import SportsFootballOutlinedIcon from '@mui/icons-material/SportsFootball';
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -39,6 +39,9 @@ export const AppBarResponsive = (props) => {
 
   // Methods
   const getUsername = () => {
+    if (!Meteor.user()) {
+      return '?';
+    }
     const { username } = Meteor.user();
     return !username ? '?' : username.toUpperCase();
   }
@@ -99,6 +102,11 @@ export const AppBarResponsive = (props) => {
       },
       children: `${name.slice(0,1)}`,
     };
+  }
+
+  const isAdminUser = () => {
+    const username = getUsername();
+    return username === 'TIMBRO' || username === 'RACH';
   }
 
   const togglePrimaryNav = () => setPrimaryNavOpen(!primaryNavOpen);
@@ -193,6 +201,22 @@ export const AppBarResponsive = (props) => {
               <ListItemText>My Picks</ListItemText>
             </ListItemButton>
           </ListItem>
+
+          {/* Admins */}
+          {
+            isAdminUser()
+              ? (
+                  <ListItem key={'settings'} disablePadding>
+                    <ListItemButton onClick={() => navigateTo('settings') }>
+                      <ListItemIcon>
+                        <SettingsApplicationsIcon sx={{ color: 'grey' }} />
+                      </ListItemIcon>
+                      <ListItemText>Settings</ListItemText>
+                    </ListItemButton>
+                  </ListItem>
+                )
+              : null
+          }
         </List>
       </Drawer>
     </>
