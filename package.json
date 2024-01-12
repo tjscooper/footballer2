@@ -2,7 +2,7 @@
   "name": "footballer2",
   "private": true,
   "scripts": {
-    "start": "meteor run",
+    "start": "MONGO_URL=mongodb://127.0.0.1:27017/footballer-meteor-app meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "MONGO_URL=mongodb://127.0.0.1:27017/footballer2_test TEST_WATCH=1 PARALLEL_TEST=1 meteor test --driver-package meteortesting:mocha --port 3100",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
@@ -16,9 +16,8 @@
     "@mui/styled-engine-sc": "^5.12.0",
     "chai": "^4.3.8",
     "dayjs": "^1.11.9",
-    "faker": "^6.6.6",
     "material-ui-popup-state": "^5.0.9",
-    "meteor-node-stubs": "^1.2.1",
+    "meteor-node-stubs": "^1.2.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.15.0",
