@@ -128,14 +128,27 @@ export const Home = () => {
   const toggleChirpsPanel = () => setChirpsPanelOpen(!chirpsPanelOpen);
 
   const getWeekText = ({ number, type }) => {
-    if (type === 2) {
+    if (type === 1 && number == 1) {
+      return `HoF Weekend`;
+    } else if (
+      type === 1 && number == 2 ||
+      type === 1 && number == 3 ||
+      type === 1 && number == 4) {
+      return `Preseason Week ${number}`;
+    } else if (type === 2) {
       return `Week ${number}`;
     } else if (type === 3 && number === 1) {
       return 'Wildcard';
     } else if (type === 3 && number === 2) {
       return 'Divisional';
+    } else if (type === 3 && number === 3) {
+      return 'Conference';
+    } else if (type === 3 && number === 4) {
+      return 'Pro Bowl';
+    } else if (type === 3 && number === 5) {
+      return 'Super Bowl';
     } else {
-      return 'TBD';
+      return 'Off Season';
     } 
   }
 
