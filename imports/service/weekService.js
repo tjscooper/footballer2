@@ -68,7 +68,6 @@ const processFeed = ({ week, season }) => {
 // returns the latest week (sorted by "number" property)
 const currentWeek = () => {
   const week = getWeekOrderByType();
-  console.log('week', week);
   return week;
 }
 
