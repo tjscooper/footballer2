@@ -5,7 +5,8 @@ export const ENTITY = {
   PICK: 'PICK',
   FEED: 'FEED',
   LEADERBOARD: 'LEADERBOARD',
-  CHIRP: 'CHIRP'
+  CHIRP: 'CHIRP',
+  USER: 'USER'
 };
 
 export const GAME_STATUS = {
