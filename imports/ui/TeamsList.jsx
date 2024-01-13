@@ -22,7 +22,6 @@ export const TeamsList = (props) => {
   const navigateTo = (pageName) => navigate(`/${pageName}`);
 
   const handleClick = (team) => {
-    // console.log('clicked team', team.name);
   }
 
   // Styles

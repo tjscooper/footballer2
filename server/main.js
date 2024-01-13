@@ -22,6 +22,7 @@ import '../imports/api/picks.js';
 import '../imports/api/leaderboards.js';
 import '../imports/api/chirps.js';
 import '../imports/api/feeds.js';
+import '../imports/api/users.js';
 
 Meteor.startup(() => {
 
@@ -115,3 +116,4 @@ Meteor.startup(() => {
     CronService.start();
   }
 });
+

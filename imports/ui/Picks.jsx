@@ -77,7 +77,6 @@ export const Picks = () => {
 
   // Methods
   const onWeekSelect = (event) => {
-    // console.log(event.target.value);
   }
   
   // Styles

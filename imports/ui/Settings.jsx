@@ -9,18 +9,13 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 
-import { GamesCollection } from '../db/games';
-import { PicksCollection } from '../db/picks';
-import { WeeksCollection } from '../db/weeks';
-
-import { PicksList } from './PicksList';
 import { AppBarResponsive } from './AppBarResponsive';
 import { Button } from '@mui/material';
 
 /*
   Settings - Description
 
-  
+  An private area for managing the data feeds as well as password resets.
   
 */
 
@@ -38,36 +33,21 @@ export const Settings = () => {
   }
 
   // Data
-  // const { picks, games, weeks, currentWeek, isLoading } = useTracker(() => {
+  const { users, isLoading } = useTracker(() => {
     
-  //   // Hydrate weeks
-  //   const weeksHandler = Meteor.subscribe('weeks');
-  //   if (!weeksHandler.ready()) {
-  //     return { weeks: null, games: null, picks: null, isLoading: true };
-  //   }
+    // Hydrate users
+    const usersHandler = Meteor.subscribe('players.listUsers');
+    if (!usersHandler.ready()) {
+      return { users: null, isLoading: true };
+    }
 
-  //   const weeks = WeeksCollection
-  //     .find({})
-  //     .fetch()
-  //     .sort((a, b) => b.number - a.number);
+    const users = Meteor.users
+      .find({}, { sort: { username: 1 } })
+      .fetch();
 
-  //   const currentWeek = weeks[0];
-
-  //   // Hydrate local collections
-  //   const picksGamesAndWeeksHandler = Meteor.subscribe('userPicksAndGames', currentWeek);
-    
-  //   // Await data hydration
-  //   if (!picksGamesAndWeeksHandler.ready()) {
-  //     return { picks: null, games: null, weeks: null, isLoading: true };
-  //   }
-    
-  //   // Query local collections
-  //   const picks = PicksCollection.find({ weekId: currentWeek._id }).fetch();
-  //   const games = GamesCollection.find({ weekId: currentWeek._id }).fetch();
-    
-  //   // Return data
-  //   return { picks, games, weeks, currentWeek, isLoading: false };
-  // });
+    // Return data
+    return { users, isLoading: false };
+  });
 
   // State
 
@@ -75,6 +55,8 @@ export const Settings = () => {
   const [teamsMessage, setTeamsMessage] = useState(null);
   const [gamesMessage, setGamesMessage] = useState(null);
   const [scoresMessage, setScoresMessage] = useState(null);
+  const [passwordResetMessage, setPasswordResetMessage] = useState(null);
+  const [userSelect, setUserSelect] = useState('');
 
   // Methods
 
@@ -83,7 +65,6 @@ export const Settings = () => {
       if (err) {
         console.err(err);
       }
-      console.log('data', data);
       var obj = { status: true, ...data };
       if (obj?.displayMessage !== null) {
         obj['displayMessage'] = data.displayMessage;
@@ -117,8 +98,29 @@ export const Settings = () => {
       if (err) {
         console.err(err);
       }
-      console.log('data', data);
       setScoresMessage(data.displayMessage);
+    });
+  }
+
+  const onUserSelect = (event) => {
+    const username = event.target.value;
+    if (!username) {
+      return;
+    }
+    setUserSelect(username);
+  }
+
+  const handleUserPasswordReset = () => {
+    const username = userSelect || null;
+    if (!username) {
+      return;
+    }
+
+    Meteor.call('users.resetPassword', { username }, (err, data) => {
+      if (err) {
+        console.error(err);
+      }
+      setPasswordResetMessage(data.displayMessage);
     });
   }
   
@@ -141,30 +143,121 @@ export const Settings = () => {
         color: '#999999'
       }
     },
+    users: {
+      select: {
+        background: '#27272f',
+        width: '180px',
+        marginRight: '16px',
+        color: '#FFFFFF',
+        minHeight: '50px',
+        maxHeight: '50px',
+        borderRadius: '8px',
+        menuItem: {
+          borderRadius: '16px',
+          textAlign: 'left',
+          background: '#FFFFFF',
+          height: '16px',
+          fontSize: '14px',
+          color: '#000000',
+          paddingLeft: '8px',
+          margin: '2px'
+        }
+      },
+      resetPasswordMessageContainer: {
+        color: '#000000',
+        margin: '8px',
+        display: 'flex',
+        flexDirection: 'column',
+        fontSize: '12px',
+        justifyContent: 'space-between',
+        minHeight: '42px'
+      }
+    },
     section: {
       display: 'block',
       marginTop: '16px',
       background: '#dedede',
       color: '#FFFFFF',
-      padding: '16px',
-      borderRadius: '24px',
-      button: {
+      padding: '8px',
+      borderRadius: '16px',
+      hint: {
+        marginLeft: '60px',
+        borderRadius: '4px',
+        fontSize: '10px',
+        padding: '4px',
         color: '#FFFFFF',
-        minWidth: '100px',
-        maxWidth: '100px',
-        maxHeight: '55px',
-        borderRadius: '8px',
-        fontSize: '14px',
-        backgroundColor: '#333333',
-        padding: '16px'
+        backgroundColor: '#999999'
+      },
+      title: {
+        marginLeft: '8px',
+        marginTop: '16px',
+        marginBottom: '16px',
+        color: '#666666',
+        fontStyle: '200',
+        textTransform: 'uppercase',
+        fontSize: '14px'
+      },
+      container: {
+        display: 'inline-flex',
+        color: '#000000',
+        margin: '8px',
+        button: {
+          color: '#FFFFFF',
+          minWidth: '100px',
+          maxWidth: '100px',
+          minHeight: '50px',
+          maxHeight: '50px',
+          borderRadius: '8px',
+          fontSize: '14px',
+          backgroundColor: '#333333',
+          padding: '16px'
+        },
+        buttonResetPassword: {
+          color: '#FFFFFF',
+          minWidth: '100px',
+          maxWidth: '100px',
+          minHeight: '50px',
+          maxHeight: '50px',
+          borderRadius: '8px',
+          lineHeight: '14px',
+          fontSize: '12px',
+          backgroundColor: 'brown',
+          padding: '16px'
+        },
+        message: {
+          marginLeft: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          fontSize: '12px',
+          justifyContent: 'space-between'
+        }
       }
     }
   }
 
-  // View
-  // if (!currentWeek) {
-  //   return null;
-  // }
+  if (isLoading) {
+    return (
+      <>
+        <AppBarResponsive />
+        <Grid container>
+          <Grid sx={styles.container} mobile={6} tablet={4} laptop={3}>
+            {/* General */}
+            <Box sx={styles.header}>
+              <Box sx={styles.header.primary}>
+                Settings
+              </Box>
+            </Box>
+            <Box sx={styles.section}>
+
+              <div style={styles.section.title}>
+                Fetching Settings...
+              </div>
+            </Box>
+          </Grid>
+        </Grid>
+      </>
+    )
+  }
 
   return (
     <>
@@ -178,64 +271,119 @@ export const Settings = () => {
             </Box>
           </Box>
           <Box sx={styles.section}>
-
-            <Box style={{ display: 'inline-flex', color: '#000000', margin: '8px' }}>
+            
+            <div style={styles.section.title}>
+              Manage Feeds
+            </div>
+            
+            <Box style={styles.section.container}>
               <Button
                 onClick={handleGetWeeks}
-                sx={styles.section.button}>
+                sx={styles.section.container.button}>
                 Weeks
               </Button>
-              <Box style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
-                <span>YEAR: {currentWeek?.year || '-'}</span>
-                <span>TYPE: {currentWeek?.type || '-'}</span>
-                <span>WEEK: {currentWeek?.number || '-'}</span>
+              <Box sx={styles.section.container.message}>
+                <span>YEAR: {currentWeek?.year || ''}</span>
+                <span>TYPE: {currentWeek?.type || ''}</span>
+                <span>WEEK: {currentWeek?.number || ''}</span>
               </Box>
             </Box>
 
             <hr />
 
-            <Box style={{ display: 'inline-flex', color: '#000000', margin: '8px' }}>
+            <Box style={styles.section.container}>
               <Button
                 onClick={handleGetTeams}
-                sx={styles.section.button}>
+                sx={styles.section.container.button}>
                 Teams
               </Button>
-              <Box style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
+              <Box sx={styles.section.container.message}>
                 <span>STATUS:</span>
-                <span>{teamsMessage || '-'}</span>
+                <span>{teamsMessage || ''}</span>
               </Box>
             </Box>
 
             <hr />
 
-            <Box style={{ display: 'inline-flex', color: '#000000', margin: '8px' }}>
+            <Box style={styles.section.container}>
               <Button
                 onClick={handleGetGames}
-                sx={styles.section.button}>
+                sx={styles.section.container.button}>
                 Games
               </Button>
-              <Box style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
+              <Box sx={styles.section.container.message}>
                 <span>STATUS:</span>
-                <span>{gamesMessage || '-'}</span>
+                <span>{gamesMessage || ''}</span>
               </Box>
             </Box>
 
             <hr />
 
-            <Box style={{ display: 'inline-flex', color: '#000000', margin: '8px' }}>
+            <Box style={styles.section.container}>
               <Button
                 onClick={handleGetScores}
-                sx={styles.section.button}>
+                sx={styles.section.container.button}>
                 Scores
               </Button>
-              <Box style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
+              <Box sx={styles.section.container.message}>
                 <span>STATUS:</span>
-                <span>{scoresMessage || '-'}</span>
+                <span>{scoresMessage || ''}</span>
               </Box>
             </Box>
 
-
           </Box>
+
+          <Box sx={styles.section}>
+            
+            <div style={styles.section.title}>
+              Manage Users
+              <span style={styles.section.hint}>
+                <em>Password: </em><span style={{ marginLeft: '6px', textTransform: 'lowercase' }}>nfl2023</span>
+              </span>
+            </div>
+            
+            <Box style={styles.section.container}>
+              { users && users.length > 0
+                && <>
+                    <Select
+                        labelId="user-selection"
+                        id="user-selector"
+                        label="Users"
+                        value={userSelect}
+                        onChange={ (event) => onUserSelect(event)}
+                        sx={styles.users.select}>
+                          {
+                            users.length > 0
+                              ? users.map((user) => (
+                                  <MenuItem
+                                    id="users-select-menu-item"
+                                    disableGutters
+                                    key={user.username}
+                                    value={user.username}
+                                    sx={styles.users.select.menuItem}>
+                                      { user.username }
+                                  </MenuItem>
+                                ))
+                              : (
+                                  <Typography>No users to select.</Typography>
+                                )
+                            }
+                      </Select>
+                      <Button
+                        onClick={handleUserPasswordReset}
+                        sx={styles.section.container.buttonResetPassword}>
+                        Reset Password
+                      </Button>
+                    </>
+              }
+            </Box>
+
+            <Box sx={styles.users.resetPasswordMessageContainer}>
+                <span>STATUS:</span>
+                <span>{passwordResetMessage || ''}</span>
+            </Box>
+          </Box>
+
         </Grid>
       </Grid>
     </>
