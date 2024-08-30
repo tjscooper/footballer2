@@ -73,7 +73,7 @@ export const Home = () => {
     }
 
     const weeks = WeeksCollection
-      .find({}, { sort: { type: -1, number: -1 } })
+      .find({ year: 2024 }, { sort: { type: -1, number: -1 } })
       .fetch();
 
     const currentWeek = selectedWeekId !== null
