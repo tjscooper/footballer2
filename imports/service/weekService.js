@@ -12,7 +12,7 @@ const getWeeksOrderByType = () => {
 };
 
 const getWeekOrderByType = () => {
-  return WeeksCollection.find({}, { sort: { type: -1, number: -1 } }, { limit: 1 }).fetch()[0];
+  return WeeksCollection.find({}, { sort: { year: -1, type: -1, number: -1 } }, { limit: 1 }).fetch()[0];
 };
 
 const getWeek = (queryObj) => {
