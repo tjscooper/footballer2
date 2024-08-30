@@ -100,7 +100,7 @@ const addChirp = ({ _channelId = 'default', _chirp, _chirpedAt, _createdAt }) =>
     // Create new chirp
     if (!existingChirp) {
       const id = insertChirp(chirpObj);
-      console.log(`Inserted chirp in channel[${_channelId}] at [id]${id}`);
+      // console.log(`Inserted chirp in channel[${_channelId}] at [id]${id}`);
       return id;
     } else {
       return null;
