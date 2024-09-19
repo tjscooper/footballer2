@@ -27,7 +27,7 @@ const processFeed = async ({ leagues, week, season, events }) => {
   });
 
   const existingLeaderboards = getLeaderboards({});
-  if (existingLeaderboards.length) {
+  if (existingLeaderboards.length > 0) {
     // Add / Modify Leaderboard
     const leaderboardCalculation = await Meteor.call('leaderboards.calculateLeaderboard', currentWeek, true);
   }

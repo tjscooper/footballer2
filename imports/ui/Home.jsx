@@ -40,37 +40,6 @@ import { AppBarResponsive } from './AppBarResponsive';
 
 const YEAR = 2024;
 
-// Aggregating data from all leaderboards
-const aggregateLeaderboards = (leaderboards) => {
-  const aggregatedData = {};
-
-  leaderboards.forEach((leaderboard) => {
-    leaderboard.data.forEach(({ username, wins, winPercentage }) => {
-      if (!aggregatedData[username]) {
-        // Initialize the entry for the username if not present
-        aggregatedData[username] = {
-          username,
-          totalWins: 0,
-          totalWinPercentage: 0,
-          appearanceCount: 0, // To calculate the average winPercentage
-        };
-      }
-
-      // Aggregate the data
-      aggregatedData[username].totalWins += wins;
-      aggregatedData[username].totalWinPercentage += winPercentage;
-      aggregatedData[username].appearanceCount += 1;
-    });
-  });
-
-  // Calculate average winPercentage for each user
-  return Object.values(aggregatedData).map((user) => ({
-    username: user.username,
-    totalWins: user.totalWins,
-    averageWinPercentage: user.totalWinPercentage / user.appearanceCount,
-  }));
-};
-
 export const Home = () => {
 
   // References
@@ -112,10 +81,12 @@ export const Home = () => {
     const weeks = WeeksCollection
       .find({ year: YEAR }, { sort: { type: -1, number: -1 } })
       .fetch();
+    // console.log('weeks', weeks);
 
     const currentWeek = selectedWeekId !== null
       ? weeks.find(w => w._id === selectedWeekId)
       : weeks[0];
+    // console.log('current week id', currentWeek._id)
 
     // Get data from application logic
 
@@ -126,21 +97,9 @@ export const Home = () => {
     }
 
     const leaderboardByWeek = LeaderboardsCollection.find({ weekId: currentWeek._id }).fetch()[0];
-
-    const leaderboardByYearHandler = Meteor.subscribe('leaderboard.byYear', YEAR);
-    
-    if (!leaderboardByYearHandler.ready()) {
-      return { currentWeek, isLoading: true };
-    }
-
-    // Get leaderboards
-    const leaderboards = LeaderboardsCollection.find({}).fetch();
-    
-    // Filter leaderboards by year
-    const leaderboardsByYear = leaderboards.filter(l => weeks.filter(w => w.year === YEAR && w._id === l.weekId).length > 0)
-
-    // Create a season data set
-    const aggregatedScores = aggregateLeaderboards(leaderboardsByYear);
+    // console.log('leaderboard week:', leaderboardByWeek)
+    let aggregatedScores = leaderboardByWeek.summary?.length > 0 ? leaderboardByWeek.summary : null
+    // console.log(aggregatedScores);
 
     // Hydrate local collections
     const picksAndGamesHandler = Meteor.subscribe('picksAndGames', currentWeek); 
@@ -154,6 +113,8 @@ export const Home = () => {
     const picks = PicksCollection.find({ weekId: currentWeek._id }).fetch();
     const games = GamesCollection.find({ weekId: currentWeek._id }).fetch();
 
+    // picksAndGamesHandler.stop();
+
     const teamsHandler = Meteor.subscribe('teams'); 
 
     // Await data hydration
@@ -163,6 +124,8 @@ export const Home = () => {
     
     // Query local collections
     const teams = TeamsCollection.find({}).fetch();
+
+    // teamsHandler.stop()
 
     // Return data
     return { currentWeek, picks, games, weeks, players, teams, leaderboardByWeek, aggregatedScores, isLoading: false };

@@ -7,6 +7,8 @@ import { PicksCollection } from '../db/picks';
 import Leaderboard from '../model/leaderboard';
 import ServiceResponse from '../model/serviceResponse';
 
+import { getWeeks } from './weekService';
+
 // Enums
 import { ENTITY, GAME_STATUS } from '../model/entities';
 import { getWeek } from './weekService';
@@ -39,14 +41,17 @@ const insertLeaderboard = (leaderboardObj) => {
 }
 
 const updateLeaderboard = (queryObj) => {
+  
   const leaderboard = getLeaderboardByWeekId(queryObj._weekId);
   if (!leaderboard) {
     return;
   }
   const { _id } = leaderboard;
+  DEBUG && console.log('leaderboard id', _id)
   return LeaderboardsCollection.update(_id, {
     $set: {
-      data: queryObj._data,
+      data: queryObj.data,
+      summary: queryObj.summary,
       updatedAt: new Date()
     }
   });
@@ -80,6 +85,7 @@ const processTop5 = ({ _currentWeek }) => {
 
     // Get leaderboard object
     const leaderboardObj = getLeaderboardObj(_currentWeek._id, 'top5');
+    leaderboardObj.summary = []
     
     // Generate chart compatible data (VictoryBar)
     const chartData = leaderboardObj.getHorizontalBarChartData('top-5');
@@ -96,19 +102,19 @@ const processTop5 = ({ _currentWeek }) => {
     // Create new leaderboard
     if (!existingLeaderboard) {
       const id = insertLeaderboard(leaderboardObj);
-      console.log(`Inserted ${leaderboardObj.weekId} at [id]${id}`);
+      DEBUG && console.log(`Inserted ${leaderboardObj.weekId} at [id]${id}`);
     } else {
       // Update existing leaderboard
       const { _id } = existingLeaderboard;
       try {
-        const result = LeaderboardsCollection.update(_id, {
+        const result = LeaderboardsCollection.upsert(_id, {
           $set: {
             data: leaderboardObj.data,
             meta: leaderboardObj.meta,
             updatedAt: new Date()
           }
         });
-        console.log(
+        DEBUG && console.log(
           `Update ${leaderboardObj.weekId} at [id]${_id}: ${result === 1 ? 'Success' : 'Failed '}`
         );
         return result === 1;
@@ -295,6 +301,8 @@ const calculateLeaderboard = async ({ number, year, type }, saveToDb = true) => 
   saveToDb && console.log('... calculating leaderboard stats for week', year, type, number);
 
   // Replace with lookups
+  const weeks = getWeeks({ year });
+  const leaderboards = getLeaderboards({})
   const week = getWeek({ number, year, type });
 
   const leaderboardObj = getLeaderboardObj(week._id);
@@ -311,6 +319,9 @@ const calculateLeaderboard = async ({ number, year, type }, saveToDb = true) => 
 
   // Leaderboard chart data
   const data = [];
+
+  const summary = await calculateSummary({ currentWeek: week, existingLeaderboards: leaderboards });
+  DEBUG && console.log(summary)
 
   // Create user map for leaderboard chart
   leaderboardObj.players.forEach((player) => {
@@ -381,39 +392,43 @@ const calculateLeaderboard = async ({ number, year, type }, saveToDb = true) => 
   leaderboardObj.setData(data);
   saveToDb && console.log('... set leaderboard data');
 
+  leaderboardObj.setSummary(summary)
+  saveToDb && console.log('... set summary data');
+
   leaderboardObj.setMeta(winners);
   saveToDb && console.log('... set leaderboard winners');
   
   if (saveToDb) {
-    console.log('... saving to DB');
+    DEBUG && console.log('... saving to DB');
     // Look for existing leaderboard
     const existingLeaderboard = getLeaderboardByWeekId(week._id);
   
     // Create new leaderboard
     if (!existingLeaderboard) {
-      console.log(`... inserting leaderboard`);
+      DEBUG && console.log(`... inserting leaderboard`);
       const id = insertLeaderboard(leaderboardObj);
-      console.log(`... inserted ${leaderboardObj.weekId} at [id]${id}`);
+      DEBUG && console.log(`... inserted ${leaderboardObj.weekId} at [id]${id}`);
       return leaderboardObj;
     } else {
       // Update existing leaderboard
       const { _id } = existingLeaderboard;
-      console.log(`... updating leaderboard at [id]${_id} for week ${number}`);
+      DEBUG && console.log(`... updating leaderboard at [id]${_id} for week ${number}`);
       try {
         const result = LeaderboardsCollection.update(_id, {
           $set: {
             data: leaderboardObj.data,
+            summary: leaderboardObj.summary,
             meta: leaderboardObj.meta,
             updatedAt: new Date()
           }
         });
-        console.log(
+        DEBUG && console.log(
           `... updated ${leaderboardObj.weekId} at [id]${_id}: ${result === 1 ? 'Success' : 'Failed '}`
         );
         return result === 1;
       } catch(e) {
-        console.log(`... failed to update leaderboard at [id]${_id}: ${result === 1 ? 'Success' : 'Failed '}`);
-        console.log(e);
+        DEBUG && console.log(`... failed to update leaderboard at [id]${_id}: ${result === 1 ? 'Success' : 'Failed '}`);
+        DEBUG && console.log(e);
       }
     } 
   } else {
@@ -421,6 +436,51 @@ const calculateLeaderboard = async ({ number, year, type }, saveToDb = true) => 
     return leaderboardObj;
   }
 }
+
+const calculateSummary = async ({ currentWeek, existingLeaderboards }, saveToDb = true) => {
+  const DEBUG = true;
+
+  saveToDb && console.log('... calculating leaderboard stats for year');
+
+  const weeks = getWeeks({ year: currentWeek.year });
+
+  // Filter leaderboards by year
+  const leaderboardsByYear = existingLeaderboards.filter(l => weeks.filter(
+    w => w.year === currentWeek.year && w._id === l.weekId).length > 0)
+
+  return aggregateLeaderboards(leaderboardsByYear);
+}
+
+// Aggregating data from all leaderboards
+const aggregateLeaderboards = (leaderboards) => {
+  const aggregatedData = {};
+
+  leaderboards.forEach((leaderboard) => {
+    leaderboard.data.forEach(({ username, wins, winPercentage }) => {
+      if (!aggregatedData[username]) {
+        // Initialize the entry for the username if not present
+        aggregatedData[username] = {
+          username,
+          totalWins: 0,
+          totalWinPercentage: 0,
+          appearanceCount: 0, // To calculate the average winPercentage
+        };
+      }
+
+      // Aggregate the data
+      aggregatedData[username].totalWins += wins;
+      aggregatedData[username].totalWinPercentage += winPercentage;
+      aggregatedData[username].appearanceCount += 1;
+    });
+  });
+
+  // Calculate average winPercentage for each user
+  return Object.values(aggregatedData).map((user) => ({
+    username: user.username,
+    totalWins: user.totalWins,
+    averageWinPercentage: user.totalWinPercentage / user.appearanceCount,
+  }));
+};
 
 export {
   // processTop5,
