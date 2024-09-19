@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "start": "MONGO_URL=mongodb://127.0.0.1:27017/footballer2 meteor run",
+    "start-backup-db": "MONGO_URL=mongodb://127.0.0.1:27017/footballer-meteorapp-com meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "MONGO_URL=mongodb://127.0.0.1:27017/footballer2_test TEST_WATCH=1 PARALLEL_TEST=1 meteor test --driver-package meteortesting:mocha --port 3100",
     "visualize": "meteor --production --extra-packages bundle-visualizer"

@@ -29,7 +29,7 @@ export const GamesList = (props) => {
   const navigateTo = (pageName) => navigate(`/${pageName}`);
 
   // Data
-  const { games, teams, leaderboard, showActiveFilterToggle } = props;
+  const { games, teams, leaderboardByWeek, showActiveFilterToggle } = props;
   
   // Methods
 
@@ -81,23 +81,23 @@ export const GamesList = (props) => {
   }
 
   const isFav = (homeAway, gameId) => {
-    if (!leaderboard) {
+    if (!leaderboardByWeek) {
       return false;
     }
-    const game = leaderboard.meta[gameId];
+    const game = leaderboardByWeek.meta[gameId];
     return homeAway === 'home'
       ? game.fav === 'home'
       : game.fav === 'away';
   }
  
   const isPickWinning = (teamId, { gameId }) => {
-    const game = leaderboard.meta[gameId];
+    const game = leaderboardByWeek.meta[gameId];
     const winning = teamId === game.winningTeam.id;
     return winning;
   }
 
   const isPick = (homeAway, { gameId }) => {
-    const game = leaderboard.meta[gameId];
+    const game = leaderboardByWeek.meta[gameId];
     const picks = homeAway === 'home'
       ? game.homeTeam.picks
       : game.awayTeam.picks;
@@ -403,7 +403,7 @@ export const GamesList = (props) => {
                                               {(popupStateAway) => (
                                                 <React.Fragment>
                                                     {
-                                                      isPickWinning(game.awayTeam.id, game, leaderboard.meta[game.gameId].winningTeam)
+                                                      isPickWinning(game.awayTeam.id, game, leaderboardByWeek.meta[game.gameId].winningTeam)
                                                         ? isPick('away', game)
                                                             ? <StarIcon sx={{ fontSize: styles.icons.size, border: '2px dashed green', borderRadius: '24px', padding: '3px', margin: '-3px' }} {...bindTrigger(popupStateAway)}/>
                                                             : <StarIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateAway)}/>
@@ -430,7 +430,7 @@ export const GamesList = (props) => {
                                                                 horizontal: 'left',
                                                               }}>
                                                               {
-                                                                leaderboard.meta[game.gameId].awayTeam.picks.map((pick) => {
+                                                                leaderboardByWeek.meta[game.gameId].awayTeam.picks.map((pick) => {
                                                                   return (
                                                                     <MenuItem
                                                                       key={pick.username}
@@ -506,7 +506,7 @@ export const GamesList = (props) => {
                                                       sx={{ background: '#27272f', border: '1px solid #CCCCCC', color: '#FFFFFF', fontSize: '16px', borderRadius: '4px', margin: '3px' }}
                                                       dense
                                                       onClick={popupStateAwayFav.close}>
-                                                      { Math.abs(leaderboard.meta[game.gameId].spread) }
+                                                      { Math.abs(leaderboardByWeek.meta[game.gameId].spread) }
                                                     </MenuItem>
                                               </Menu>
                                               }
@@ -585,7 +585,7 @@ export const GamesList = (props) => {
                                               {(popupStateHome) => (
                                                 <React.Fragment>
                                                   {
-                                                      isPickWinning(game.homeTeam.id, game, leaderboard.meta[game.gameId].winningTeam)
+                                                      isPickWinning(game.homeTeam.id, game, leaderboardByWeek.meta[game.gameId].winningTeam)
                                                         ? isPick('home', game)
                                                             ? <StarIcon sx={{ fontSize: styles.icons.size, border: '2px dashed green', borderRadius: '24px', padding: '3px', margin: '-3px' }} {...bindTrigger(popupStateHome)}/>
                                                             : <StarIcon sx={{ fontSize: styles.icons.size }} {...bindTrigger(popupStateHome)}/>
@@ -612,7 +612,7 @@ export const GamesList = (props) => {
                                                                 horizontal: 'left',
                                                               }}>
                                                               {
-                                                                leaderboard.meta[game.gameId].homeTeam.picks.map((pick) => {
+                                                                leaderboardByWeek.meta[game.gameId].homeTeam.picks.map((pick) => {
                                                                   return (
                                                                     <MenuItem
                                                                       key={pick.username}
@@ -688,7 +688,7 @@ export const GamesList = (props) => {
                                                       sx={{ background: '#27272f', border: '1px solid #CCCCCC', color: '#FFFFFF', fontSize: '16px', borderRadius: '4px', margin: '3px' }}
                                                       dense
                                                       onClick={popupStateHomeFav.close}>
-                                                      { Math.abs(leaderboard.meta[game.gameId].spread) }
+                                                      { Math.abs(leaderboardByWeek.meta[game.gameId].spread) }
                                                     </MenuItem>
                                                 </Menu>
                                               }
