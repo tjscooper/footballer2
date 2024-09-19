@@ -8,3 +8,8 @@ Meteor.publish('leaderboard.byWeekId', function (currentWeek) {
   }
   return LeaderboardsCollection.find({ weekId: currentWeek._id });
 });
+
+
+Meteor.publish('leaderboard.byYear', function(year) {
+  return LeaderboardsCollection.find({})
+});

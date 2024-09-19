@@ -8,6 +8,8 @@ import Select from '@mui/material/Select';
 import Drawer from '@mui/material/Drawer';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded';
 import ToggleOnRoundedIcon from '@mui/icons-material/ToggleOnRounded';
 import { CircularProgress } from '@mui/material';
@@ -19,7 +21,8 @@ import {
   VictoryChart,
   VictoryAxis,
   VictoryLabel,
-  VictoryStack
+  VictoryStack,
+  VictoryTooltip
 } from 'victory';
 
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +37,39 @@ import { LeaderboardsCollection } from '../db/leaderboards';
 import { GamesList } from './GamesList';
 import { Chirps } from './Chirps';
 import { AppBarResponsive } from './AppBarResponsive';
-import { Weekend } from '@mui/icons-material';
+
+const YEAR = 2024;
+
+// Aggregating data from all leaderboards
+const aggregateLeaderboards = (leaderboards) => {
+  const aggregatedData = {};
+
+  leaderboards.forEach((leaderboard) => {
+    leaderboard.data.forEach(({ username, wins, winPercentage }) => {
+      if (!aggregatedData[username]) {
+        // Initialize the entry for the username if not present
+        aggregatedData[username] = {
+          username,
+          totalWins: 0,
+          totalWinPercentage: 0,
+          appearanceCount: 0, // To calculate the average winPercentage
+        };
+      }
+
+      // Aggregate the data
+      aggregatedData[username].totalWins += wins;
+      aggregatedData[username].totalWinPercentage += winPercentage;
+      aggregatedData[username].appearanceCount += 1;
+    });
+  });
+
+  // Calculate average winPercentage for each user
+  return Object.values(aggregatedData).map((user) => ({
+    username: user.username,
+    totalWins: user.totalWins,
+    averageWinPercentage: user.totalWinPercentage / user.appearanceCount,
+  }));
+};
 
 export const Home = () => {
 
@@ -55,8 +90,10 @@ export const Home = () => {
   const [chirpsPanelOpen, setChirpsPanelOpen] = useState(false);
   const [selectedWeekId, setSelectedWeekId] = useState(null);
 
-  // Data
-  const { currentWeek, weeks, games, picks, players, teams, leaderboard, isLoading } = useTracker(() => {
+  // Reactive Data
+  const {
+    currentWeek, weeks, games, picks, players, teams, leaderboardByWeek, aggregatedScores, isLoading
+  } = useTracker(() => {
     
     // Hydrate players
     const playersHandler = Meteor.subscribe('players.listUsers');
@@ -73,7 +110,7 @@ export const Home = () => {
     }
 
     const weeks = WeeksCollection
-      .find({ year: 2024 }, { sort: { type: -1, number: -1 } })
+      .find({ year: YEAR }, { sort: { type: -1, number: -1 } })
       .fetch();
 
     const currentWeek = selectedWeekId !== null
@@ -82,13 +119,28 @@ export const Home = () => {
 
     // Get data from application logic
 
-    const leaderboardHandler = Meteor.subscribe('leaderboard.byWeekId', currentWeek);
+    const leaderboardByWeekHandler = Meteor.subscribe('leaderboard.byWeekId', currentWeek);
     
-    if (!leaderboardHandler.ready()) {
+    if (!leaderboardByWeekHandler.ready()) {
       return { currentWeek, isLoading: true };
     }
 
-    const leaderboard = LeaderboardsCollection.find({ weekId: currentWeek._id }).fetch()[0];
+    const leaderboardByWeek = LeaderboardsCollection.find({ weekId: currentWeek._id }).fetch()[0];
+
+    const leaderboardByYearHandler = Meteor.subscribe('leaderboard.byYear', YEAR);
+    
+    if (!leaderboardByYearHandler.ready()) {
+      return { currentWeek, isLoading: true };
+    }
+
+    // Get leaderboards
+    const leaderboards = LeaderboardsCollection.find({}).fetch();
+    
+    // Filter leaderboards by year
+    const leaderboardsByYear = leaderboards.filter(l => weeks.filter(w => w.year === YEAR && w._id === l.weekId).length > 0)
+
+    // Create a season data set
+    const aggregatedScores = aggregateLeaderboards(leaderboardsByYear);
 
     // Hydrate local collections
     const picksAndGamesHandler = Meteor.subscribe('picksAndGames', currentWeek); 
@@ -113,7 +165,7 @@ export const Home = () => {
     const teams = TeamsCollection.find({}).fetch();
 
     // Return data
-    return { currentWeek, picks, games, weeks, players, teams, leaderboard, isLoading: false };
+    return { currentWeek, picks, games, weeks, players, teams, leaderboardByWeek, aggregatedScores, isLoading: false };
   }, [selectedWeekId]);
   
   // Methods
@@ -259,8 +311,37 @@ export const Home = () => {
           <SportsFootballIcon sx={{styles}} />
         </Button>
   }
+  
+  const CustomTabPanel = (props) => {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && <Box>{children}</Box>}
+      </div>
+    );
+  }
 
-  const BarChart = (chartData) => {
+  const a11yProps = (index) => {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+  
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const WeeklyBarChart = (chartData) => {
 
     if (!chartData) {
       return null;
@@ -365,6 +446,106 @@ export const Home = () => {
     );
   }
 
+  const SeasonBarChart = (chartData) => {
+
+    if (!chartData) {
+      return null;
+    }
+
+    // Find the max value for totalWins to set the y-axis dynamically
+    const data = chartData.sort((a, b) => a.totalWins - b.totalWins);
+    const maxWins = Math.max(...data.map(d => d.totalWins));
+
+    return (
+      <VictoryChart
+        domainPadding={{ x: 16, y: 18 }}
+        padding={{ top: 50, bottom: 50, right: 24, left: 90 }}
+        height={250}
+        width={300}
+        style={{
+          fontFamily: "'Montserrat', sans-serif",
+          fontWeight: 100,
+        }}
+      >
+        {/* X-Axis for Usernames */}
+        <VictoryAxis
+          tickFormat={data.map(d => d.username)}
+          style={{
+            axis: { stroke: '#f34cc5', opacity: 0.4 },
+            tickLabels: {
+              fontSize: 10,
+              stroke: '#FFFFFF',
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 100,
+              opacity: 0.8,
+            },
+          }}
+        />
+        
+        {/* Y-Axis for Total Wins */}
+        <VictoryAxis
+          label="Total Confirmed Wins"
+          axisLabelComponent={
+            <VictoryLabel
+              dx={-24}
+              dy={-210}
+              style={{
+                textAnchor: "middle",
+                fontSize: 16,
+                fill: '#FFFFFF',
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 600,
+                opacity: 0.25,
+              }}
+            />
+          }
+          dependentAxis
+          domain={[0, maxWins + 2]} // Dynamically scale y-axis based on data
+          tickFormat={(x) => x}
+          style={{
+            axis: { stroke: '#f34cc5', opacity: 0.4 },
+            tickLabels: {
+              fontSize: 12,
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 100,
+              stroke: '#FFFFFF',
+              opacity: 0.8,
+            },
+          }}
+        />
+
+        <VictoryStack colorScale={["#698009", "#d0ff12"]}>
+          {/* Confirmed Wins Bar with Tooltip */}
+          <VictoryBar
+            barRatio={0.70}
+            horizontal
+            sortOrder="ascending"
+            data={data}
+            animate={{
+              duration: 2000,
+              onLoad: { duration: 1000 },
+            }}
+            x="username"
+            y="totalWins"
+            labelComponent={<VictoryTooltip />}
+            labels={({ datum }) => `${datum.totalWins}`}
+            style={{
+              data: {
+                fill: "#698009",
+                stroke: "#FFFFFF",
+                strokeWidth: 0,
+              },
+              labels: {
+                fill: "#000000",
+                fontSize: 10,
+              },
+            }}
+          />
+        </VictoryStack>
+      </VictoryChart>
+    );
+  }
+
   // View
   if (!currentWeek) {
     return <Box sx={{
@@ -388,12 +569,28 @@ export const Home = () => {
       <Grid container>
         <Grid mobile={6} tablet={4} laptop={3}>
           {/* Leaderboard */}
-          <Box sx={styles.chart}>
-            {
-              // Render the leaderboard chart 
-              BarChart(leaderboard)
-            }
+          <Box>
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label={getWeekText(currentWeek)} {...a11yProps(0)} />
+              <Tab label="Season" {...a11yProps(1)} />
+            </Tabs>
           </Box>
+          <CustomTabPanel value={value} index={0}>
+            <Box sx={styles.chart}>
+              {
+                // Render the weekly leaderboard bar chart 
+                WeeklyBarChart(leaderboardByWeek)
+              }
+            </Box>
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <Box sx={styles.chart}>
+                {
+                  // Render the season bar chart 
+                  SeasonBarChart(aggregatedScores)
+                }
+            </Box>
+          </CustomTabPanel>
 
           {/* <Header> */}
           <Box sx={styles.header}>
@@ -452,7 +649,7 @@ export const Home = () => {
               picks={picks}
               players={players}
               teams={teams}
-              leaderboard={leaderboard}
+              leaderboardByWeek={leaderboardByWeek}
               currentWeek={currentWeek}
               isLoading={isLoading}
               showActiveFilterToggle={showActiveFilterToggle}
