@@ -1,4 +1,6 @@
-import { getTop5, processTop5, calculateLeaderboard } from '../service/leaderboardService';
+import {
+  getTop5, processTop5, calculateLeaderboard
+} from '../service/leaderboardService';
 
 Meteor.methods({
   async 'leaderboards.processTop5'(args) {
@@ -9,7 +11,7 @@ Meteor.methods({
   },
   async 'leaderboards.calculateLeaderboard'(args) {
     return calculateLeaderboard(args);
-  },
+  }
 });
 
 

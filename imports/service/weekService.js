@@ -75,6 +75,7 @@ const currentWeek = () => {
 export {
   processFeed,
   currentWeek,
-  getWeek
+  getWeek,
+  getWeeks
 };
 

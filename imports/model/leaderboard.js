@@ -7,6 +7,7 @@ export default class Leaderboard {
     _players,
     _picks,
     _games,
+    _summary,
     _meta = {},
   }){
     // Properties
@@ -15,6 +16,7 @@ export default class Leaderboard {
     this.players = _players;
     this.picks = _picks;
     this.games = _games;
+    this.summary = _summary;
     this.meta = _meta;
     this.data = null;
 
@@ -103,74 +105,18 @@ export default class Leaderboard {
     return retObj;
   }
 
-  // getLeaderboardTop5() {
-  //   // create game result dictionary
-  //   const gameDictionary = this.createGameDictionary();
-    
-  //   // create leaderboard list 
-  //   // for each player    
-  //   const leaderboard = this.players.map((player) => {
-  //     // data
-  //     const wins = [];
-  //     const winning = [];
-  //     const losing = [];
-
-  //     // for each pick
-  //     this.picks
-  //       .filter(p => p.userId === player._id)
-  //       .map((pick) => {
-
-  //         // winning team id = game dictionary [pick gameId]
-  //         const { winningTeamId, pregame, active, final } = gameDictionary[pick.gameId];
-
-  //         // if winning team id = pick team id
-  //         if (winningTeamId === pick.teamId) {
-  //           // if game active
-  //           if (pregame) {
-  //             // hide from users
-  //           } else if (active) {
-  //             // show who is winning any games
-  //             winning.push(pick);
-  //           } else if (final) {
-  //             // show the finished games
-  //             wins.push(pick);
-  //           }
-  //         } else {
-  //           losing.push(pick);
-  //         }
-  //       });
-  //     // total = sum winning and wins
-  //     const totalWins = wins.length + winning.length;
-  //     const stats = {
-  //       username: player.username,
-  //       wins: wins.length,
-  //       winning: winning.length,
-  //       losing: losing.length,
-  //       totalWins
-  //     };
-  //     return stats;
-  //   });
-    
-  //   const sorted = [...leaderboard.sort((a, b) => b.totalWins - a.totalWins)];
-  //   const trimmedAndSorted = [
-  //     ...sorted
-  //          .slice(0, 5)
-  //          .sort((a, b) => b.totalWins - a.totalWins)
-  //   ];
-    
-  //   this.data = {
-  //     top5: trimmedAndSorted,
-  //     full: sorted
-  //   }
-    
-  //   return this.data;
-  // }
-
   setData(data) {
     if (!data) {
       this.data = null;
     }
     this.data = data;
+  }
+
+  setSummary(summary) {
+    if (!summary) {
+      this.summary = null;
+    }
+    this.summary = summary;
   }
 
   setMeta(data) {
@@ -180,10 +126,4 @@ export default class Leaderboard {
     this.meta = data;
   }
 
-  // getHorizontalBarChartData(chartName) {
-  //   switch (chartName) {
-  //     case 'top-5': return this.getLeaderboardTop5();
-  //     default: return null;
-  //   }
-  // }
 }
