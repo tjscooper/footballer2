@@ -80,12 +80,15 @@ Meteor.startup(() => {
   
     const feedService = new FeedService().getInstance();
 
-    // Trigger all services on startup
-    // Get Teams must always run first
-    feedService.getTeams();
-    feedService.getWeeks();
-    feedService.getGames();
-    feedService.getScores();
+    // Trigger all services on startup, in order and awaited:
+    // teams first, then weeks (so a new season / week exists before games
+    // are attached to it), then games, then scores
+    (async () => {
+      await feedService.getTeams();
+      await feedService.getWeeks();
+      await feedService.getGames();
+      await feedService.getScores();
+    })();
 
     // Scheduled Service Registry
     CronService.register({
@@ -103,7 +106,7 @@ Meteor.startup(() => {
     CronService.register({
       name: 'Get Games',
       scheduleParserText: 'at 2:00 am every Wednesday',
-      scheduleFn: feedService.getGames()
+      scheduleFn: feedService.getGames
     });
     
     CronService.register({

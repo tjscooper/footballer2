@@ -54,8 +54,14 @@ export const Picks = () => {
       return { weeks: null, games: null, picks: null, isLoading: true };
     }
 
+    // Use the most recent season in the database
+    const allWeeks = WeeksCollection.find({}).fetch();
+    if (allWeeks.length === 0) {
+      return { weeks: [], games: null, picks: null, isLoading: true };
+    }
+    const seasonYear = Math.max(...allWeeks.map(w => w.year));
     const weeks = WeeksCollection
-      .find({ year: 2024 }, { sort: { type: -1, number: -1 } }).fetch();
+      .find({ year: seasonYear }, { sort: { type: -1, number: -1 } }).fetch();
 
     const currentWeek = weeks[0];
 

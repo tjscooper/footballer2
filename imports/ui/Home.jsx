@@ -38,8 +38,6 @@ import { GamesList } from './GamesList';
 import { Chirps } from './Chirps';
 import { AppBarResponsive } from './AppBarResponsive';
 
-const YEAR = 2024;
-
 export const Home = () => {
 
   // References
@@ -78,8 +76,14 @@ export const Home = () => {
       return { weeks: null, games: null, players, picks: null, isLoading: true };
     }
 
+    // Show the most recent season in the database
+    const allWeeks = WeeksCollection.find({}).fetch();
+    if (allWeeks.length === 0) {
+      return { weeks: [], games: null, players, picks: null, isLoading: true };
+    }
+    const seasonYear = Math.max(...allWeeks.map(w => w.year));
     const weeks = WeeksCollection
-      .find({ year: YEAR }, { sort: { type: -1, number: -1 } })
+      .find({ year: seasonYear }, { sort: { type: -1, number: -1 } })
       .fetch();
     // console.log('weeks', weeks);
 
@@ -97,8 +101,9 @@ export const Home = () => {
     }
 
     const leaderboardByWeek = LeaderboardsCollection.find({ weekId: currentWeek._id }).fetch()[0];
+    // A new week has no leaderboard until the first score feed is processed
     // console.log('leaderboard week:', leaderboardByWeek)
-    let aggregatedScores = leaderboardByWeek.summary?.length > 0 ? leaderboardByWeek.summary : null
+    let aggregatedScores = leaderboardByWeek?.summary?.length > 0 ? leaderboardByWeek.summary : null
     // console.log(aggregatedScores);
 
     // Hydrate local collections
